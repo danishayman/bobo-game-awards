@@ -86,7 +86,7 @@ export default function LoginPage() {
         <motion.div variants={itemVariants} className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
-              Welcome Back
+              Reporting for duty!
             </span>
           </h1>
           <p className="text-lg text-white/80 font-body">
