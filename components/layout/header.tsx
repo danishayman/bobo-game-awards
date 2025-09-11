@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Gamepad2, LogOut, Settings, User, Menu, X } from 'lucide-react'
+import { LogOut, Settings, User, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import {
   DropdownMenu,
@@ -32,14 +33,17 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-3 group">
-          <div className="relative">
-            <Gamepad2 className="h-8 w-8 text-red-primary group-hover:text-red-secondary transition-colors" />
-            <div className="absolute inset-0 h-8 w-8 bg-red-primary/20 rounded-full blur-sm group-hover:bg-red-primary/30 transition-all"></div>
+        <Link href="/" className="flex items-center group">
+          <div className="relative h-10 w-auto">
+            <Image
+              src="/logo.webp"
+              alt="Gaming Awards Logo"
+              width={120}
+              height={40}
+              className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+              priority
+            />
           </div>
-          <span className="font-bold text-2xl bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Gaming Awards
-          </span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
