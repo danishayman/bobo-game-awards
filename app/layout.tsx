@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { LoadingWrapper } from "@/components/ui/loading-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,11 +68,13 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <AuthProvider>
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
+          <LoadingWrapper>
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </LoadingWrapper>
         </AuthProvider>
       </body>
     </html>

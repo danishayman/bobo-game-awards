@@ -9,6 +9,7 @@ type AuthContextType = {
   user: User | null
   appUser: AppUser | null
   loading: boolean
+  signingOut: boolean
   signInWithGoogle: () => Promise<void>
   signInWithTwitch: () => Promise<void>
   signInWithDiscord: () => Promise<void>
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [appUser, setAppUser] = useState<AppUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [signingOut, setSigningOut] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         setLoading(false)
+        setSigningOut(false) // Reset signing out state on any auth change
       }
     )
 
@@ -110,14 +113,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    setSigningOut(true)
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+    } finally {
+      // Keep signing out state until auth state change is processed
+      // This will be reset when the auth state change handler runs
+    }
   }
 
   const value = {
     user,
     appUser,
     loading,
+    signingOut,
     signInWithGoogle,
     signInWithTwitch,
     signInWithDiscord,

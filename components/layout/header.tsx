@@ -17,11 +17,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 export function Header() {
-  const { user, appUser, signOut } = useAuth()
+  const { user, appUser, signOut, signingOut } = useAuth()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
+    if (signingOut) return // Prevent multiple clicks
+    
     try {
       await signOut()
       router.push('/')
@@ -76,8 +78,12 @@ export function Header() {
 
           {user ? (
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white">
+              <DropdownMenuTrigger asChild disabled={signingOut}>
+                <Button 
+                  variant="ghost" 
+                  className={`relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white ${signingOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={signingOut}
+                >
                   <Avatar className="h-9 w-9">
                     <AvatarImage 
                       src={appUser?.avatar_url || ''} 
@@ -114,9 +120,13 @@ export function Header() {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem onClick={handleSignOut} className="text-white hover:text-red-primary hover:bg-white/10">
-                  <LogOut className="mr-3 h-4 w-4" />
-                  Sign out
+                <DropdownMenuItem 
+                  onClick={handleSignOut} 
+                  className="text-white hover:text-red-primary hover:bg-white/10"
+                  disabled={signingOut}
+                >
+                  <LogOut className={`mr-3 h-4 w-4 ${signingOut ? 'animate-spin' : ''}`} />
+                  {signingOut ? 'Signing out...' : 'Sign out'}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

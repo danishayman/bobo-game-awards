@@ -47,7 +47,7 @@ export default function CategoryVotePage() {
         throw new Error(categoryData.error || 'Failed to fetch category')
       }
 
-      // Fetch all categories for navigation
+      // Fetch all categories for navigation (ordered by display_order)
       const allCategoriesRes = await fetch('/api/categories')
       const allCategoriesData = await allCategoriesRes.json()
       
@@ -56,6 +56,8 @@ export default function CategoryVotePage() {
       const votesData = await votesRes.json()
 
       setCategory(categoryData.category)
+      
+      // Categories are already ordered by display_order and filtered for active ones from the API
       setAllCategories(allCategoriesData.categories || [])
       
       const currentVoteForCategory = votesData.votes?.[0]
@@ -65,7 +67,7 @@ export default function CategoryVotePage() {
       }
 
       // Find current category index
-      const index = allCategoriesData.categories?.findIndex((cat: any) => cat.slug === slug) ?? 0
+      const index = (allCategoriesData.categories || []).findIndex((cat: any) => cat.slug === slug) ?? 0
       setCurrentIndex(index)
     } catch (error) {
       console.error('Error fetching data:', error)

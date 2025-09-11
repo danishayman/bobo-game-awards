@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Category } from '@/lib/types/database'
-import { CheckCircle, Clock, Users, Trophy, Vote, Target, Award, Star } from 'lucide-react'
+import { CheckCircle, Vote, Target, Award, Star } from 'lucide-react'
 import Image from 'next/image'
 
 const containerVariants: Variants = {
@@ -34,17 +33,6 @@ const itemVariants: Variants = {
   }
 };
 
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut"
-    }
-  }
-};
 
 export default function VotePage() {
   const { user, loading } = useAuth()
@@ -89,23 +77,6 @@ export default function VotePage() {
     }
   }
 
-  const hasVotedInCategory = (categoryId: string) => {
-    return userVotes.some(vote => vote.category_id === categoryId)
-  }
-
-  const getVotingStatus = (category: Category) => {
-    const now = new Date()
-    
-    if (category.voting_start && new Date(category.voting_start) > now) {
-      return { status: 'upcoming', label: 'Upcoming', color: 'secondary' }
-    }
-    
-    if (category.voting_end && new Date(category.voting_end) < now) {
-      return { status: 'ended', label: 'Ended', color: 'destructive' }
-    }
-    
-    return { status: 'active', label: 'Active', color: 'default' }
-  }
 
   if (loading || loadingData) {
     return (
@@ -321,121 +292,41 @@ export default function VotePage() {
           </Card>
         </motion.div>
 
-        {/* Categories Section */}
-        <motion.div variants={containerVariants} className="space-y-12">
-          <motion.div variants={itemVariants} className="text-center space-y-4">
-            <h2 className="text-3xl md:text-4xl font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-              <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
-                Choose Your Categories
-              </span>
-            </h2>
-            <p className="text-white/60 font-body text-lg">Click on any category to start voting</p>
-          </motion.div>
-          
-          <motion.div 
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {categories.map((category, index) => {
-              const hasVoted = hasVotedInCategory(category.id)
-              const votingStatus = getVotingStatus(category)
-              
-              return (
-                <motion.div 
-                  key={category.id} 
-                  variants={cardVariants}
-                  transition={{ delay: index * 0.1 }}
+        {/* Start Voting Section */}
+        <motion.div variants={itemVariants} className="text-center space-y-8">
+          <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5 backdrop-blur-sm shadow-[0_0_30px_rgba(229,9,20,0.1)] hover:shadow-[0_0_40px_rgba(229,9,20,0.2)] transition-all duration-300 max-w-2xl mx-auto">
+            <CardContent className="pt-8 pb-8">
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="p-4 rounded-full bg-red-primary/20 shadow-[0_0_20px_rgba(229,9,20,0.3)]">
+                    <Vote className="h-12 w-12 text-red-primary" />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-4xl font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                    <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                      Ready to Vote?
+                    </span>
+                  </h2>
+                  <p className="text-white/70 font-body text-lg leading-relaxed max-w-lg mx-auto">
+                    Start the guided voting experience and go through each category one by one. You can change your votes anytime before finalizing.
+                  </p>
+                </div>
+                <Button 
+                  asChild 
+                  size="lg"
+                  className="bg-red-primary hover:bg-red-secondary text-white px-8 py-6 text-xl font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body"
                 >
-                  <Card className="group relative overflow-hidden cursor-pointer border-white/20 hover:border-red-primary/50 backdrop-blur-sm bg-white/5 hover:bg-white/10 shadow-[0_0_20px_rgba(0,0,0,0.2)] hover:shadow-[0_0_30px_rgba(229,9,20,0.2)] transition-all duration-500 transform hover:scale-105">
-                    {/* Top Accent Line */}
-                    <div className={`absolute top-0 left-0 w-full h-1 transition-all duration-300 ${
-                      hasVoted 
-                        ? 'bg-gradient-to-r from-green-400 to-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' 
-                        : votingStatus.status === 'active'
-                          ? 'bg-gradient-to-r from-red-primary to-red-secondary opacity-0 group-hover:opacity-100 shadow-[0_0_10px_rgba(229,9,20,0.5)]'
-                          : 'bg-gradient-to-r from-gray-500 to-gray-600'
-                    }`} />
-
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-4">
-                          <div className="p-3 rounded-xl bg-red-primary/20 shadow-[0_0_15px_rgba(229,9,20,0.3)] group-hover:shadow-[0_0_25px_rgba(229,9,20,0.5)] transition-all duration-300">
-                            <Trophy className="h-6 w-6 text-red-primary" />
-                          </div>
-                          <div className="space-y-3">
-                            <CardTitle className="text-xl text-white group-hover:text-red-primary transition-colors font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                              {category.name}
-                            </CardTitle>
-                            <div className="flex gap-2">
-                              <Badge 
-                                variant={votingStatus.color as any}
-                                className="font-body text-xs"
-                              >
-                                {votingStatus.label}
-                              </Badge>
-                              {hasVoted && (
-                                <Badge 
-                                  variant="default"
-                                  className="bg-green-500/20 text-green-400 border-green-500/30 font-body text-xs"
-                                >
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Voted
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="space-y-4">
-                      <CardDescription className="text-white/70 leading-relaxed font-body">
-                        {category.description}
-                      </CardDescription>
-                      
-                      <div className="flex items-center justify-between">
-                        {votingStatus.status === 'upcoming' ? (
-                          <div className="flex items-center text-sm text-white/60 font-body">
-                            <Clock className="h-4 w-4 mr-2" />
-                            Starts {new Date(category.voting_start!).toLocaleDateString()}
-                          </div>
-                        ) : votingStatus.status === 'ended' ? (
-                          <div className="text-sm text-white/60 font-body">
-                            Voting has ended
-                          </div>
-                        ) : (
-                          <div className="text-sm text-white/60 font-body">
-                            {category.voting_end 
-                              ? `Ends ${new Date(category.voting_end).toLocaleDateString()}`
-                              : 'No end date set'
-                            }
-                          </div>
-                        )}
-                        
-                        <Button 
-                          asChild 
-                          variant={hasVoted ? "outline" : "default"}
-                          size="sm"
-                          disabled={votingStatus.status !== 'active'}
-                          className={`rounded-full font-body transition-all duration-300 transform group-hover:scale-105 ${
-                            hasVoted 
-                              ? 'border-white/20 hover:border-green-400/50 text-white hover:text-green-400' 
-                              : 'bg-red-primary hover:bg-red-secondary text-white shadow-[0_0_15px_rgba(229,9,20,0.4)] hover:shadow-[0_0_25px_rgba(229,9,20,0.6)]'
-                          }`}
-                        >
-                          <Link href={`/vote/category/${category.slug}`}>
-                            <Vote className="mr-2 h-4 w-4" />
-                            {hasVoted ? 'Change Vote' : 'Vote Now'}
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
-          </motion.div>
+                  <Link href="/vote/start">
+                    <Vote className="mr-3 h-6 w-6" />
+                    Start Voting
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
+
       </motion.div>
     </div>
   )
