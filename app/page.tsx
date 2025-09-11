@@ -58,7 +58,7 @@ export default function Home() {
         
         {/* Title */}
         <motion.div variants={itemVariants} className="space-y-4">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none font-display">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent block">
               Bobo Game
             </span>
@@ -70,7 +70,7 @@ export default function Home() {
         
         {/* Year */}
         <motion.div variants={itemVariants} className="mt-8">
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide font-accent">
+          <div className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
               2025
             </span>
@@ -79,10 +79,11 @@ export default function Home() {
         
         {/* Subtitle */}
         <motion.div variants={itemVariants} className="space-y-8 mt-12">
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-body">
-            Vote for your favorite games and celebrate the best of gaming. Community-driven 
-            awards by gamers, for gamers.
-          </p>
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-body">
+            Community-driven awards by Spudin, for Spudins. 
+            <br />
+            Veli Nai Veli Premium
+            </p>
           
           {/* Call to Action */}
           <Button 

@@ -27,6 +27,8 @@
   --font-display: var(--font-oswald);
   --font-body: var(--font-inter);
   --font-accent: var(--font-montserrat);
+  --font-serif: var(--font-baskervville);
+  --font-dm-serif: var(--font-dm-serif-text);
 }
 
 @theme inline {
@@ -48,6 +50,8 @@
   --font-display: var(--font-oswald);
   --font-body: var(--font-inter);
   --font-accent: var(--font-montserrat);
+  --font-serif: var(--font-baskervville);
+  --font-dm-serif: var(--font-dm-serif-text);
 }
 
 body {

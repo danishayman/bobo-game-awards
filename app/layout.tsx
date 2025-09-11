@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Oswald, Inter, Montserrat } from "next/font/google";
+import { Geist, Geist_Mono, Oswald, Inter, Montserrat, Baskervville, DM_Serif_Text } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import { Header } from "@/components/layout/header";
@@ -36,6 +36,20 @@ const montserrat = Montserrat({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
+// Classic serif font for main title
+const baskervville = Baskervville({
+  variable: "--font-baskervville",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+// DM Serif Text for elegant headings
+const dmSerifText = DM_Serif_Text({
+  variable: "--font-dm-serif-text",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: "Gaming Awards - Community Voting",
   description: "Vote for your favorite games of the year in our community-driven gaming awards",
@@ -49,7 +63,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} ${inter.variable} ${montserrat.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} ${inter.variable} ${montserrat.variable} ${baskervville.variable} ${dmSerifText.variable} antialiased min-h-screen flex flex-col`}
       >
         <AuthProvider>
           <Header />
