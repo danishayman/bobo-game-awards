@@ -5,12 +5,35 @@ import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { CategoryWithNominees, Nominee } from '@/lib/types/database'
-import { ArrowLeft, ArrowRight, Check, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    }
+  }
+};
 
 export default function CategoryVotePage() {
   const { user, loading } = useAuth()
@@ -25,6 +48,7 @@ export default function CategoryVotePage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadingData, setLoadingData] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [ballot, setBallot] = useState<any>(null)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -39,6 +63,16 @@ export default function CategoryVotePage() {
 
   const fetchData = async () => {
     try {
+      // Fetch ballot status first to check if it's finalized
+      const ballotRes = await fetch('/api/ballot/status')
+      const ballotData = await ballotRes.json()
+      setBallot(ballotData.ballot)
+
+      // If ballot is finalized, don't allow further voting
+      if (ballotData.ballot?.is_final) {
+        return // Component will render thank you message
+      }
+
       // Fetch category with nominees
       const categoryRes = await fetch(`/api/categories/${slug}`)
       const categoryData = await categoryRes.json()
@@ -143,6 +177,72 @@ export default function CategoryVotePage() {
             <p>Loading category...</p>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  // If ballot is finalized, show thank you page
+  if (ballot?.is_final) {
+    return (
+      <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
+        <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-red-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <motion.div 
+          className="relative text-center space-y-12 px-6 max-w-2xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <div className="relative w-24 h-24">
+              <Image
+                src="/logo.webp"
+                alt="Bobo Game Awards Logo"
+                fill
+                className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              />
+            </div>
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="space-y-6">
+            <CheckCircle className="h-20 w-20 text-green-500 mx-auto drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]" />
+            <h1 className="text-5xl md:text-6xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              <span className="bg-gradient-to-r from-green-300 via-green-200 to-green-400 bg-clip-text text-transparent">
+                Thank You!
+              </span>
+            </h1>
+            <p className="text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
+              Your ballot has been successfully submitted and finalized. Your voice matters in the gaming community!
+            </p>
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="space-y-4">
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-red-primary hover:bg-red-secondary text-white px-8 py-6 text-lg font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body mr-4"
+            >
+              <Link href="/vote/summary">
+                <Star className="mr-3 h-6 w-6" />
+                View Your Votes
+              </Link>
+            </Button>
+            <Button 
+              asChild 
+              variant="outline" 
+              size="lg"
+              className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-6 text-lg font-semibold rounded-full hover:shadow-[0_0_20px_rgba(229,9,20,0.2)] transition-all duration-300 transform hover:scale-105 font-body"
+            >
+              <Link href="/results">
+                <Trophy className="mr-3 h-6 w-6" />
+                See Results
+              </Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     )
   }
