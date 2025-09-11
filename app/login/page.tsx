@@ -73,7 +73,7 @@ export default function LoginPage() {
         <motion.div variants={itemVariants} className="flex justify-center">
           <div className="relative w-24 h-24 md:w-32 md:h-32">
             <Image
-              src="/logo.webp"
+              src="/salute.webp"
               alt="Bobo Game Awards Logo"
               fill
               className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all duration-300"
