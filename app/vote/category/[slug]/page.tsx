@@ -3,14 +3,35 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { NomineeCard } from '@/components/ui/nominee-card'
 import { useAuth } from '@/lib/auth/auth-context'
 import { CategoryWithNominees, Nominee } from '@/lib/types/database'
-import { ArrowLeft, ArrowRight, Check, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Trophy, Vote } from 'lucide-react'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
 
 export default function CategoryVotePage() {
   const { user, loading } = useAuth()
@@ -134,11 +155,15 @@ export default function CategoryVotePage() {
 
   if (loading || loadingData) {
     return (
-      <div className="container py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>Loading category...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
+            <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-semibold text-white">Loading Category</h3>
+            <p className="text-white/60">Preparing your voting experience...</p>
           </div>
         </div>
       </div>
@@ -161,123 +186,141 @@ export default function CategoryVotePage() {
   const { prevCategory, nextCategory } = getNavigationInfo()
 
   return (
-    <div className="container py-8 space-y-8">
-      {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <Button asChild variant="outline">
-          <Link href="/vote">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Categories
-          </Link>
-        </Button>
-        
-        <div className="text-sm text-muted-foreground">
-          Category {currentIndex + 1} of {allCategories.length}
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background-secondary">
+      <div className="container py-8 space-y-8">
+        {/* Navigation */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between"
+        >
+          <Button asChild variant="outline" size="lg">
+            <Link href="/vote">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Categories
+            </Link>
+          </Button>
+          
+          <div className="text-sm text-white/60 font-medium bg-background-secondary px-4 py-2 rounded-full border border-white/10">
+            Category {currentIndex + 1} of {allCategories.length}
+          </div>
+        </motion.div>
 
-      {/* Category Header */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <Trophy className="h-8 w-8 text-purple-600" />
-          <div>
-            <h1 className="text-3xl font-bold">{category.name}</h1>
-            {category.description && (
-              <p className="text-muted-foreground text-lg">{category.description}</p>
+        {/* Category Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-6 text-center"
+        >
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-red-primary/10 border border-red-primary/30">
+              <Trophy className="h-8 w-8 text-red-primary" />
+              <div className="text-left">
+                <h1 className="text-3xl md:text-4xl font-bold text-white">{category.name}</h1>
+                {category.description && (
+                  <p className="text-white/70 text-lg mt-1">{category.description}</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {currentVote && (
+            <Badge variant="success" className="text-base px-4 py-2">
+              <Check className="h-4 w-4 mr-2" />
+              You have voted in this category
+            </Badge>
+          )}
+        </motion.div>
+
+        {/* Nominees Grid */}
+        <motion.div 
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="space-y-8"
+        >
+          <motion.div variants={itemVariants} className="text-center">
+            <h2 className="text-2xl font-bold text-white mb-2">Choose your favorite</h2>
+            <p className="text-white/60">Select the game that deserves this award the most</p>
+          </motion.div>
+          
+          <motion.div 
+            variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {category.nominees.map((nominee: Nominee) => (
+              <motion.div key={nominee.id} variants={itemVariants}>
+                <NomineeCard
+                  id={nominee.id}
+                  name={nominee.name}
+                  description={nominee.description || undefined}
+                  imageUrl={nominee.image_url || undefined}
+                  isSelected={selectedNominee === nominee.id}
+                  isVoted={currentVote === nominee.id}
+                  onClick={() => setSelectedNominee(nominee.id)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex items-center justify-between pt-8 border-t border-white/10"
+        >
+          <div className="flex gap-3">
+            {prevCategory && (
+              <Button asChild variant="outline" size="lg">
+                <Link href={`/vote/category/${prevCategory.slug}`}>
+                  <ArrowLeft className="h-5 w-5 mr-2" />
+                  <span className="hidden sm:inline">{prevCategory.name}</span>
+                  <span className="sm:hidden">Previous</span>
+                </Link>
+              </Button>
             )}
           </div>
-        </div>
-        
-        {currentVote && (
-          <Badge variant="outline" className="text-green-600 border-green-600">
-            <Check className="h-3 w-3 mr-1" />
-            You have voted in this category
-          </Badge>
-        )}
-      </div>
 
-      {/* Nominees Grid */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold">Choose your favorite:</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {category.nominees.map((nominee: Nominee) => (
-            <Card 
-              key={nominee.id}
-              className={`cursor-pointer transition-all hover:shadow-lg ${
-                selectedNominee === nominee.id 
-                  ? 'ring-2 ring-purple-600 bg-purple-50 dark:bg-purple-950/20' 
-                  : ''
-              }`}
-              onClick={() => setSelectedNominee(nominee.id)}
+          <div className="flex gap-3">
+            <Button
+              onClick={handleVote}
+              disabled={!selectedNominee || submitting}
+              variant="premium"
+              size="lg"
+              className="min-w-[140px]"
             >
-              <CardHeader className="pb-3">
-                {nominee.image_url && (
-                  <div className="relative w-full h-48 mb-4 rounded-md overflow-hidden">
-                    <Image
-                      src={nominee.image_url}
-                      alt={nominee.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  </div>
-                )}
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{nominee.name}</CardTitle>
-                  {selectedNominee === nominee.id && (
-                    <Check className="h-5 w-5 text-purple-600 flex-shrink-0" />
-                  )}
+              {submitting ? (
+                <div className="flex items-center">
+                  <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                  Saving...
                 </div>
-                {nominee.description && (
-                  <CardDescription>{nominee.description}</CardDescription>
-                )}
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-6 border-t">
-        <div className="flex gap-2">
-          {prevCategory && (
-            <Button asChild variant="outline">
-              <Link href={`/vote/category/${prevCategory.slug}`}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                {prevCategory.name}
-              </Link>
+              ) : currentVote === selectedNominee ? (
+                <div className="flex items-center">
+                  <Check className="h-5 w-5 mr-2" />
+                  Vote Saved
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <Vote className="h-5 w-5 mr-2" />
+                  Save Vote
+                </div>
+              )}
             </Button>
-          )}
-        </div>
 
-        <div className="flex gap-2">
-          <Button
-            onClick={handleVote}
-            disabled={!selectedNominee || submitting}
-            className="min-w-[120px]"
-          >
-            {submitting ? (
-              <div className="flex items-center">
-                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                Saving...
-              </div>
-            ) : currentVote === selectedNominee ? (
-              'Vote Saved'
-            ) : (
-              'Save Vote'
+            {nextCategory && (
+              <Button asChild variant="outline" size="lg">
+                <Link href={`/vote/category/${nextCategory.slug}`}>
+                  <span className="hidden sm:inline">{nextCategory.name}</span>
+                  <span className="sm:hidden">Next</span>
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Link>
+              </Button>
             )}
-          </Button>
-
-          {nextCategory && (
-            <Button asChild variant="outline">
-              <Link href={`/vote/category/${nextCategory.slug}`}>
-                {nextCategory.name}
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          )}
-        </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   )

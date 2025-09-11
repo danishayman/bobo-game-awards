@@ -28,24 +28,32 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <Gamepad2 className="h-6 w-6 text-purple-600" />
-          <span className="font-bold text-xl">Gaming Awards</span>
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
+      <div className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-3 group">
+          <div className="relative">
+            <Gamepad2 className="h-8 w-8 text-red-primary group-hover:text-red-secondary transition-colors" />
+            <div className="absolute inset-0 h-8 w-8 bg-red-primary/20 rounded-full blur-sm group-hover:bg-red-primary/30 transition-all"></div>
+          </div>
+          <span className="font-bold text-2xl bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            Gaming Awards
+          </span>
         </Link>
 
-        <nav className="flex items-center space-x-6">
-          <Link href="/" className="text-sm font-medium hover:text-purple-600 transition-colors">
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link href="/" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
             Home
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
           {user && (
-            <Link href="/vote" className="text-sm font-medium hover:text-purple-600 transition-colors">
+            <Link href="/vote" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
               Vote
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
             </Link>
           )}
-          <Link href="/results" className="text-sm font-medium hover:text-purple-600 transition-colors">
+          <Link href="/results" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
             Results
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
         </nav>
 
@@ -53,51 +61,60 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-white/20 hover:border-red-primary hover:shadow-[0_0_15px_rgba(229,9,20,0.3)]">
+                  <Avatar className="h-9 w-9">
                     <AvatarImage 
                       src={appUser?.avatar_url || ''} 
                       alt={appUser?.display_name || 'User'} 
                     />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-background-secondary text-white font-semibold">
                       {appUser?.display_name?.charAt(0)?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center justify-start gap-2 p-2">
+              <DropdownMenuContent className="w-64 bg-background-secondary border border-white/20 backdrop-blur-xl" align="end" forceMount>
+                <div className="flex items-center justify-start gap-3 p-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage 
+                      src={appUser?.avatar_url || ''} 
+                      alt={appUser?.display_name || 'User'} 
+                    />
+                    <AvatarFallback className="bg-red-primary text-white font-semibold">
+                      {appUser?.display_name?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{appUser?.display_name}</p>
-                    <p className="w-[200px] truncate text-sm text-muted-foreground">
+                    <p className="font-semibold text-white">{appUser?.display_name}</p>
+                    <p className="w-[180px] truncate text-sm text-white/60">
                       {user.email}
                     </p>
                   </div>
                 </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuItem asChild className="text-white hover:text-red-primary hover:bg-white/10">
                   <Link href="/profile">
-                    <User className="mr-2 h-4 w-4" />
+                    <User className="mr-3 h-4 w-4" />
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 {appUser?.is_admin && (
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="text-white hover:text-red-primary hover:bg-white/10">
                     <Link href="/admin">
-                      <Settings className="mr-2 h-4 w-4" />
+                      <Settings className="mr-3 h-4 w-4" />
                       Admin Dashboard
                     </Link>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
+                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuItem onClick={handleSignOut} className="text-white hover:text-red-primary hover:bg-white/10">
+                  <LogOut className="mr-3 h-4 w-4" />
                   Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
+            <Button asChild variant="premium" size="sm">
               <Link href="/login">Sign In</Link>
             </Button>
           )}

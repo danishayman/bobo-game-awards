@@ -4,25 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-red-primary text-white hover:bg-red-secondary hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] border border-red-primary hover:border-red-secondary",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-red-600 text-white hover:bg-red-700 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)]",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-red-primary hover:text-red-primary hover:shadow-[0_0_15px_rgba(229,9,20,0.2)]",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-background-secondary text-white hover:bg-background-tertiary border border-white/10 hover:border-white/20",
+        ghost: "text-white hover:bg-white/10 hover:text-red-primary",
+        link: "text-red-primary underline-offset-4 hover:underline hover:text-red-secondary",
+        premium: "bg-gradient-to-r from-red-primary to-red-secondary text-white hover:shadow-[0_0_30px_rgba(229,9,20,0.6)] border border-red-primary",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-11 px-6 py-2",
+        sm: "h-9 rounded-md px-4 text-xs",
+        lg: "h-12 rounded-lg px-8 text-base",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {
