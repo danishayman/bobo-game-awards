@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Category } from '@/lib/types/database'
-import { CheckCircle, Vote, Target, Award, Star } from 'lucide-react'
+import { CheckCircle, Vote, Target, Award, Star, Trophy } from 'lucide-react'
 import Image from 'next/image'
 
 const containerVariants: Variants = {
