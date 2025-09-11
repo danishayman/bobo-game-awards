@@ -231,7 +231,42 @@ export default function VotePage() {
           </div>
         </motion.div>
 
-        {/* Progress Overview */}
+        {/* Start Voting Section */}
+        <motion.div variants={itemVariants} className="text-center space-y-8">
+          <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5 backdrop-blur-sm shadow-[0_0_30px_rgba(229,9,20,0.1)] hover:shadow-[0_0_40px_rgba(229,9,20,0.2)] transition-all duration-300 max-w-2xl mx-auto">
+            <CardContent className="pt-8 pb-8">
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <div className="p-4 rounded-full bg-red-primary/20 shadow-[0_0_20px_rgba(229,9,20,0.3)]">
+                    <Vote className="h-12 w-12 text-red-primary" />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h2 className="text-3xl md:text-4xl font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                    <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                      Ready to Vote?
+                    </span>
+                  </h2>
+                  <p className="text-white/70 font-body text-lg leading-relaxed max-w-lg mx-auto">
+                    Start the guided voting experience and go through each category one by one. You can change your votes anytime before finalizing.
+                  </p>
+                </div>
+                <Button 
+                  asChild 
+                  size="lg"
+                  className="bg-red-primary hover:bg-red-secondary text-white px-8 py-6 text-xl font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body"
+                >
+                  <Link href="/vote/start">
+                    <Vote className="mr-3 h-6 w-6" />
+                    Start Voting
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+                {/* Progress Overview */}
         <motion.div variants={itemVariants}>
           <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5 backdrop-blur-sm shadow-[0_0_30px_rgba(229,9,20,0.1)] hover:shadow-[0_0_40px_rgba(229,9,20,0.2)] transition-all duration-300">
             <CardHeader>
@@ -287,41 +322,6 @@ export default function VotePage() {
                     </Button>
                   )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Start Voting Section */}
-        <motion.div variants={itemVariants} className="text-center space-y-8">
-          <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5 backdrop-blur-sm shadow-[0_0_30px_rgba(229,9,20,0.1)] hover:shadow-[0_0_40px_rgba(229,9,20,0.2)] transition-all duration-300 max-w-2xl mx-auto">
-            <CardContent className="pt-8 pb-8">
-              <div className="space-y-6">
-                <div className="flex justify-center">
-                  <div className="p-4 rounded-full bg-red-primary/20 shadow-[0_0_20px_rgba(229,9,20,0.3)]">
-                    <Vote className="h-12 w-12 text-red-primary" />
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h2 className="text-3xl md:text-4xl font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                    <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
-                      Ready to Vote?
-                    </span>
-                  </h2>
-                  <p className="text-white/70 font-body text-lg leading-relaxed max-w-lg mx-auto">
-                    Start the guided voting experience and go through each category one by one. You can change your votes anytime before finalizing.
-                  </p>
-                </div>
-                <Button 
-                  asChild 
-                  size="lg"
-                  className="bg-red-primary hover:bg-red-secondary text-white px-8 py-6 text-xl font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body"
-                >
-                  <Link href="/vote/start">
-                    <Vote className="mr-3 h-6 w-6" />
-                    Start Voting
-                  </Link>
-                </Button>
               </div>
             </CardContent>
           </Card>

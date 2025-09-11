@@ -317,16 +317,6 @@ export default function CategoryVotePage() {
                 {category.description}
               </p>
             )}
-
-            {/* Tell Others to Vote Button */}
-            <div className="pt-6">
-              <Button 
-                variant="outline" 
-                className="border-red-primary/50 text-red-primary hover:bg-red-primary hover:text-white transition-all duration-300"
-              >
-                TELL OTHERS TO VOTE
-              </Button>
-            </div>
           </div>
         </div>
       </div>
