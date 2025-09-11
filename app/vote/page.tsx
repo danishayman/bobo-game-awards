@@ -3,31 +3,45 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Category } from '@/lib/types/database'
-import { CheckCircle, Clock, Users, Trophy, Vote, Target } from 'lucide-react'
+import { CheckCircle, Clock, Users, Trophy, Vote, Target, Award, Star } from 'lucide-react'
+import Image from 'next/image'
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.2
     }
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    }
+  }
+};
+
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5
+      duration: 0.6,
+      ease: "easeOut"
     }
   }
 };
@@ -95,106 +109,210 @@ export default function VotePage() {
 
   if (loading || loadingData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-6">
-          <div className="relative">
-            <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
-            <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-xl font-semibold text-white">Loading Categories</h3>
-            <p className="text-white/60">Preparing your voting dashboard...</p>
-          </div>
-        </div>
+      <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
+        <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-red-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <motion.div 
+          className="relative text-center space-y-8 px-6 max-w-md mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <div className="relative w-20 h-20">
+              <Image
+                src="/logo.webp"
+                alt="Bobo Game Awards Logo"
+                fill
+                className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              />
+            </div>
+          </motion.div>
+          
+          <motion.div variants={itemVariants}>
+            <div className="relative">
+              <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
+              <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
+            </div>
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="space-y-2">
+            <h3 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              Loading Your Voting Dashboard
+            </h3>
+            <p className="text-white/60 font-body">Preparing categories and your voting progress...</p>
+          </motion.div>
+        </motion.div>
       </div>
     )
   }
 
   if (ballot?.is_final) {
     return (
-      <div className="container py-8">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
-          <div className="space-y-4">
-            <CheckCircle className="h-16 w-16 text-green-600 mx-auto" />
-            <h1 className="text-3xl font-bold">Thank You for Voting!</h1>
-            <p className="text-muted-foreground text-lg">
-              Your ballot has been successfully submitted and finalized.
-            </p>
-          </div>
+      <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
+        <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-red-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <motion.div 
+          className="relative text-center space-y-12 px-6 max-w-2xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <div className="relative w-24 h-24">
+              <Image
+                src="/logo.webp"
+                alt="Bobo Game Awards Logo"
+                fill
+                className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              />
+            </div>
+          </motion.div>
           
-          <div className="space-y-4">
-            <Button asChild>
-              <Link href="/vote/summary">View Your Votes</Link>
+          <motion.div variants={itemVariants} className="space-y-6">
+            <CheckCircle className="h-20 w-20 text-green-500 mx-auto drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]" />
+            <h1 className="text-5xl md:text-6xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              <span className="bg-gradient-to-r from-green-300 via-green-200 to-green-400 bg-clip-text text-transparent">
+                Thank You!
+              </span>
+            </h1>
+            <p className="text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
+              Your ballot has been successfully submitted and finalized. Your voice matters in the gaming community!
+            </p>
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="space-y-4">
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-red-primary hover:bg-red-secondary text-white px-8 py-6 text-lg font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body mr-4"
+            >
+              <Link href="/vote/summary">
+                <Star className="mr-3 h-6 w-6" />
+                View Your Votes
+              </Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/results">See Results</Link>
+            <Button 
+              asChild 
+              variant="outline" 
+              size="lg"
+              className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-6 text-lg font-semibold rounded-full hover:shadow-[0_0_20px_rgba(229,9,20,0.2)] transition-all duration-300 transform hover:scale-105 font-body"
+            >
+              <Link href="/results">
+                <Trophy className="mr-3 h-6 w-6" />
+                See Results
+              </Link>
             </Button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background-secondary">
-      <div className="container py-8 space-y-8">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-6"
-        >
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-primary/30 bg-red-primary/10 text-red-primary text-sm font-semibold">
-              <Vote className="w-4 h-4" />
-              Gaming Awards 2024
+    <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
+      <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-red-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      
+      {/* Main Content */}
+      <motion.div 
+        className="relative w-full max-w-7xl mx-auto px-6 space-y-16"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* Header Section */}
+        <motion.div variants={itemVariants} className="text-center space-y-8">
+          <div className="flex justify-center">
+            <div className="relative w-20 h-20 md:w-24 md:h-24">
+              <Image
+                src="/logo.webp"
+                alt="Bobo Game Awards Logo"
+                fill
+                className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all duration-300"
+                priority
+              />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white">Cast Your Votes</h1>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+          </div>
+          
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                Cast Your
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-red-300 via-red-200 to-red-400 bg-clip-text text-transparent">
+                Votes
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-body mt-6">
               Vote for your favorite games in each category. You can change your votes until you finalize your ballot.
             </p>
           </div>
         </motion.div>
 
         {/* Progress Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5">
+        <motion.div variants={itemVariants}>
+          <Card className="border-red-primary/20 bg-gradient-to-r from-red-primary/5 to-red-secondary/5 backdrop-blur-sm shadow-[0_0_30px_rgba(229,9,20,0.1)] hover:shadow-[0_0_40px_rgba(229,9,20,0.2)] transition-all duration-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-white">
-                <div className="p-2 rounded-xl bg-red-primary/20">
+              <CardTitle className="flex items-center gap-3 text-white text-xl" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                <div className="p-3 rounded-xl bg-red-primary/20 shadow-[0_0_20px_rgba(229,9,20,0.3)]">
                   <Target className="h-6 w-6 text-red-primary" />
                 </div>
                 Your Voting Progress
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-white">
-                    {userVotes.length} / {categories.length}
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="space-y-4">
+                  <div className="text-4xl font-normal text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                    <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                      {userVotes.length}
+                    </span>
+                    <span className="text-white/60"> / {categories.length}</span>
                   </div>
-                  <div className="text-white/70">Categories completed</div>
+                  <div className="text-white/70 font-body">Categories completed</div>
                   
                   {/* Progress Bar */}
-                  <div className="w-full sm:w-64 bg-white/10 rounded-full h-2">
+                  <div className="w-full lg:w-80 bg-white/10 rounded-full h-3 shadow-inner">
                     <div 
-                      className="bg-gradient-to-r from-red-primary to-red-secondary h-2 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-red-primary to-red-secondary h-3 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(229,9,20,0.5)]"
                       style={{ width: `${(userVotes.length / categories.length) * 100}%` }}
                     />
                   </div>
                 </div>
                 
-                <div className="flex gap-3">
-                  <Button asChild variant="outline" size="sm">
-                    <Link href="/vote/summary">Review Votes</Link>
+                <div className="flex gap-4">
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    size="lg"
+                    className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-6 py-3 rounded-full hover:shadow-[0_0_20px_rgba(229,9,20,0.2)] transition-all duration-300 transform hover:scale-105 font-body"
+                  >
+                    <Link href="/vote/summary">
+                      <Star className="mr-2 h-5 w-5" />
+                      Review Votes
+                    </Link>
                   </Button>
                   {userVotes.length > 0 && (
-                    <Button asChild variant="premium" size="sm">
-                      <Link href="/vote/finalize">Finalize Ballot</Link>
+                    <Button 
+                      asChild 
+                      size="lg"
+                      className="bg-red-primary hover:bg-red-secondary text-white px-6 py-3 rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body"
+                    >
+                      <Link href="/vote/finalize">
+                        <Award className="mr-2 h-5 w-5" />
+                        Finalize Ballot
+                      </Link>
                     </Button>
                   )}
                 </div>
@@ -203,54 +321,63 @@ export default function VotePage() {
           </Card>
         </motion.div>
 
-        {/* Categories Grid */}
-        <motion.div 
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-          className="space-y-6"
-        >
-          <motion.div variants={itemVariants} className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">Choose Your Categories</h2>
-            <p className="text-white/60">Click on any category to start voting</p>
+        {/* Categories Section */}
+        <motion.div variants={containerVariants} className="space-y-12">
+          <motion.div variants={itemVariants} className="text-center space-y-4">
+            <h2 className="text-3xl md:text-4xl font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                Choose Your Categories
+              </span>
+            </h2>
+            <p className="text-white/60 font-body text-lg">Click on any category to start voting</p>
           </motion.div>
           
           <motion.div 
             variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {categories.map((category) => {
+            {categories.map((category, index) => {
               const hasVoted = hasVotedInCategory(category.id)
               const votingStatus = getVotingStatus(category)
               
               return (
-                <motion.div key={category.id} variants={itemVariants}>
-                  <Card className="group relative overflow-hidden cursor-pointer hover:shadow-[0_0_30px_rgba(229,9,20,0.2)] border-white/20 hover:border-red-primary/50 transition-all duration-300">
+                <motion.div 
+                  key={category.id} 
+                  variants={cardVariants}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="group relative overflow-hidden cursor-pointer border-white/20 hover:border-red-primary/50 backdrop-blur-sm bg-white/5 hover:bg-white/10 shadow-[0_0_20px_rgba(0,0,0,0.2)] hover:shadow-[0_0_30px_rgba(229,9,20,0.2)] transition-all duration-500 transform hover:scale-105">
                     {/* Top Accent Line */}
                     <div className={`absolute top-0 left-0 w-full h-1 transition-all duration-300 ${
                       hasVoted 
-                        ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                        ? 'bg-gradient-to-r from-green-400 to-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' 
                         : votingStatus.status === 'active'
-                          ? 'bg-gradient-to-r from-red-primary to-red-secondary opacity-0 group-hover:opacity-100'
+                          ? 'bg-gradient-to-r from-red-primary to-red-secondary opacity-0 group-hover:opacity-100 shadow-[0_0_10px_rgba(229,9,20,0.5)]'
                           : 'bg-gradient-to-r from-gray-500 to-gray-600'
                     }`} />
 
-                    <CardHeader>
+                    <CardHeader className="pb-4">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-xl bg-red-primary/20">
-                            <Trophy className="h-5 w-5 text-red-primary" />
+                        <div className="flex items-start gap-4">
+                          <div className="p-3 rounded-xl bg-red-primary/20 shadow-[0_0_15px_rgba(229,9,20,0.3)] group-hover:shadow-[0_0_25px_rgba(229,9,20,0.5)] transition-all duration-300">
+                            <Trophy className="h-6 w-6 text-red-primary" />
                           </div>
-                          <div>
-                            <CardTitle className="text-lg text-white group-hover:text-red-primary transition-colors">
+                          <div className="space-y-3">
+                            <CardTitle className="text-xl text-white group-hover:text-red-primary transition-colors font-normal" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                               {category.name}
                             </CardTitle>
-                            <div className="flex gap-2 mt-2">
-                              <Badge variant={votingStatus.color as any}>
+                            <div className="flex gap-2">
+                              <Badge 
+                                variant={votingStatus.color as any}
+                                className="font-body text-xs"
+                              >
                                 {votingStatus.label}
                               </Badge>
                               {hasVoted && (
-                                <Badge variant="success">
+                                <Badge 
+                                  variant="default"
+                                  className="bg-green-500/20 text-green-400 border-green-500/30 font-body text-xs"
+                                >
                                   <CheckCircle className="h-3 w-3 mr-1" />
                                   Voted
                                 </Badge>
@@ -259,24 +386,25 @@ export default function VotePage() {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="text-white/70 leading-relaxed">
-                        {category.description}
-                      </CardDescription>
                     </CardHeader>
                     
-                    <CardContent>
+                    <CardContent className="space-y-4">
+                      <CardDescription className="text-white/70 leading-relaxed font-body">
+                        {category.description}
+                      </CardDescription>
+                      
                       <div className="flex items-center justify-between">
                         {votingStatus.status === 'upcoming' ? (
-                          <div className="flex items-center text-sm text-white/60">
+                          <div className="flex items-center text-sm text-white/60 font-body">
                             <Clock className="h-4 w-4 mr-2" />
                             Starts {new Date(category.voting_start!).toLocaleDateString()}
                           </div>
                         ) : votingStatus.status === 'ended' ? (
-                          <div className="text-sm text-white/60">
+                          <div className="text-sm text-white/60 font-body">
                             Voting has ended
                           </div>
                         ) : (
-                          <div className="text-sm text-white/60">
+                          <div className="text-sm text-white/60 font-body">
                             {category.voting_end 
                               ? `Ends ${new Date(category.voting_end).toLocaleDateString()}`
                               : 'No end date set'
@@ -286,12 +414,17 @@ export default function VotePage() {
                         
                         <Button 
                           asChild 
-                          variant={hasVoted ? "outline" : "premium"}
+                          variant={hasVoted ? "outline" : "default"}
                           size="sm"
                           disabled={votingStatus.status !== 'active'}
-                          className="group-hover:scale-105 transition-transform"
+                          className={`rounded-full font-body transition-all duration-300 transform group-hover:scale-105 ${
+                            hasVoted 
+                              ? 'border-white/20 hover:border-green-400/50 text-white hover:text-green-400' 
+                              : 'bg-red-primary hover:bg-red-secondary text-white shadow-[0_0_15px_rgba(229,9,20,0.4)] hover:shadow-[0_0_25px_rgba(229,9,20,0.6)]'
+                          }`}
                         >
                           <Link href={`/vote/category/${category.slug}`}>
+                            <Vote className="mr-2 h-4 w-4" />
                             {hasVoted ? 'Change Vote' : 'Vote Now'}
                           </Link>
                         </Button>
@@ -303,7 +436,7 @@ export default function VotePage() {
             })}
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   )
 }

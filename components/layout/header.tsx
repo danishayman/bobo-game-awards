@@ -75,9 +75,9 @@ export function Header() {
           </Button>
 
           {user ? (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-white/20 hover:border-red-primary hover:shadow-[0_0_15px_rgba(229,9,20,0.3)]">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white">
                   <Avatar className="h-9 w-9">
                     <AvatarImage 
                       src={appUser?.avatar_url || ''} 
@@ -102,18 +102,9 @@ export function Header() {
                   </Avatar>
                   <div className="flex flex-col space-y-1 leading-none">
                     <p className="font-semibold text-white">{appUser?.display_name}</p>
-                    <p className="w-[180px] truncate text-sm text-white/60">
-                      {user.email}
-                    </p>
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem asChild className="text-white hover:text-red-primary hover:bg-white/10">
-                  <Link href="/profile">
-                    <User className="mr-3 h-4 w-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
                 {appUser?.is_admin && (
                   <DropdownMenuItem asChild className="text-white hover:text-red-primary hover:bg-white/10">
                     <Link href="/admin">
