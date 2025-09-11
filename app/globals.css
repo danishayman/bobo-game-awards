@@ -3,7 +3,7 @@
 /* Premium Dark Gaming Theme */
 :root {
   /* Dark theme base colors */
-  --background: #0a0a0a;
+  --background: #0A0A0F;
   --background-secondary: #121212;
   --background-tertiary: #1a1a1a;
   --foreground: #ededed;
@@ -24,6 +24,9 @@
   /* Typography */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-oswald);
+  --font-body: var(--font-inter);
+  --font-accent: var(--font-montserrat);
 }
 
 @theme inline {
@@ -42,6 +45,9 @@
   --color-surface-hover: var(--surface-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-oswald);
+  --font-body: var(--font-inter);
+  --font-accent: var(--font-montserrat);
 }
 
 body {
@@ -107,4 +113,9 @@ body {
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--border-hover);
+}
+
+/* Radial gradient */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
 }

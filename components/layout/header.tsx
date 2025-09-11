@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Gamepad2, LogOut, Settings, User } from 'lucide-react'
+import { Gamepad2, LogOut, Settings, User, Menu, X } from 'lucide-react'
+import { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
 export function Header() {
   const { user, appUser, signOut } = useAuth()
   const router = useRouter()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
     try {
@@ -29,7 +31,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-3 group">
           <div className="relative">
             <Gamepad2 className="h-8 w-8 text-red-primary group-hover:text-red-secondary transition-colors" />
@@ -40,24 +42,34 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link href="/" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
+        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          <Link href="/" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
             Home
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
           {user && (
-            <Link href="/vote" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
+            <Link href="/vote" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
               Vote
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
             </Link>
           )}
-          <Link href="/results" className="text-sm font-semibold text-white/80 hover:text-red-primary transition-all duration-200 relative group">
+          <Link href="/results" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
             Results
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
         </nav>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden p-2 text-white hover:text-red-primary hover:bg-white/10"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -120,6 +132,46 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-white/10 bg-background/95 backdrop-blur-xl">
+          <div className="px-4 py-4 space-y-3">
+            <Link 
+              href="/" 
+              className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            {user && (
+              <Link 
+                href="/vote" 
+                className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Vote
+              </Link>
+            )}
+            <Link 
+              href="/results" 
+              className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Results
+            </Link>
+            {!user && (
+              <Link 
+                href="/login" 
+                className="block text-sm font-medium text-red-primary hover:text-red-secondary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   )
 }
