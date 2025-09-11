@@ -70,7 +70,7 @@ export default function RootLayout({
         <AuthProvider>
           <LoadingWrapper>
             <Header />
-            <main className="flex-1">
+            <main className="flex-1 justify-items-center">
               {children}
             </main>
             <Footer />
