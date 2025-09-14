@@ -1,7 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import { Gamepad2 } from 'lucide-react'
+import { useAuth } from '@/lib/auth/auth-context'
 
 export function Footer() {
+  const { appUser } = useAuth()
   return (
     <footer className="border-t border-white/10 bg-[var(--background-secondary)] mt-auto">
       <div className="container mx-auto px-6 py-8 md:py-12">
@@ -29,11 +33,13 @@ export function Footer() {
                   Categories
                 </Link>
               </li>
-              <li>
-                <Link href="/results" className="text-white/70 hover:text-[var(--red-primary)] transition-colors">
-                  Results
-                </Link>
-              </li>
+              {appUser?.is_admin && (
+                <li>
+                  <Link href="/results" className="text-white/70 hover:text-[var(--red-primary)] transition-colors">
+                    Results
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
           

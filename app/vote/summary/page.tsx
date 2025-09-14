@@ -87,7 +87,7 @@ const cardVariants = {
 }
 
 export default function VoteSummaryPage() {
-  const { user, loading } = useAuth()
+  const { user, appUser, loading } = useAuth()
   const router = useRouter()
   const [votes, setVotes] = useState<VoteWithDetails[]>([])
   const [ballot, setBallot] = useState<BallotData | null>(null)
@@ -429,12 +429,14 @@ export default function VoteSummaryPage() {
           transition={{ delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
         >
-          <Button asChild variant="premium" size="lg" className="text-lg px-8 py-4">
-            <Link href="/results">
-              <Eye className="mr-2 h-5 w-5" />
-              View Results
-            </Link>
-          </Button>
+          {appUser?.is_admin && (
+            <Button asChild variant="premium" size="lg" className="text-lg px-8 py-4">
+              <Link href="/results">
+                <Eye className="mr-2 h-5 w-5" />
+                View Results
+              </Link>
+            </Button>
+          )}
           
           <Button 
             onClick={handleShare}

@@ -59,10 +59,12 @@ export function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
             </Link>
           )}
-          <Link href="/results" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
-            Results
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
-          </Link>
+          {appUser?.is_admin && (
+            <Link href="/results" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
+              Results
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center space-x-3">
@@ -158,13 +160,15 @@ export function Header() {
                 Vote
               </Link>
             )}
-            <Link 
-              href="/results" 
-              className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Results
-            </Link>
+            {appUser?.is_admin && (
+              <Link 
+                href="/results" 
+                className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Results
+              </Link>
+            )}
             {!user && (
               <Link 
                 href="/login" 

@@ -35,7 +35,7 @@ const itemVariants: Variants = {
 
 
 export default function VotePage() {
-  const { user, loading } = useAuth()
+  const { user, appUser, loading } = useAuth()
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
   const [userVotes, setUserVotes] = useState<any[]>([])
@@ -169,17 +169,19 @@ export default function VotePage() {
                 View Your Votes
               </Link>
             </Button>
-            <Button 
-              asChild 
-              variant="outline" 
-              size="lg"
-              className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-6 text-lg font-semibold rounded-full hover:shadow-[0_0_20px_rgba(229,9,20,0.2)] transition-all duration-300 transform hover:scale-105 font-body"
-            >
-              <Link href="/results">
-                <Trophy className="mr-3 h-6 w-6" />
-                See Results
-              </Link>
-            </Button>
+            {appUser?.is_admin && (
+              <Button 
+                asChild 
+                variant="outline" 
+                size="lg"
+                className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-6 text-lg font-semibold rounded-full hover:shadow-[0_0_20px_rgba(229,9,20,0.2)] transition-all duration-300 transform hover:scale-105 font-body"
+              >
+                <Link href="/results">
+                  <Trophy className="mr-3 h-6 w-6" />
+                  See Results
+                </Link>
+              </Button>
+            )}
           </motion.div>
         </motion.div>
       </div>

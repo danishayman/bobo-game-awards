@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Trophy, Users, Clock, Crown } from 'lucide-react'
+import { Trophy, Users, Clock, Crown, Shield } from 'lucide-react'
 
 interface ResultNominee {
   nominee_id: string
@@ -20,14 +21,22 @@ interface CategoryResult {
 }
 
 export default function ResultsPage() {
-  const { appUser } = useAuth()
+  const { appUser, loading: authLoading } = useAuth()
+  const router = useRouter()
   const [results, setResults] = useState<CategoryResult[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchResults()
-  }, [])
+    // Check if user is authenticated and is admin
+    if (!authLoading) {
+      if (!appUser || !appUser.is_admin) {
+        router.push('/')
+        return
+      }
+      fetchResults()
+    }
+  }, [appUser, authLoading, router])
 
   const fetchResults = async () => {
     try {
@@ -69,14 +78,30 @@ export default function ResultsPage() {
     }
   }
 
-  if (loading) {
+  // Show loading while checking auth or loading results
+  if (authLoading || loading) {
     return (
       <div className="container py-8">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
             <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>Loading results...</p>
+            <p>{authLoading ? 'Checking permissions...' : 'Loading results...'}</p>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show access denied for non-admin users (fallback, should redirect before this)
+  if (!appUser?.is_admin) {
+    return (
+      <div className="container py-8">
+        <div className="text-center space-y-4">
+          <Shield className="h-16 w-16 text-red-400 mx-auto" />
+          <h1 className="text-2xl font-bold">Access Restricted</h1>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Results are only available to administrators. Please contact an admin if you believe this is an error.
+          </p>
         </div>
       </div>
     )
