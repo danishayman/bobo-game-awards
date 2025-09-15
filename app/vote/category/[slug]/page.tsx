@@ -220,7 +220,7 @@ export default function CategoryVotePage() {
               </span>
             </h1>
             <p className="text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
-              Your ballot has been successfully submitted and finalized. Your voice matters in the gaming community!
+              Your votes has been successfully submitted and finalized. Your voice matters in the gaming community!
             </p>
           </motion.div>
           
