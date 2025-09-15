@@ -48,6 +48,7 @@ export default function CategoryVotePage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadingData, setLoadingData] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [justVoted, setJustVoted] = useState(false)
   const [ballot, setBallot] = useState<any>(null)
 
   useEffect(() => {
@@ -111,7 +112,7 @@ export default function CategoryVotePage() {
     }
   }
 
-  const handleVote = async () => {
+  const handleVoteAndNavigate = async () => {
     if (!selectedNominee || !category) return
 
     setSubmitting(true)
@@ -144,13 +145,17 @@ export default function CategoryVotePage() {
       }
 
       setCurrentVote(selectedNominee)
+      setJustVoted(true)
+      
+      // Small delay to show success state
+      await new Promise(resolve => setTimeout(resolve, 800))
       
       // Navigate to next category or back to vote overview
       const nextCategory = allCategories[currentIndex + 1]
       if (nextCategory) {
         router.push(`/vote/category/${nextCategory.slug}`)
       } else {
-        router.push('/vote')
+        router.push('/vote/summary')
       }
     } catch (error) {
       console.error('Error saving vote:', error)
@@ -332,7 +337,10 @@ export default function CategoryVotePage() {
               className={`group relative cursor-pointer animate-slide-in-up ${
                 index < 4 ? `animate-delay-${(index + 1) * 100}` : ''
               }`}
-              onClick={() => setSelectedNominee(nominee.id)}
+              onClick={() => {
+                setSelectedNominee(nominee.id)
+                setJustVoted(false)
+              }}
             >
               {/* Nominee Card */}
               <Card className={`h-full flex flex-col overflow-hidden border-white/20 bg-background-secondary/50 backdrop-blur-sm ${
@@ -420,33 +428,39 @@ export default function CategoryVotePage() {
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 order-1 lg:order-2 w-full lg:w-auto">
+          <div className="flex justify-center order-1 lg:order-2 w-full lg:w-auto">
             <Button
-              onClick={handleVote}
+              onClick={handleVoteAndNavigate}
               disabled={!selectedNominee || submitting}
-              className="min-w-[140px] bg-red-primary hover:bg-red-secondary text-white w-full sm:w-auto"
+              size="lg"
+              className={`min-w-[200px] px-8 py-6 text-lg font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto ${
+                justVoted 
+                  ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_30px_rgba(34,197,94,0.4)]' 
+                  : 'bg-red-primary hover:bg-red-secondary text-white shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)]'
+              }`}
             >
               {submitting ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                  Saving...
+                  <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-3" />
+                  {justVoted ? 'Saved! Going to next...' : 'Saving vote...'}
                 </div>
-              ) : currentVote === selectedNominee ? (
-                'Vote Saved'
+              ) : justVoted ? (
+                <div className="flex items-center justify-center">
+                  <Check className="h-5 w-5 mr-3" />
+                  Vote Saved!
+                </div>
+              ) : nextCategory ? (
+                <div className="flex items-center justify-center">
+                  Next
+                  <ArrowRight className="h-5 w-5 ml-3" />
+                </div>
               ) : (
-                'Save Vote'
+                <div className="flex items-center justify-center">
+                  Finish
+                  <Check className="h-5 w-5 ml-3" />
+                </div>
               )}
             </Button>
-
-            {nextCategory && (
-              <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50 w-full sm:w-auto">
-                <Link href={`/vote/category/${nextCategory.slug}`}>
-                  <span className="hidden sm:inline">{nextCategory.name}</span>
-                  <span className="sm:hidden">Next</span>
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </Button>
-            )}
           </div>
         </div>
       </div>
