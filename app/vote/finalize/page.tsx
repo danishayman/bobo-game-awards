@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -11,7 +11,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -21,7 +21,7 @@ const containerVariants = {
   }
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -34,7 +34,7 @@ const itemVariants = {
 }
 
 export default function FinalizePage() {
-  const { user, appUser, loading } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
   const [finalizing, setFinalizing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -69,9 +69,9 @@ export default function FinalizePage() {
         router.push('/vote')
       }, 2000)
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error finalizing ballot:', error)
-      setError(error.message)
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred')
     } finally {
       setFinalizing(false)
     }
@@ -160,7 +160,7 @@ export default function FinalizePage() {
             </h1>
             
             <p className="text-lg md:text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
-              You're about to finalize your Bobo Gaming Awards 2025 votes. Once finalized, you won't be able to make any changes to your votes.
+              You&rsquo;re about to finalize your Bobo Gaming Awards 2025 votes. Once finalized, you won&rsquo;t be able to make any changes to your votes.
             </p>
           </div>
         </motion.div>

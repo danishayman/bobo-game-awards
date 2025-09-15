@@ -105,13 +105,13 @@ export async function POST(request: NextRequest) {
       ballot,
       votes_count: votes.length
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('💥 Unexpected error in ballot finalization:', error)
     return NextResponse.json(
       { 
         error: 'Internal server error', 
-        details: error?.message || 'Unknown error',
-        stack: process.env.NODE_ENV === 'development' ? error?.stack : undefined
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined
       },
       { status: 500 }
     )

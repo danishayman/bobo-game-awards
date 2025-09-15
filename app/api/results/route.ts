@@ -1,6 +1,30 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
+interface VoteResult {
+  category_id: string
+  category_name: string
+  category_slug: string
+  nominee_id: string
+  nominee_name: string
+  nominee_image_url?: string
+  nominee_description?: string
+  vote_count: number
+}
+
+interface GroupedCategory {
+  category_id: string
+  category_name: string
+  category_slug: string
+  nominees: Array<{
+    nominee_id: string
+    nominee_name: string
+    nominee_image_url?: string
+    nominee_description?: string
+    vote_count: number
+  }>
+}
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -121,7 +145,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Group results by category
-    const groupedResults = data.reduce((acc: any, result: any) => {
+    const groupedResults = data.reduce((acc: Record<string, GroupedCategory>, result: VoteResult) => {
       if (!acc[result.category_id]) {
         acc[result.category_id] = {
           category_id: result.category_id,

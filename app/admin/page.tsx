@@ -10,10 +10,34 @@ import { useAuth } from '@/lib/auth/auth-context'
 import { Settings, Users, Trophy, BarChart3, Plus, Edit } from 'lucide-react'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 
+interface Nominee {
+  id: string
+  name: string
+  vote_count?: number
+}
+
+interface Category {
+  id: string
+  name: string
+  slug: string
+  description: string
+  is_active: boolean
+  display_order: number
+  nominees?: Nominee[]
+}
+
+interface ResultNominee {
+  vote_count: number
+}
+
+interface ResultCategory {
+  nominees: ResultNominee[]
+}
+
 export default function AdminDashboard() {
   const { appUser, loading } = useAuth()
   const router = useRouter()
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [stats, setStats] = useState({
     totalVotes: 0,
     totalUsers: 0,
@@ -48,12 +72,12 @@ export default function AdminDashboard() {
       // Calculate stats
       const totalCategories = categoriesData.categories?.length || 0
       const totalNominees = categoriesData.categories?.reduce(
-        (sum: number, cat: any) => sum + (cat.nominees?.length || 0), 0
+        (sum: number, cat: Category) => sum + (cat.nominees?.length || 0), 0
       ) || 0
       
       const totalVotes = resultsData.results?.reduce(
-        (sum: number, cat: any) => sum + cat.nominees.reduce(
-          (catSum: number, nom: any) => catSum + nom.vote_count, 0
+        (sum: number, cat: ResultCategory) => sum + cat.nominees.reduce(
+          (catSum: number, nom: ResultNominee) => catSum + nom.vote_count, 0
         ), 0
       ) || 0
 
@@ -80,7 +104,7 @@ export default function AdminDashboard() {
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold">Access Denied</h1>
           <p className="text-muted-foreground">
-            You don't have permission to access the admin dashboard.
+            You don&rsquo;t have permission to access the admin dashboard.
           </p>
         </div>
       </div>

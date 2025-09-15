@@ -14,16 +14,14 @@ import {
   Trophy, 
   Vote, 
   Calendar, 
-  Share2, 
-  Download,
-  ExternalLink,
   Clock,
   Star,
   Medal,
-  ChevronRight,
-  Eye
+  ChevronRight
 } from 'lucide-react'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
+import { Category } from '@/lib/types/database'
+import Image from 'next/image'
 
 interface VoteWithDetails {
   id: string
@@ -59,17 +57,6 @@ const containerVariants = {
   }
 }
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  }
-}
-
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: {
@@ -88,12 +75,12 @@ const cardVariants = {
 }
 
 export default function VoteSummaryPage() {
-  const { user, appUser, loading } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
   const [votes, setVotes] = useState<VoteWithDetails[]>([])
   const [ballot, setBallot] = useState<BallotData | null>(null)
   const [loadingData, setLoadingData] = useState(true)
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [finalizing, setFinalizing] = useState(false)
 
   useEffect(() => {
@@ -148,32 +135,14 @@ export default function VoteSummaryPage() {
       // Refresh data to show updated ballot status
       await fetchData()
       router.push('/vote')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error finalizing ballot:', error)
       
       // Show more detailed error information
-      const errorMessage = error.message || 'Failed to finalize ballot. Please try again.'
+      const errorMessage = error instanceof Error ? error.message : 'Failed to finalize ballot. Please try again.'
       alert(`Failed to finalize ballot: ${errorMessage}`)
     } finally {
       setFinalizing(false)
-    }
-  }
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My Gaming Awards 2024 Ballot',
-          text: `I've cast my votes for the Gaming Awards 2024! Check out the results.`,
-          url: window.location.origin + '/results'
-        })
-      } catch (error) {
-        console.log('Error sharing:', error)
-      }
-    } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(window.location.origin + '/results')
-      alert('Results link copied to clipboard!')
     }
   }
 
@@ -204,7 +173,7 @@ export default function VoteSummaryPage() {
               </div>
               <h1 className="text-3xl font-bold text-white">No Votes Yet</h1>
               <p className="text-white/70 text-lg">
-                You haven't cast any votes yet. Start voting to see your ballot summary here.
+                You haven&rsquo;t cast any votes yet. Start voting to see your ballot summary here.
               </p>
             </motion.div>
             
@@ -228,7 +197,6 @@ export default function VoteSummaryPage() {
 
   const totalCategories = categories.length
   const votedCategories = votes.length
-  const completionPercentage = totalCategories > 0 ? (votedCategories / totalCategories) * 100 : 0
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-background-secondary">
@@ -263,7 +231,7 @@ export default function VoteSummaryPage() {
             variants={containerVariants}
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            {votes.map((vote, index) => {
+            {votes.map((vote) => {
               const IconComponent = getCategoryIcon(vote.categories.name)
               
               return (
@@ -304,9 +272,11 @@ export default function VoteSummaryPage() {
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
                         <div className="flex items-center gap-3">
                           {vote.nominees.image_url && (
-                            <img 
+                            <Image 
                               src={vote.nominees.image_url} 
                               alt={vote.nominees.name}
+                              width={48}
+                              height={48}
                               className="w-12 h-12 rounded-lg object-cover bg-white/10"
                             />
                           )}
@@ -365,9 +335,9 @@ export default function VoteSummaryPage() {
                   Ready to Finalize Your Votes?
                 </CardTitle>
                 <CardDescription className="text-orange-300 text-center">
-                  Once you finalize, you won't be able to make any changes to your votes.
+                  Once you finalize, you won&rsquo;t be able to make any changes to your votes.
                   {votedCategories < totalCategories && (
-                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you're satisfied with your current choices.`
+                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you&rsquo;re satisfied with your current choices.`
                   )}
                 </CardDescription>
               </CardHeader>

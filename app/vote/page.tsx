@@ -7,7 +7,7 @@ import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Category } from '@/lib/types/database'
+import { Category, Vote as VoteType, Ballot } from '@/lib/types/database'
 import { CheckCircle, Vote, Target, Award, Star, Trophy } from 'lucide-react'
 import Image from 'next/image'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
@@ -39,8 +39,8 @@ export default function VotePage() {
   const { user, appUser, loading } = useAuth()
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
-  const [userVotes, setUserVotes] = useState<any[]>([])
-  const [ballot, setBallot] = useState<any>(null)
+  const [userVotes, setUserVotes] = useState<VoteType[]>([])
+  const [ballot, setBallot] = useState<Ballot | null>(null)
   const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {

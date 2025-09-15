@@ -7,10 +7,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
-import { CategoryWithNominees, Nominee } from '@/lib/types/database'
+import { CategoryWithNominees, Nominee, Category, Ballot } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 
@@ -45,12 +45,12 @@ export default function CategoryVotePage() {
   const [category, setCategory] = useState<CategoryWithNominees | null>(null)
   const [selectedNominee, setSelectedNominee] = useState<string | null>(null)
   const [currentVote, setCurrentVote] = useState<string | null>(null)
-  const [allCategories, setAllCategories] = useState<any[]>([])
+  const [allCategories, setAllCategories] = useState<Category[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadingData, setLoadingData] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [justVoted, setJustVoted] = useState(false)
-  const [ballot, setBallot] = useState<any>(null)
+  const [ballot, setBallot] = useState<Ballot | null>(null)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -103,7 +103,7 @@ export default function CategoryVotePage() {
       }
 
       // Find current category index
-      const index = (allCategoriesData.categories || []).findIndex((cat: any) => cat.slug === slug) ?? 0
+      const index = (allCategoriesData.categories || []).findIndex((cat: Category) => cat.slug === slug) ?? 0
       setCurrentIndex(index)
     } catch (error) {
       console.error('Error fetching data:', error)
