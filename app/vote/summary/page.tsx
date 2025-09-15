@@ -240,14 +240,10 @@ export default function VoteSummaryPage() {
           className="text-center space-y-6"
         >
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-primary/30 bg-red-primary/10 text-red-primary text-sm font-semibold">
-              <Trophy className="w-4 h-4" />
-              Your Gaming Awards 2024 Ballot
-            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white">Vote Summary</h1>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
               {ballot?.is_final 
-                ? "Your finalized ballot for the Gaming Awards 2024" 
+                ? "Your finalized votes for the Bobo Gaming Awards 2025" 
                 : "Review your current votes before finalizing"
               }
             </p>

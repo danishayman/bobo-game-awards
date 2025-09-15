@@ -160,7 +160,7 @@ export default function FinalizePage() {
             </h1>
             
             <p className="text-lg md:text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
-              You're about to finalize your Gaming Awards 2024 ballot. Once finalized, you won't be able to make any changes to your votes.
+              You're about to finalize your Bobo Gaming Awards 2025 votes. Once finalized, you won't be able to make any changes to your votes.
             </p>
           </div>
         </motion.div>

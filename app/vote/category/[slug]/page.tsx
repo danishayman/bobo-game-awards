@@ -206,7 +206,7 @@ export default function CategoryVotePage() {
           
           <motion.div variants={itemVariants} className="space-y-6">
             <CheckCircle className="h-20 w-20 text-green-500 mx-auto drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]" />
-            <h1 className="text-5xl md:text-6xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
               <span className="bg-gradient-to-r from-green-300 via-green-200 to-green-400 bg-clip-text text-transparent">
                 Thank You!
               </span>
@@ -306,13 +306,13 @@ export default function CategoryVotePage() {
           <div className="text-center space-y-6 mb-12">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-in-up">
               <Trophy className="h-8 w-8 sm:h-12 sm:w-12 text-red-primary" />
-              <h1 className="text-responsive-title font-bold bg-gradient-to-r from-white via-white to-red-primary bg-clip-text text-transparent text-center sm:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight leading-none bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent text-center sm:text-left" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                 {category.name.toUpperCase()}
               </h1>
             </div>
             
             {category.description && (
-              <p className="text-foreground-muted text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed font-body">
                 {category.description}
               </p>
             )}
