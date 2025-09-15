@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Trophy, Users, Clock, Crown, Shield } from 'lucide-react'
+import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 interface ResultNominee {
   nominee_id: string
@@ -80,16 +81,7 @@ export default function ResultsPage() {
 
   // Show loading while checking auth or loading results
   if (authLoading || loading) {
-    return (
-      <div className="container py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>{authLoading ? 'Checking permissions...' : 'Loading results...'}</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="results" />
   }
 
   // Show access denied for non-admin users (fallback, should redirect before this)

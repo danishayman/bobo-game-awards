@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function StartVotingPage() {
   const { user, loading } = useAuth()
@@ -80,10 +81,7 @@ export default function StartVotingPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <div className="relative">
-            <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
-            <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
-          </div>
+          <Skeleton className="h-12 w-12 rounded-full mx-auto" />
         </motion.div>
         
         <motion.div 

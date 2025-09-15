@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { CategoryWithNominees, Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
+import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -174,16 +175,7 @@ export default function CategoryVotePage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div className="container py-8 justify-items-center">
-        <div className="flex items-center justify-items-center min-h-[400px]">
-          <div className="text-center space-y-4 justify-items-center">
-            <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>Loading category...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="category-vote" />
   }
 
   // If ballot is finalized, show thank you page

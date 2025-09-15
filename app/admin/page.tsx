@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Settings, Users, Trophy, BarChart3, Plus, Edit } from 'lucide-react'
+import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 export default function AdminDashboard() {
   const { appUser, loading } = useAuth()
@@ -70,16 +71,7 @@ export default function AdminDashboard() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div className="container py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>Loading admin dashboard...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="admin-dashboard" />
   }
 
   if (!appUser?.is_admin) {

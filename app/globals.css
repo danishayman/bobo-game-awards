@@ -195,3 +195,13 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Skeleton loading shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

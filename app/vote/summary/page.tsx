@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Eye
 } from 'lucide-react'
+import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 interface VoteWithDetails {
   id: string
@@ -93,6 +94,7 @@ export default function VoteSummaryPage() {
   const [ballot, setBallot] = useState<BallotData | null>(null)
   const [loadingData, setLoadingData] = useState(true)
   const [categories, setCategories] = useState<any[]>([])
+  const [finalizing, setFinalizing] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -127,6 +129,36 @@ export default function VoteSummaryPage() {
     }
   }
 
+  const handleFinalize = async () => {
+    setFinalizing(true)
+    try {
+      const response = await fetch('/api/ballot/finalize', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.error('API Error:', data)
+        throw new Error(data.error || 'Failed to finalize ballot')
+      }
+
+      console.log('✅ Ballot finalized successfully:', data)
+      
+      // Refresh data to show updated ballot status
+      await fetchData()
+      router.push('/vote')
+    } catch (error: any) {
+      console.error('Error finalizing ballot:', error)
+      
+      // Show more detailed error information
+      const errorMessage = error.message || 'Failed to finalize ballot. Please try again.'
+      alert(`Failed to finalize ballot: ${errorMessage}`)
+    } finally {
+      setFinalizing(false)
+    }
+  }
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -154,20 +186,7 @@ export default function VoteSummaryPage() {
   }
 
   if (loading || loadingData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-6">
-          <div className="relative">
-            <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
-            <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-xl font-semibold text-white">Loading Your Ballot</h3>
-            <p className="text-white/60">Gathering your votes...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="vote-summary" />
   }
 
   if (votes.length === 0) {
@@ -235,83 +254,6 @@ export default function VoteSummaryPage() {
           </div>
         </motion.div>
 
-        {/* Ballot Status */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className={`border-2 ${ballot?.is_final 
-            ? 'border-green-500/50 bg-gradient-to-r from-green-500/10 to-green-600/10' 
-            : 'border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10'
-          }`}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl ${ballot?.is_final 
-                    ? 'bg-green-500/20 text-green-400' 
-                    : 'bg-orange-500/20 text-orange-400'
-                  }`}>
-                    {ballot?.is_final ? <CheckCircle className="h-6 w-6" /> : <Clock className="h-6 w-6" />}
-                  </div>
-                  <div>
-                    <CardTitle className="text-white text-xl">
-                      {ballot?.is_final ? 'Ballot Finalized' : 'Ballot in Progress'}
-                    </CardTitle>
-                    <CardDescription className="text-white/70">
-                      {ballot?.is_final 
-                        ? `Submitted on ${new Date(ballot.submitted_at!).toLocaleDateString()}`
-                        : `${votedCategories} of ${totalCategories} categories completed`
-                      }
-                    </CardDescription>
-                  </div>
-                </div>
-                <Badge 
-                  variant={ballot?.is_final ? "success" : "secondary"} 
-                  className="text-sm px-3 py-1"
-                >
-                  {ballot?.is_final ? 'Final' : 'Draft'}
-                </Badge>
-              </div>
-              
-              {!ballot?.is_final && (
-                <div className="mt-4">
-                  <div className="flex items-center justify-between text-sm text-white/70 mb-2">
-                    <span>Progress</span>
-                    <span>{Math.round(completionPercentage)}%</span>
-                  </div>
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div 
-                      className="bg-gradient-to-r from-red-primary to-red-secondary h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${completionPercentage}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </CardHeader>
-            
-            {!ballot?.is_final && (
-              <CardContent>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button asChild variant="outline" size="sm">
-                    <Link href="/vote">
-                      <Vote className="mr-2 h-4 w-4" />
-                      Continue Voting
-                    </Link>
-                  </Button>
-                  {votes.length > 0 && (
-                    <Button asChild variant="premium" size="sm">
-                      <Link href="/vote/finalize">
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Finalize Ballot
-                      </Link>
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            )}
-          </Card>
-        </motion.div>
 
         {/* Your Votes */}
         <motion.div 
@@ -320,15 +262,6 @@ export default function VoteSummaryPage() {
           variants={containerVariants}
           className="space-y-6"
         >
-          <motion.div variants={itemVariants} className="text-center">
-            <h2 className="text-3xl font-bold text-white mb-2">Your Votes</h2>
-            <p className="text-white/60">
-              {ballot?.is_final 
-                ? "Your final selections for each category"
-                : "Your current selections - you can still make changes"
-              }
-            </p>
-          </motion.div>
           
           <motion.div 
             variants={containerVariants}
@@ -422,48 +355,65 @@ export default function VoteSummaryPage() {
           </motion.div>
         </motion.div>
 
-        {/* Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
-        >
-          {appUser?.is_admin && (
-            <Button asChild variant="premium" size="lg" className="text-lg px-8 py-4">
-              <Link href="/results">
-                <Eye className="mr-2 h-5 w-5" />
-                View Results
-              </Link>
-            </Button>
-          )}
-          
-          <Button 
-            onClick={handleShare}
-            variant="outline" 
-            size="lg" 
-            className="text-lg px-8 py-4"
+
+        {/* Finalize Ballot Section */}
+        {!ballot?.is_final && votes.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
           >
-            <Share2 className="mr-2 h-5 w-5" />
-            Share Ballot
-          </Button>
-          
-          {!ballot?.is_final && (
-            <Button asChild variant="ghost" size="lg" className="text-lg px-8 py-4">
-              <Link href="/vote">
-                <Vote className="mr-2 h-5 w-5" />
-                Back to Voting
-              </Link>
-            </Button>
-          )}
-        </motion.div>
+            <Card className="border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
+              <CardHeader>
+                <CardTitle className="text-orange-200 text-xl text-center">
+                  Ready to Finalize Your Votes?
+                </CardTitle>
+                <CardDescription className="text-orange-300 text-center">
+                  Once you finalize your ballot, you won't be able to make any changes to your votes.
+                  {votedCategories < totalCategories && (
+                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you're satisfied with your current choices.`
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/vote">
+                      <Vote className="mr-2 h-5 w-5" />
+                      Continue Voting
+                    </Link>
+                  </Button>
+                  <Button 
+                    onClick={handleFinalize}
+                    disabled={finalizing}
+                    variant="premium"
+                    size="lg"
+                    className="bg-orange-600 hover:bg-orange-700"
+                  >
+                    {finalizing ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                        Finalizing Votes...
+                      </div>
+                    ) : (
+                      <>
+                        <CheckCircle className="mr-2 h-5 w-5" />
+                        Finalize Votes
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Missing Categories Alert */}
         {!ballot?.is_final && votedCategories < totalCategories && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
           >
             <Alert className="border-orange-500/50 bg-orange-500/10">
               <Clock className="h-4 w-4 text-orange-400" />

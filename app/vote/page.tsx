@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/auth/auth-context'
 import { Category } from '@/lib/types/database'
 import { CheckCircle, Vote, Target, Award, Star, Trophy } from 'lucide-react'
 import Image from 'next/image'
+import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -79,46 +80,7 @@ export default function VotePage() {
 
 
   if (loading || loadingData) {
-    return (
-      <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
-        <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-red-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        
-        <motion.div 
-          className="relative text-center space-y-8 px-6 max-w-md mx-auto"
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants} className="flex justify-center">
-            <div className="relative w-20 h-20">
-              <Image
-                src="/logo.webp"
-                alt="Bobo Game Awards Logo"
-                fill
-                className="object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-              />
-            </div>
-          </motion.div>
-          
-          <motion.div variants={itemVariants}>
-            <div className="relative">
-              <div className="animate-spin h-12 w-12 border-2 border-red-primary border-t-transparent rounded-full mx-auto" />
-              <div className="absolute inset-0 h-12 w-12 border-2 border-red-primary/20 rounded-full mx-auto"></div>
-            </div>
-          </motion.div>
-          
-          <motion.div variants={itemVariants} className="space-y-2">
-            <h3 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-              Loading Your Voting Dashboard
-            </h3>
-            <p className="text-white/60 font-body">Preparing categories and your voting progress...</p>
-          </motion.div>
-        </motion.div>
-      </div>
-    )
+    return <PageSkeleton variant="vote-dashboard" />
   }
 
   if (ballot?.is_final) {
@@ -317,7 +279,7 @@ export default function VotePage() {
                       size="lg"
                       className="bg-red-primary hover:bg-red-secondary text-white px-6 py-3 rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 font-body"
                     >
-                      <Link href="/vote/finalize">
+                      <Link href="/vote/summary">
                         <Award className="mr-2 h-5 w-5" />
                         Finalize Ballot
                       </Link>
