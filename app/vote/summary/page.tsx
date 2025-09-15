@@ -330,7 +330,7 @@ export default function VoteSummaryPage() {
                       <div className="flex items-center justify-between text-sm text-white/60">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4" />
-                          <span>Voted {new Date(vote.created_at).toLocaleDateString()}</span>
+                          <span>Voted {new Date(vote.created_at).toLocaleDateString('en-GB')}</span>
                         </div>
                         
                         {!ballot?.is_final && (
@@ -369,7 +369,7 @@ export default function VoteSummaryPage() {
                   Ready to Finalize Your Votes?
                 </CardTitle>
                 <CardDescription className="text-orange-300 text-center">
-                  Once you finalize your ballot, you won't be able to make any changes to your votes.
+                  Once you finalize, you won't be able to make any changes to your votes.
                   {votedCategories < totalCategories && (
                     ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you're satisfied with your current choices.`
                   )}
