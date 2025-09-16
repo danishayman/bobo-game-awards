@@ -3,11 +3,20 @@
 
 export const VOTING_CONFIG = {
   // Set your voting deadline here
-  // Format: YYYY-MM-DD HH:MM:SS in UTC
-  GLOBAL_VOTING_DEADLINE: new Date('2025-09-20T23:59:59Z'), // Example: January 15, 2025 at 11:59 PM UTC
+  // This is the deadline in GMT+8 time - the system will convert it properly
+  // Format: YYYY-MM-DD HH:MM:SS (this will be interpreted as GMT+8 time)
+  DEADLINE_YEAR: 2025,
+  DEADLINE_MONTH: 9, // September (1-12)
+  DEADLINE_DAY: 20,
+  DEADLINE_HOUR: 23, // 11 PM
+  DEADLINE_MINUTE: 59,
+  DEADLINE_SECOND: 59,
   
-  // Timezone for display (optional - used for user-friendly display)
-  DISPLAY_TIMEZONE: 'GMT+8',
+  // Timezone offset from UTC (GMT+8 = +8 hours)
+  TIMEZONE_OFFSET_HOURS: 8,
+  
+  // Timezone for display
+  DISPLAY_TIMEZONE: 'Asia/Singapore', // More specific than 'GMT+8'
   
   // Enable/disable the countdown globally
   COUNTDOWN_ENABLED: true,
@@ -17,18 +26,35 @@ export const VOTING_CONFIG = {
 } as const;
 
 /**
+ * Get the voting deadline as a Date object in GMT+8
+ */
+function getGMT8Deadline(): Date {
+  // Create the deadline in GMT+8 by subtracting the offset from UTC
+  const utcDeadline = new Date(Date.UTC(
+    VOTING_CONFIG.DEADLINE_YEAR,
+    VOTING_CONFIG.DEADLINE_MONTH - 1, // Month is 0-indexed in Date
+    VOTING_CONFIG.DEADLINE_DAY,
+    VOTING_CONFIG.DEADLINE_HOUR - VOTING_CONFIG.TIMEZONE_OFFSET_HOURS, // Subtract 8 hours to convert GMT+8 to UTC
+    VOTING_CONFIG.DEADLINE_MINUTE,
+    VOTING_CONFIG.DEADLINE_SECOND
+  ));
+  
+  return utcDeadline;
+}
+
+/**
  * Check if voting is currently active (before the global deadline)
  */
 export function isVotingActive(): boolean {
   const now = new Date();
-  return now < VOTING_CONFIG.GLOBAL_VOTING_DEADLINE;
+  return now < getGMT8Deadline();
 }
 
 /**
  * Get the global voting deadline
  */
 export function getVotingDeadline(): Date {
-  return VOTING_CONFIG.GLOBAL_VOTING_DEADLINE;
+  return getGMT8Deadline();
 }
 
 /**
@@ -42,7 +68,7 @@ export function getTimeRemaining(): {
   total: number;
 } {
   const now = new Date().getTime();
-  const deadline = VOTING_CONFIG.GLOBAL_VOTING_DEADLINE.getTime();
+  const deadline = getGMT8Deadline().getTime();
   const distance = deadline - now;
 
   if (distance < 0) {
@@ -58,10 +84,10 @@ export function getTimeRemaining(): {
 }
 
 /**
- * Format the deadline for display
+ * Format the deadline for display in GMT+8
  */
 export function formatDeadlineForDisplay(): string {
-  return VOTING_CONFIG.GLOBAL_VOTING_DEADLINE.toLocaleString('en-US', {
+  return getGMT8Deadline().toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -70,4 +96,19 @@ export function formatDeadlineForDisplay(): string {
     timeZoneName: 'short',
     timeZone: VOTING_CONFIG.DISPLAY_TIMEZONE,
   });
+}
+
+/**
+ * Get a user-friendly description of the deadline
+ */
+export function getDeadlineDescription(): string {
+  return `${VOTING_CONFIG.DEADLINE_DAY} ${getMonthName(VOTING_CONFIG.DEADLINE_MONTH)} ${VOTING_CONFIG.DEADLINE_YEAR} at ${VOTING_CONFIG.DEADLINE_HOUR.toString().padStart(2, '0')}:${VOTING_CONFIG.DEADLINE_MINUTE.toString().padStart(2, '0')} GMT+8`;
+}
+
+function getMonthName(month: number): string {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return months[month - 1];
 }
