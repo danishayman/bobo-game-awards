@@ -114,7 +114,7 @@ export default function FinalizePage() {
               </span>
             </h1>
             <p className="text-xl text-white/80 max-w-xl mx-auto leading-relaxed font-body">
-              Your votes have been successfully submitted and finalized. Thank you for participating in the Gaming Awards 2024!
+              Your votes have been successfully submitted and finalized. Thank you for participating in the Gaming Awards 2025!
             </p>
           </motion.div>
           

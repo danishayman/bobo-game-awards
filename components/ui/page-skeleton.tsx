@@ -28,7 +28,7 @@ const itemVariants: Variants = {
 }
 
 interface PageSkeletonProps {
-  variant: 'vote-dashboard' | 'vote-summary' | 'category-vote' | 'admin-dashboard' | 'results' | 'finalize'
+  variant: 'vote-dashboard' | 'vote-summary' | 'category-vote' | 'admin-dashboard' | 'results' | 'finalize' | 'nominees'
   className?: string
 }
 
@@ -393,6 +393,72 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
             </div>
           </CardContent>
         </Card>
+      </div>
+    )
+  }
+
+  if (variant === 'nominees') {
+    return (
+      <div className={cn("container py-8 space-y-8", className)}>
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <SkeletonPulse className="h-12 w-96 mx-auto" variant="shimmer" />
+          <SkeletonPulse className="h-6 w-[32rem] mx-auto" variant="shimmer" />
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i} className="border-white/20">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <SkeletonPulse className="h-4 w-24" variant="shimmer" />
+                <SkeletonPulse className="w-4 h-4 rounded" variant="shimmer" />
+              </CardHeader>
+              <CardContent>
+                <SkeletonPulse className="h-8 w-16 mb-2" variant="shimmer" />
+                <SkeletonPulse className="h-3 w-20" variant="shimmer" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Categories and Nominees */}
+        <div className="space-y-12">
+          {[...Array(3)].map((_, categoryIndex) => (
+            <div key={categoryIndex} className="space-y-6">
+              {/* Category Header */}
+              <div className="text-center space-y-2">
+                <div className="flex items-center justify-center gap-3">
+                  <SkeletonPulse className="h-8 w-8 rounded" variant="shimmer" />
+                  <SkeletonPulse className="h-8 w-64" variant="shimmer" />
+                </div>
+                <SkeletonPulse className="h-5 w-96 mx-auto" variant="shimmer" />
+                <div className="flex items-center justify-center gap-4">
+                  <SkeletonPulse className="h-4 w-20" variant="shimmer" />
+                  <SkeletonPulse className="h-4 w-1" variant="shimmer" />
+                  <SkeletonPulse className="h-4 w-32" variant="shimmer" />
+                </div>
+              </div>
+
+              {/* Nominees Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <CardSkeleton variant="nominee" count={6} />
+              </div>
+
+              {/* Divider */}
+              {categoryIndex !== 2 && (
+                <div className="flex items-center justify-center pt-8">
+                  <SkeletonPulse className="w-32 h-px" variant="shimmer" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="text-center pt-8">
+          <SkeletonPulse className="h-4 w-80 mx-auto" variant="shimmer" />
+        </div>
       </div>
     )
   }

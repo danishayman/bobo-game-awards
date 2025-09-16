@@ -53,6 +53,10 @@ export function Header() {
             Home
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
+          <Link href="/nominees" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
+            Nominees
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
+          </Link>
           {user && (
             <Link href="/vote" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
               Vote
@@ -150,6 +154,13 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
+            </Link>
+            <Link 
+              href="/nominees" 
+              className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Nominees
             </Link>
             {user && (
               <Link 

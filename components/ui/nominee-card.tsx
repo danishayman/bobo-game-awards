@@ -40,6 +40,7 @@ export function NomineeCard({
         className={cn(
           "group relative overflow-hidden cursor-pointer transition-all duration-300 border-white/20",
           "hover:border-red-primary/50 hover:shadow-[0_0_30px_rgba(229,9,20,0.3)]",
+          "h-full flex flex-col", // Make card full height and use flexbox
           isSelected && [
             "ring-2 ring-red-primary border-red-primary",
             showGlow && "shadow-[0_0_40px_rgba(229,9,20,0.5)]"
@@ -86,7 +87,7 @@ export function NomineeCard({
           </div>
         )}
 
-        <CardHeader className={cn("relative", !imageUrl && "pt-8")}>
+        <CardHeader className={cn("relative flex-grow flex flex-col justify-between", !imageUrl && "pt-8")}>
           {/* Premium Accent Line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-1 transition-all duration-300",
@@ -97,24 +98,24 @@ export function NomineeCard({
                 : "bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100"
           )} />
 
-          <div className="flex items-start justify-between">
-            <div className="flex-1 space-y-2">
+          <div className="flex items-start justify-between h-full">
+            <div className="flex-1 space-y-2 min-h-0">
               <CardTitle className={cn(
-                "text-xl font-bold leading-tight transition-colors duration-200",
+                "text-xl font-bold leading-tight transition-colors duration-200 line-clamp-2",
                 isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
               )}>
                 {name}
               </CardTitle>
               
               {description && (
-                <CardDescription className="text-white/70 leading-relaxed">
+                <CardDescription className="text-white/70 leading-relaxed line-clamp-3">
                   {description}
                 </CardDescription>
               )}
             </div>
 
             {/* Star Rating Placeholder */}
-            <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
