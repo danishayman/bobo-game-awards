@@ -7,8 +7,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LoadingWrapper } from "@/components/ui/loading-wrapper";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
-import { CountdownBanner } from "@/components/ui/countdown-banner";
-import { getVotingDeadline, VOTING_CONFIG } from "@/lib/config/voting";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,12 +77,6 @@ export default function RootLayout({
             <LoadingWrapper>
               <ServiceWorkerRegister />
               <Header />
-              {VOTING_CONFIG.COUNTDOWN_ENABLED && (
-                <CountdownBanner 
-                  deadline={getVotingDeadline()}
-                  title="VOTING ENDS IN"
-                />
-              )}
               <main className="flex-1 justify-items-center">
                 {children}
               </main>

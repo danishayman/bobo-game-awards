@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Vote } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { isVotingActive } from "@/lib/config/voting";
+import { isVotingActive, getVotingDeadline, VOTING_CONFIG } from "@/lib/config/voting";
 import { useEffect, useState } from "react";
+import { CountdownBanner } from "@/components/ui/countdown-banner";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -61,7 +62,14 @@ export default function Home() {
   }
 
   return (
-    <div className="flex items-center justify-center relative overflow-hidden py-20">
+    <>
+      {VOTING_CONFIG.COUNTDOWN_ENABLED && (
+        <CountdownBanner 
+          deadline={getVotingDeadline()}
+          title="VOTING ENDS IN"
+        />
+      )}
+      <div className="flex items-center justify-center relative overflow-hidden py-20">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
       <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
@@ -144,6 +152,7 @@ export default function Home() {
           )}
         </motion.div>
       </motion.div>
-    </div>
+      </div>
+    </>
   );
 }
