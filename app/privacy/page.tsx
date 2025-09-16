@@ -33,7 +33,7 @@ const privacySections = [
     icon: Database,
     title: "Information We Collect",
     content: [
-      "When you sign in with Google, Twitch, or Discord, we collect your display name, email address, and profile picture.",
+      "When you sign in with Google or Twitch, we collect your display name, email address, and profile picture.",
       "We collect voting data including your game preferences and category selections.",
       "We automatically collect technical information such as IP address, browser type, and device information for security and analytics purposes.",
       "We may collect additional information you voluntarily provide when contacting us or participating in community features."
@@ -220,10 +220,6 @@ export default function PrivacyPage() {
               <li className="flex items-start">
                 <span className="text-red-primary mr-3 mt-2">•</span>
                 <span><strong className="text-white">Twitch OAuth:</strong> For Twitch sign-in authentication</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red-primary mr-3 mt-2">•</span>
-                <span><strong className="text-white">Discord OAuth:</strong> For Discord sign-in authentication</span>
               </li>
             </ul>
           </div>
