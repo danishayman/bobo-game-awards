@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Category, Vote as VoteType, Ballot } from '@/lib/types/database'
-import { CheckCircle, Vote, Target, Award, Star, Trophy } from 'lucide-react'
+import { CheckCircle, Vote, Target, Award, Star, Trophy, AlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
+import { isVotingActive } from '@/lib/config/voting'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -42,8 +43,12 @@ export default function VotePage() {
   const [userVotes, setUserVotes] = useState<VoteType[]>([])
   const [ballot, setBallot] = useState<Ballot | null>(null)
   const [loadingData, setLoadingData] = useState(true)
+  const [votingActive, setVotingActive] = useState(true)
 
   useEffect(() => {
+    // Check if voting is still active
+    setVotingActive(isVotingActive())
+    
     if (!loading && !user) {
       router.push('/login')
       return
@@ -81,6 +86,69 @@ export default function VotePage() {
 
   if (loading || loadingData) {
     return <PageSkeleton variant="vote-dashboard" />
+  }
+
+  // Show voting ended message if voting is no longer active
+  if (!votingActive) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center py-8">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <motion.div 
+            className="text-center space-y-8"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <div className="relative w-20 h-20">
+                <Image
+                  src="/logo.webp"
+                  alt="Bobo Game Awards Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="space-y-6">
+              <AlertTriangle className="h-16 w-16 text-red-500 mx-auto" />
+              <h1 className="text-4xl md:text-5xl font-bold text-red-500" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                Voting Has Ended
+              </h1>
+              <p className="text-lg text-foreground-muted max-w-xl mx-auto">
+                The voting period has concluded. Thank you for your interest in the Bobo Game Awards!
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                asChild 
+                size="lg" 
+                className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
+              >
+                <Link href="/">
+                  <Star className="mr-2 h-5 w-5" />
+                  Back to Home
+                </Link>
+              </Button>
+              {appUser?.is_admin && (
+                <Button 
+                  asChild 
+                  variant="outline" 
+                  size="lg"
+                  className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-3 font-semibold"
+                >
+                  <Link href="/results">
+                    <Trophy className="mr-2 h-5 w-5" />
+                    See Results
+                  </Link>
+                </Button>
+              )}
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    )
   }
 
   if (ballot?.is_final) {

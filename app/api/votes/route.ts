@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { validateVotingPeriod } from '@/lib/utils/voting-protection'
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,6 +49,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check global voting deadline first
+    const votingValidation = validateVotingPeriod();
+    if (!votingValidation.isActive) {
+      return votingValidation.response!;
+    }
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 

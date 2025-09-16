@@ -1,14 +1,51 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
+import { isVotingActive } from '@/lib/config/voting'
 
 export async function middleware(request: NextRequest) {
-  // Handle auth session updates
+  // Handle auth session updates first
   const response = await updateSession(request)
   
-  // Add any additional middleware logic here
-  // For example, role-based route protection
+  // Check if this is a voting-related route and if voting has ended
+  const { pathname } = request.nextUrl
+  
+  // Protect voting routes when voting has ended
+  if (!isVotingActive() && isVotingRoute(pathname)) {
+    // For API routes, return JSON error
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { 
+          error: 'Voting has ended',
+          message: 'The global voting period has concluded. No new votes can be submitted.',
+          code: 'VOTING_ENDED'
+        },
+        { status: 403 }
+      );
+    }
+    
+    // For page routes, redirect to results or home with a message
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    url.searchParams.set('message', 'voting-ended')
+    return NextResponse.redirect(url)
+  }
   
   return response
+}
+
+/**
+ * Check if the current route is voting-related
+ */
+function isVotingRoute(pathname: string): boolean {
+  const votingPaths = [
+    '/vote',
+    '/api/votes',
+    '/api/ballot/finalize',
+  ];
+  
+  return votingPaths.some(path => 
+    pathname === path || pathname.startsWith(path + '/')
+  );
 }
 
 export const config = {
