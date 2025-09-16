@@ -143,7 +143,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const signOutPromise = supabase.auth.signOut()
       
       // Race between sign-out and timeout
-      const { error } = await Promise.race([signOutPromise, timeoutPromise]) as any
+      const result = await Promise.race([signOutPromise, timeoutPromise])
+      const { error } = result as { error: Error | null }
       
       if (error) throw error
       
