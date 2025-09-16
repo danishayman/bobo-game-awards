@@ -283,13 +283,27 @@ export default function CategoryVotePage() {
 
   const { prevCategory, nextCategory } = getNavigationInfo()
 
-  // Dynamic grid calculation based on nominee count - optimized for smaller cards
-  const getGridCols = (count: number) => {
-    if (count <= 2) return 'grid-cols-2 sm:grid-cols-2 md:grid-cols-2'
-    if (count <= 3) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-3'
-    if (count <= 4) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
-    if (count <= 6) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
-    return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+  // Dynamic layout calculation based on nominee count - responsive and centered for single cards
+  const getLayoutClasses = (count: number) => {
+    if (count === 1) {
+      return {
+        container: 'flex justify-center',
+        item: 'w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl'
+      }
+    }
+    
+    // Grid layout for multiple nominees
+    let gridCols = ''
+    if (count === 2) gridCols = 'grid-cols-1 sm:grid-cols-2'
+    else if (count === 3) gridCols = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    else if (count === 4) gridCols = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+    else if (count <= 6) gridCols = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
+    else gridCols = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'
+    
+    return {
+      container: `grid ${gridCols}`,
+      item: ''
+    }
   }
 
   return (
@@ -344,13 +358,13 @@ export default function CategoryVotePage() {
 
       {/* Nominees Section */}
       <div className="container mx-auto px-4 pb-20">
-        <div className={`grid ${getGridCols(category.nominees.length)} gap-3 lg:gap-4`}>
+        <div className={`${getLayoutClasses(category.nominees.length).container} gap-3 lg:gap-4`}>
           {category.nominees.map((nominee: Nominee, index: number) => (
             <div
               key={nominee.id}
               className={`group relative cursor-pointer animate-slide-in-up ${
                 index < 4 ? `animate-delay-${(index + 1) * 100}` : ''
-              }`}
+              } ${getLayoutClasses(category.nominees.length).item}`}
               onClick={() => {
                 setSelectedNominee(nominee.id)
                 setJustVoted(false)
