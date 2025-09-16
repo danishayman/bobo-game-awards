@@ -199,7 +199,7 @@ export default function VoteSummaryPage() {
   const votedCategories = votes.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background-secondary">
+    <div className="bg-full-viewport bg-gradient-to-b from-background via-background to-background-secondary">
       <div className="container py-8 space-y-8">
         {/* Header */}
         <motion.div 

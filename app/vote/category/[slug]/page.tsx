@@ -307,7 +307,7 @@ export default function CategoryVotePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
+    <div className="bg-full-viewport bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
       {/* Hero Header Section */}
       <div className="relative overflow-hidden">
         {/* Background Pattern */}

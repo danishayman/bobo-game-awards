@@ -151,7 +151,7 @@ export default function VotePage() {
   }
 
   return (
-    <div className="relative overflow-hidden py-20 min-h-[80vh] flex items-center justify-center">
+    <div className="relative overflow-hidden py-20 bg-full-viewport bg-gradient-to-br from-background via-background-secondary to-background-tertiary flex items-center justify-center">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
       <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>

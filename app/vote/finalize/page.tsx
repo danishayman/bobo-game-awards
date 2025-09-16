@@ -127,7 +127,7 @@ export default function FinalizePage() {
   }
 
   return (
-    <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
+    <div className="flex items-center justify-center relative overflow-hidden py-20 bg-full-viewport bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
       <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>

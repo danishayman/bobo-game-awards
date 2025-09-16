@@ -169,6 +169,12 @@ body {
   animation-delay: 0.1s;
 }
 
+/* Full viewport background utility */
+.bg-full-viewport {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
 .animate-delay-200 {
   animation-delay: 0.2s;
 }
