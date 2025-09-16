@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
@@ -10,9 +10,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
-import { CategoryWithNominees, Nominee, Category, Ballot } from '@/lib/types/database'
+import { useVotingData, usePrefetchVotingData } from '@/lib/hooks/use-voting-data'
+import { Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
-import { PageSkeleton } from '@/components/ui/page-skeleton'
+import { NomineeLoadingSkeleton } from '@/components/ui/nominee-loading-skeleton'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -42,75 +43,54 @@ export default function CategoryVotePage() {
   const params = useParams()
   const slug = params.slug as string
 
-  const [category, setCategory] = useState<CategoryWithNominees | null>(null)
+  // Use React Query for data fetching
+  const { data: votingData, isLoading: loadingData, error, isError } = useVotingData(slug)
+  const prefetchVotingData = usePrefetchVotingData()
+
   const [selectedNominee, setSelectedNominee] = useState<string | null>(null)
-  const [currentVote, setCurrentVote] = useState<string | null>(null)
-  const [allCategories, setAllCategories] = useState<Category[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [loadingData, setLoadingData] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [justVoted, setJustVoted] = useState(false)
-  const [ballot, setBallot] = useState<Ballot | null>(null)
+
+  // Extract data from React Query result
+  const category = votingData?.category || null
+  const allCategories = useMemo(() => votingData?.allCategories || [], [votingData?.allCategories])
+  const currentIndex = votingData?.currentIndex || 0
+  const ballot = votingData?.ballot || null
+  const currentVote = votingData?.currentVote || null
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login')
       return
     }
+  }, [user, loading, router])
 
-    if (user && slug) {
-      fetchData()
+  // Set initial selected nominee when data loads
+  useEffect(() => {
+    if (currentVote?.nominee_id) {
+      setSelectedNominee(currentVote.nominee_id)
     }
-  }, [user, loading, slug])
+  }, [currentVote])
 
-  const fetchData = async () => {
-    try {
-      // Fetch ballot status first to check if it's finalized
-      const ballotRes = await fetch('/api/ballot/status')
-      const ballotData = await ballotRes.json()
-      setBallot(ballotData.ballot)
-
-      // If ballot is finalized, don't allow further voting
-      if (ballotData.ballot?.is_final) {
-        return // Component will render thank you message
+  // Prefetch next category data for better UX
+  useEffect(() => {
+    if (allCategories.length > 0 && currentIndex < allCategories.length - 1) {
+      const nextCategory = allCategories[currentIndex + 1]
+      if (nextCategory) {
+        // Prefetch next category data after a short delay
+        const timer = setTimeout(() => {
+          prefetchVotingData(nextCategory.slug)
+        }, 1000)
+        return () => clearTimeout(timer)
       }
-
-      // Fetch category with nominees
-      const categoryRes = await fetch(`/api/categories/${slug}`)
-      const categoryData = await categoryRes.json()
-      
-      if (!categoryRes.ok) {
-        throw new Error(categoryData.error || 'Failed to fetch category')
-      }
-
-      // Fetch all categories for navigation (ordered by display_order)
-      const allCategoriesRes = await fetch('/api/categories')
-      const allCategoriesData = await allCategoriesRes.json()
-      
-      // Fetch current user vote for this category
-      const votesRes = await fetch(`/api/votes?category=${slug}`)
-      const votesData = await votesRes.json()
-
-      setCategory(categoryData.category)
-      
-      // Categories are already ordered by display_order and filtered for active ones from the API
-      setAllCategories(allCategoriesData.categories || [])
-      
-      const currentVoteForCategory = votesData.votes?.[0]
-      if (currentVoteForCategory) {
-        setCurrentVote(currentVoteForCategory.nominee_id)
-        setSelectedNominee(currentVoteForCategory.nominee_id)
-      }
-
-      // Find current category index
-      const index = (allCategoriesData.categories || []).findIndex((cat: Category) => cat.slug === slug) ?? 0
-      setCurrentIndex(index)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      router.push('/vote')
-    } finally {
-      setLoadingData(false)
     }
+  }, [allCategories, currentIndex, prefetchVotingData])
+
+  // Handle error states
+  if (isError) {
+    console.error('Error fetching voting data:', error)
+    router.push('/vote')
+    return null
   }
 
   const handleVoteAndNavigate = async () => {
@@ -145,8 +125,10 @@ export default function CategoryVotePage() {
         throw new Error(error.error || 'Failed to save vote')
       }
 
-      setCurrentVote(selectedNominee)
-      setJustVoted(true)
+        setJustVoted(true)
+        
+        // Invalidate and refetch the voting data to get latest state
+        // This will update the currentVote state from server
       
       // Small delay to show success state
       await new Promise(resolve => setTimeout(resolve, 800))
@@ -175,7 +157,47 @@ export default function CategoryVotePage() {
   }
 
   if (loading || loadingData) {
-    return <PageSkeleton variant="category-vote" />
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
+        {/* Hero Header Section */}
+        <div className="relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-primary/20 via-transparent to-red-secondary/20" />
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-secondary/10 rounded-full blur-3xl" />
+          </div>
+
+          <div className="relative container mx-auto px-4 py-12 lg:py-20">
+            {/* Navigation Skeleton */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+              <div className="h-10 w-40 bg-gray-700/50 rounded animate-pulse" />
+              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse" />
+            </div>
+
+            {/* Category Title Skeleton */}
+            <div className="text-center space-y-6 mb-12">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="h-12 w-12 bg-gray-700/50 rounded animate-pulse" />
+                <div className="h-16 w-96 bg-gray-700/50 rounded animate-pulse" />
+              </div>
+              <div className="h-6 w-80 mx-auto bg-gray-700/50 rounded animate-pulse" />
+            </div>
+          </div>
+        </div>
+
+        {/* Nominees Skeleton */}
+        <div className="container mx-auto px-4 pb-20">
+          <NomineeLoadingSkeleton count={6} />
+          
+          {/* Action Buttons Skeleton */}
+          <div className="flex flex-col lg:flex-row items-center justify-between pt-16 border-t border-white/10 mt-16 gap-6">
+            <div className="h-10 w-32 bg-gray-700/50 rounded animate-pulse" />
+            <div className="h-12 w-48 bg-gray-700/50 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // If ballot is finalized, show thank you page
@@ -293,7 +315,7 @@ export default function CategoryVotePage() {
             
             <div className="text-sm text-foreground-muted flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
               <span>Category {currentIndex + 1} of {allCategories.length}</span>
-              {currentVote && (
+              {(currentVote || justVoted) && (
                 <Badge variant="outline" className="text-green-500 border-green-500/50 bg-green-500/10">
                   <Check className="h-3 w-3 mr-1" />
                   Voted
@@ -349,13 +371,20 @@ export default function CategoryVotePage() {
 
                 {/* Image */}
                 {nominee.image_url && (
-                  <div className="relative w-full aspect-[3/4] overflow-hidden flex-shrink-0">
+                  <div className="relative w-full aspect-[3/4] overflow-hidden flex-shrink-0 bg-gray-800">
                     <Image
                       src={nominee.image_url}
                       alt={nominee.name}
                       fill
-                      className="object-contain"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      className="object-contain transition-opacity duration-300"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                      priority={index < 4} // Prioritize first 4 images
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkbHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      loading={index < 4 ? "eager" : "lazy"} // Eager load first 4, lazy load rest
+                      onLoadingComplete={() => {
+                        // Optional: Track image loading for analytics
+                      }}
                     />
                     
                     {/* Gradient Overlay */}

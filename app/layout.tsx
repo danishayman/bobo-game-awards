@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oswald, Inter, Montserrat, Baskervville, DM_Serif_Text } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-context";
+import { QueryProvider } from "@/lib/providers/query-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LoadingWrapper } from "@/components/ui/loading-wrapper";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,15 +69,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} ${inter.variable} ${montserrat.variable} ${baskervville.variable} ${dmSerifText.variable} antialiased min-h-screen flex flex-col`}
         suppressHydrationWarning={true}
       >
-        <AuthProvider>
-          <LoadingWrapper>
-            <Header />
-            <main className="flex-1 justify-items-center">
-              {children}
-            </main>
-            <Footer />
-          </LoadingWrapper>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <LoadingWrapper>
+              <ServiceWorkerRegister />
+              <Header />
+              <main className="flex-1 justify-items-center">
+                {children}
+              </main>
+              <Footer />
+            </LoadingWrapper>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

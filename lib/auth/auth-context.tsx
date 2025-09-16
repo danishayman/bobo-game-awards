@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
 import { User as AppUser } from '@/lib/types/database'
@@ -25,6 +25,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [signingOut, setSigningOut] = useState(false)
   const supabase = createClient()
+
+  const fetchAppUser = useCallback(async (userId: string) => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    if (data && !error) {
+      setAppUser(data)
+    }
+  }, [supabase])
 
   useEffect(() => {
     // Get initial session
@@ -58,19 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     )
 
     return () => subscription.unsubscribe()
-  }, [])
-
-  const fetchAppUser = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
-
-    if (data && !error) {
-      setAppUser(data)
-    }
-  }
+  }, [fetchAppUser, supabase.auth])
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({

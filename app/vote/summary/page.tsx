@@ -92,7 +92,7 @@ export default function VoteSummaryPage() {
     if (user) {
       fetchData()
     }
-  }, [user, loading])
+  }, [user, loading, router])
 
   const fetchData = async () => {
     try {

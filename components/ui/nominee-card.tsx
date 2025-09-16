@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,6 @@ interface NomineeCardProps {
 }
 
 export function NomineeCard({
-  id,
   name,
   description,
   imageUrl,

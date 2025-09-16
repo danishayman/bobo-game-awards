@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   console.log('🔍 Starting ballot finalization process...')
   
   try {
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     console.log('🚀 Calling finalize_ballot function...')
 
     // Use the finalize_ballot function
-    const { data: rpcData, error: finalizeError } = await supabase
+    const { error: finalizeError } = await supabase
       .rpc('finalize_ballot', { p_user_id: user.id })
 
     if (finalizeError) {

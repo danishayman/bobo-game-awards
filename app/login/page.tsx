@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/auth-context";
 import { Chrome, Twitch } from "lucide-react";
@@ -33,7 +32,6 @@ const itemVariants: Variants = {
 export default function LoginPage() {
   const [loading, setLoading] = useState<'google' | 'twitch' | null>(null);
   const { signInWithGoogle, signInWithTwitch } = useAuth();
-  const router = useRouter();
 
   const handleGoogleLogin = async () => {
     try {

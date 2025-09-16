@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/auth/auth-context'
-import { LogOut, Settings, User, Menu, X } from 'lucide-react'
+import { LogOut, Settings, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import {
   DropdownMenu,

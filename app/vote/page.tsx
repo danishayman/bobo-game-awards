@@ -52,7 +52,7 @@ export default function VotePage() {
     if (user) {
       fetchData()
     }
-  }, [user, loading])
+  }, [user, loading, router])
 
   const fetchData = async () => {
     try {

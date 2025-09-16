@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { motion } from 'framer-motion'
@@ -11,18 +11,7 @@ export default function StartVotingPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login')
-      return
-    }
-
-    if (user) {
-      startVotingFlow()
-    }
-  }, [user, loading])
-
-  const startVotingFlow = async () => {
+  const startVotingFlow = useCallback(async () => {
     try {
       // Fetch categories ordered by display_order
       const response = await fetch('/api/categories')
@@ -45,7 +34,18 @@ export default function StartVotingPage() {
       console.error('Error starting voting flow:', error)
       router.push('/vote')
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login')
+      return
+    }
+
+    if (user) {
+      startVotingFlow()
+    }
+  }, [user, loading, router, startVotingFlow])
 
   return (
     <div className="flex items-center justify-center relative overflow-hidden py-20 min-h-screen">
