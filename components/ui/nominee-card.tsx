@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Star } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NomineeCardProps {
@@ -68,15 +68,15 @@ export function NomineeCard({
           </div>
         )}
 
-        {/* Image Section */}
+        {/* Image Section - 3:4 Aspect Ratio */}
         {imageUrl && (
-          <div className="relative w-full h-56 overflow-hidden">
+          <div className="relative w-full aspect-[3/4] overflow-hidden">
             <Image
               src={imageUrl}
               alt={name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-110"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw, 25vw"
             />
             
             {/* Gradient Overlay */}
@@ -87,7 +87,7 @@ export function NomineeCard({
           </div>
         )}
 
-        <CardHeader className={cn("relative flex-grow flex flex-col justify-between", !imageUrl && "pt-8")}>
+        <CardHeader className={cn("relative flex-grow flex flex-col justify-between p-3 md:p-6", !imageUrl && "pt-6 md:pt-8")}>
           {/* Premium Accent Line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-1 transition-all duration-300",
@@ -98,33 +98,20 @@ export function NomineeCard({
                 : "bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100"
           )} />
 
-          <div className="flex items-start justify-between h-full">
-            <div className="flex-1 space-y-2 min-h-0">
+          <div className="flex flex-col h-full">
+            <div className="flex-1 space-y-1 md:space-y-2 min-h-0">
               <CardTitle className={cn(
-                "text-xl font-bold leading-tight transition-colors duration-200 line-clamp-2",
+                "text-sm md:text-xl font-bold leading-tight transition-colors duration-200 line-clamp-2",
                 isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
               )}>
                 {name}
               </CardTitle>
               
               {description && (
-                <CardDescription className="text-white/70 leading-relaxed line-clamp-3">
+                <CardDescription className="text-white/70 leading-relaxed line-clamp-2 md:line-clamp-3 text-xs md:text-sm">
                   {description}
                 </CardDescription>
               )}
-            </div>
-
-            {/* Star Rating Placeholder */}
-            <div className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "w-3 h-3 transition-colors",
-                    i < 4 ? "fill-yellow-400 text-yellow-400" : "text-white/30"
-                  )}
-                />
-              ))}
             </div>
           </div>
         </CardHeader>

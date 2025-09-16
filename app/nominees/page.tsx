@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { NomineeCard } from '@/components/ui/nominee-card'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import { Trophy, Users, GamepadIcon, AlertTriangle } from 'lucide-react'
@@ -159,7 +159,7 @@ export default function NomineesPage() {
 
             {/* Nominees Grid */}
             {category.nominees && category.nominees.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
                 {category.nominees
                   .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
                   .map((nominee) => (

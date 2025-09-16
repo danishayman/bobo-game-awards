@@ -74,6 +74,7 @@ export interface Database {
           name: string
           description: string | null
           image_url: string | null
+          display_order: number
           created_at: string
         }
         Insert: {
@@ -82,6 +83,7 @@ export interface Database {
           name: string
           description?: string | null
           image_url?: string | null
+          display_order?: number
           created_at?: string
         }
         Update: {
@@ -90,6 +92,7 @@ export interface Database {
           name?: string
           description?: string | null
           image_url?: string | null
+          display_order?: number
           created_at?: string
         }
       }
