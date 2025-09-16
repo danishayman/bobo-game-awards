@@ -337,17 +337,21 @@ export default function CategoryVotePage() {
             <motion.div
               key={nominee.id}
               variants={itemVariants}
-              className={`group relative cursor-pointer ${getLayoutClasses(category.nominees.length).item}`}
+              className={`group relative ${submitting ? 'cursor-not-allowed' : 'cursor-pointer'} ${getLayoutClasses(category.nominees.length).item}`}
               onClick={() => {
-                setSelectedNominee(nominee.id)
-                setJustVoted(false)
+                if (!submitting) {
+                  setSelectedNominee(nominee.id)
+                  setJustVoted(false)
+                }
               }}
             >
               {/* Simplified Nominee Card */}
-              <Card className={`h-full overflow-hidden border transition-all duration-300 hover:scale-105 ${
+              <Card className={`h-full overflow-hidden border transition-all duration-300 ${
+                submitting ? '' : 'hover:scale-105'
+              } ${
                 selectedNominee === nominee.id 
                   ? 'border-red-primary shadow-lg shadow-red-primary/25 bg-background-secondary' 
-                  : 'border-white/10 bg-background-secondary/50 hover:border-white/20'
+                  : `border-white/10 bg-background-secondary/50 ${submitting ? 'opacity-60' : 'hover:border-white/20'}`
               }`}>
                 
                 {/* Image */}
