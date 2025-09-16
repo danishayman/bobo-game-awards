@@ -26,6 +26,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [signingOut, setSigningOut] = useState(false)
   const supabase = createClient()
 
+  // Safety mechanism: Reset signing out state after 15 seconds if it gets stuck
+  useEffect(() => {
+    if (signingOut) {
+      const timeout = setTimeout(() => {
+        console.warn('Sign out process seems stuck, resetting state')
+        setSigningOut(false)
+      }, 15000) // 15 second safety timeout
+      
+      return () => clearTimeout(timeout)
+    }
+  }, [signingOut])
+
   const fetchAppUser = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from('users')
@@ -56,10 +68,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session ? 'session exists' : 'no session')
+        
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          await fetchAppUser(session.user.id)
+          try {
+            await fetchAppUser(session.user.id)
+          } catch (error) {
+            console.error('Error fetching app user:', error)
+            // Continue anyway, we have auth user even if app user fetch fails
+          }
         } else {
           setAppUser(null)
         }
@@ -114,12 +133,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     setSigningOut(true)
+    
     try {
-      const { error } = await supabase.auth.signOut()
+      // Set a timeout for the sign-out operation
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Sign out timeout')), 10000) // 10 second timeout
+      })
+      
+      const signOutPromise = supabase.auth.signOut()
+      
+      // Race between sign-out and timeout
+      const { error } = await Promise.race([signOutPromise, timeoutPromise]) as any
+      
       if (error) throw error
-    } finally {
-      // Keep signing out state until auth state change is processed
-      // This will be reset when the auth state change handler runs
+      
+    } catch (error) {
+      console.error('Sign out error:', error)
+      
+      // Force local session clearing as fallback
+      try {
+        // Clear local storage items that Supabase might use
+        localStorage.removeItem('supabase.auth.token')
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.includes('supabase')) {
+            localStorage.removeItem(key)
+          }
+        })
+        
+        // Clear cookies by setting them to expire
+        document.cookie.split(";").forEach(cookie => {
+          const eqPos = cookie.indexOf("=")
+          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+          if (name.trim().includes('sb-') || name.trim().includes('supabase')) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+          }
+        })
+        
+        // Force update the auth state
+        setUser(null)
+        setAppUser(null)
+        setSigningOut(false)
+        
+        // Force a page reload as final fallback
+        window.location.href = '/'
+        
+      } catch (fallbackError) {
+        console.error('Fallback sign out error:', fallbackError)
+        setSigningOut(false)
+      }
     }
   }
 

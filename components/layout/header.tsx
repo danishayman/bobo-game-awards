@@ -26,9 +26,11 @@ export function Header() {
     
     try {
       await signOut()
-      router.push('/')
+      // Don't call router.push here - let the auth state change handle navigation
+      // or the signOut function will handle it via window.location if needed
     } catch (error) {
       console.error('Error signing out:', error)
+      // The signOut function now handles fallbacks, so we don't need additional error handling here
     }
   }
 
