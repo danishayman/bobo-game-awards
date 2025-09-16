@@ -47,7 +47,7 @@ const votingRules = [
     icon: UserCheck,
     title: "Eligibility Requirements",
     rules: [
-      "You must have a valid account registered through Google, Twitch, or Discord authentication",
+      "You must have a valid account registered through Google or Twitch authentication",
       "Only one vote per person per category - multiple accounts are prohibited",
       "You must be a member of the gaming community (no age restrictions)",
       "Account must be created before the voting period begins"
@@ -247,11 +247,6 @@ export default function RulesPage() {
               The Bobo Game Awards represents the authentic voice of the gaming community. 
               To maintain the integrity and fairness of our awards, we've established these 
               comprehensive rules that all participants must follow.
-            </p>
-            <p>
-              <span className="text-red-primary font-semibold">Veli Nai Veli Premium</span> - 
-              Our commitment to excellence extends to ensuring every vote is legitimate, 
-              secure, and representative of genuine community sentiment.
             </p>
           </div>
         </motion.div>
