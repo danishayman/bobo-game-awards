@@ -20,19 +20,19 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
+      staggerChildren: 0.1
     }
   }
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
-      ease: [0.6, -0.05, 0.01, 0.99]
+      duration: 0.5,
+      ease: "easeOut"
     }
   }
 };
@@ -158,41 +158,25 @@ export default function CategoryVotePage() {
 
   if (loading || loadingData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
-        {/* Hero Header Section */}
-        <div className="relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0 bg-gradient-to-r from-red-primary/20 via-transparent to-red-secondary/20" />
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-secondary/10 rounded-full blur-3xl" />
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          {/* Simple header skeleton */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="h-10 w-32 bg-gray-700/50 rounded animate-pulse" />
+            <div className="h-6 w-24 bg-gray-700/50 rounded animate-pulse" />
           </div>
 
-          <div className="relative container mx-auto px-4 py-12 lg:py-20">
-            {/* Navigation Skeleton */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-              <div className="h-10 w-40 bg-gray-700/50 rounded animate-pulse" />
-              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse" />
-            </div>
-
-            {/* Category Title Skeleton */}
-            <div className="text-center space-y-6 mb-12">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <div className="h-12 w-12 bg-gray-700/50 rounded animate-pulse" />
-                <div className="h-16 w-96 bg-gray-700/50 rounded animate-pulse" />
-              </div>
-              <div className="h-6 w-80 mx-auto bg-gray-700/50 rounded animate-pulse" />
-            </div>
+          {/* Category title skeleton */}
+          <div className="text-center mb-12">
+            <div className="h-12 w-80 mx-auto bg-gray-700/50 rounded animate-pulse mb-4" />
+            <div className="h-4 w-96 mx-auto bg-gray-700/50 rounded animate-pulse" />
           </div>
-        </div>
 
-        {/* Nominees Skeleton */}
-        <div className="container mx-auto px-4 pb-20">
+          {/* Nominees skeleton */}
           <NomineeLoadingSkeleton count={6} />
           
-          {/* Action Buttons Skeleton */}
-          <div className="flex flex-col lg:flex-row items-center justify-between pt-16 border-t border-white/10 mt-16 gap-6">
-            <div className="h-10 w-32 bg-gray-700/50 rounded animate-pulse" />
+          {/* Action button skeleton */}
+          <div className="flex justify-center mt-12">
             <div className="h-12 w-48 bg-gray-700/50 rounded animate-pulse" />
           </div>
         </div>
@@ -307,196 +291,158 @@ export default function CategoryVotePage() {
   }
 
   return (
-    <div className="bg-full-viewport bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
-      {/* Hero Header Section */}
-      <div className="relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-primary/20 via-transparent to-red-secondary/20" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-secondary/10 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative container mx-auto px-4 py-12 lg:py-20">
-          {/* Navigation */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-            <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
-              <Link href="/vote">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Categories
-              </Link>
-            </Button>
-            
-            <div className="text-sm text-foreground-muted flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <span>Category {currentIndex + 1} of {allCategories.length}</span>
-              {(currentVote || justVoted) && (
-                <Badge variant="outline" className="text-green-500 border-green-500/50 bg-green-500/10">
-                  <Check className="h-3 w-3 mr-1" />
-                  Voted
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          {/* Category Title */}
-          <div className="text-center space-y-6 mb-12">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-in-up">
-              <Trophy className="h-8 w-8 sm:h-12 sm:w-12 text-red-primary" />
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight leading-none bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent text-center sm:text-left" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                {category.name.toUpperCase()}
-              </h1>
-            </div>
-            
-            {category.description && (
-              <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed font-body">
-                {category.description}
-              </p>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8">
+        {/* Simple Header */}
+        <div className="flex items-center justify-between mb-8">
+          <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
+            <Link href="/vote">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Link>
+          </Button>
+          
+          <div className="flex items-center gap-4 text-sm text-foreground-muted">
+            <span>{currentIndex + 1} of {allCategories.length}</span>
+            {(currentVote || justVoted) && (
+              <Badge variant="outline" className="text-green-500 border-green-500/50 bg-green-500/10">
+                <Check className="h-3 w-3 mr-1" />
+                Voted
+              </Badge>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Nominees Section */}
-      <div className="container mx-auto px-4 pb-20">
-        <div className={`${getLayoutClasses(category.nominees.length).container} gap-3 lg:gap-4`}>
+        {/* Category Title - Simplified */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+            {category.name}
+          </h1>
+          
+          {category.description && (
+            <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+              {category.description}
+            </p>
+          )}
+        </div>
+
+        {/* Nominees Section - Simplified */}
+        <motion.div 
+          className={`${getLayoutClasses(category.nominees.length).container} gap-4`}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {category.nominees.map((nominee: Nominee, index: number) => (
-            <div
+            <motion.div
               key={nominee.id}
-              className={`group relative cursor-pointer animate-slide-in-up ${
-                index < 4 ? `animate-delay-${(index + 1) * 100}` : ''
-              } ${getLayoutClasses(category.nominees.length).item}`}
+              variants={itemVariants}
+              className={`group relative cursor-pointer ${getLayoutClasses(category.nominees.length).item}`}
               onClick={() => {
                 setSelectedNominee(nominee.id)
                 setJustVoted(false)
               }}
             >
-              {/* Nominee Card */}
-              <Card className={`h-full flex flex-col overflow-hidden border-white/20 bg-background-secondary/50 backdrop-blur-sm ${
+              {/* Simplified Nominee Card */}
+              <Card className={`h-full overflow-hidden border transition-all duration-300 hover:scale-105 ${
                 selectedNominee === nominee.id 
-                  ? 'ring-2 ring-red-primary border-red-primary shadow-[0_0_40px_rgba(229,9,20,0.5)]' 
-                  : ''
+                  ? 'border-red-primary shadow-lg shadow-red-primary/25 bg-background-secondary' 
+                  : 'border-white/10 bg-background-secondary/50 hover:border-white/20'
               }`}>
-                {/* Selection Indicator */}
-                {selectedNominee === nominee.id && (
-                  <div className="absolute top-2 right-2 z-10 w-6 h-6 bg-red-primary rounded-full flex items-center justify-center shadow-lg">
-                    <Check className="w-4 h-4 text-white" />
-                  </div>
-                )}
-
+                
                 {/* Image */}
                 {nominee.image_url && (
-                  <div className="relative w-full aspect-[3/4] overflow-hidden flex-shrink-0 bg-gray-800">
+                  <div className="relative w-full aspect-[3/4] overflow-hidden bg-background-tertiary">
                     <Image
                       src={nominee.image_url}
                       alt={nominee.name}
                       fill
-                      className="object-contain transition-opacity duration-300"
+                      className="object-contain"
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                      priority={index < 4} // Prioritize first 4 images
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkbHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      loading={index < 4 ? "eager" : "lazy"} // Eager load first 4, lazy load rest
-                      onLoadingComplete={() => {
-                        // Optional: Track image loading for analytics
-                      }}
+                      priority={index < 4}
+                      loading={index < 4 ? "eager" : "lazy"}
                     />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    
                   </div>
                 )}
 
                 {/* Content */}
-                <CardHeader className="relative p-3 flex-1 flex flex-col justify-between min-h-[120px]">
-                  {/* Accent Line */}
-                  <div className={`absolute top-0 left-0 w-full h-1 ${
-                    selectedNominee === nominee.id 
-                      ? 'bg-gradient-to-r from-red-primary to-red-secondary' 
-                      : ''
-                  }`} />
+                <CardHeader className="p-4">
+                  <CardTitle className={`text-base font-semibold text-center line-clamp-2 ${
+                    selectedNominee === nominee.id ? 'text-red-primary' : 'text-white'
+                  }`}>
+                    {nominee.name}
+                  </CardTitle>
+                  
+                  {nominee.description && (
+                    <CardDescription className="text-foreground-muted text-sm text-center line-clamp-2 mt-2">
+                      {nominee.description}
+                    </CardDescription>
+                  )}
 
-                  {/* Vote Button */}
-                  <div className="text-center pt-2">
-                    <Button
-                      size="sm"
-                      className={`w-full text-xs py-1.5 ${
-                        selectedNominee === nominee.id
-                          ? 'bg-red-primary hover:bg-red-secondary text-white'
-                          : 'bg-background-tertiary border border-white/20 text-white hover:bg-red-primary hover:border-red-primary'
-                      }`}
-                    >
-                      VOTE
-                    </Button>
-                  </div>
-
-                  <div className="text-center pt-2 flex-1 flex flex-col justify-center">
-                    <CardTitle className={`text-sm lg:text-base font-bold leading-tight line-clamp-2 ${
-                      selectedNominee === nominee.id ? 'text-red-primary' : 'text-white'
-                    }`}>
-                      {nominee.name}
-                    </CardTitle>
-                    
-                    {nominee.description && (
-                      <CardDescription className="text-foreground-muted mt-1 text-xs leading-tight line-clamp-2">
-                        {nominee.description}
-                      </CardDescription>
-                    )}
+                  {/* Selection indicator */}
+                  <div className="flex justify-center mt-4">
+                    <div className={`w-3 h-3 rounded-full transition-colors ${
+                      selectedNominee === nominee.id ? 'bg-red-primary' : 'bg-white/20'
+                    }`} />
                   </div>
                 </CardHeader>
               </Card>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col lg:flex-row items-center justify-between pt-16 border-t border-white/10 mt-16 gap-6">
-          <div className="flex flex-col sm:flex-row gap-4 order-2 lg:order-1">
+        {/* Simplified Action Section */}
+        <div className="flex flex-col items-center gap-6 mt-16 pt-8 border-t border-white/10">
+          {/* Navigation hint */}
+          <div className="text-sm text-foreground-muted text-center">
             {prevCategory && (
-              <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
-                <Link href={`/vote/category/${prevCategory.slug}`}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">{prevCategory.name}</span>
-                  <span className="sm:hidden">Previous</span>
-                </Link>
-              </Button>
+              <Link 
+                href={`/vote/category/${prevCategory.slug}`}
+                className="text-red-primary hover:text-red-secondary transition-colors mr-4"
+              >
+                ← Previous: {prevCategory.name}
+              </Link>
+            )}
+            {nextCategory && (
+              <span className="text-foreground-muted">
+                Next: {nextCategory.name} →
+              </span>
             )}
           </div>
 
-          <div className="flex justify-center order-1 lg:order-2 w-full lg:w-auto">
-            <Button
-              onClick={handleVoteAndNavigate}
-              disabled={!selectedNominee || submitting}
-              size="lg"
-              className={`min-w-[200px] px-8 py-6 text-lg font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto ${
-                justVoted 
-                  ? 'bg-green-500 hover:bg-green-600 text-white shadow-[0_0_30px_rgba(34,197,94,0.4)]' 
-                  : 'bg-red-primary hover:bg-red-secondary text-white shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)]'
-              }`}
-            >
-              {submitting ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-3" />
-                  {justVoted ? 'Saved! Going to next...' : 'Saving vote...'}
-                </div>
-              ) : justVoted ? (
-                <div className="flex items-center justify-center">
-                  <Check className="h-5 w-5 mr-3" />
-                  Vote Saved!
-                </div>
-              ) : nextCategory ? (
-                <div className="flex items-center justify-center">
-                  Next
-                  <ArrowRight className="h-5 w-5 ml-3" />
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  Finish
-                  <Check className="h-5 w-5 ml-3" />
-                </div>
-              )}
-            </Button>
-          </div>
+          {/* Main action button */}
+          <Button
+            onClick={handleVoteAndNavigate}
+            disabled={!selectedNominee || submitting}
+            size="lg"
+            className={`min-w-[200px] px-8 py-3 font-semibold transition-all duration-300 ${
+              justVoted 
+                ? 'bg-green-500 hover:bg-green-600 text-white' 
+                : 'bg-red-primary hover:bg-red-secondary text-white disabled:opacity-50'
+            }`}
+          >
+            {submitting ? (
+              <div className="flex items-center">
+                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                {justVoted ? 'Saved! Going to next...' : 'Saving vote...'}
+              </div>
+            ) : justVoted ? (
+              <div className="flex items-center">
+                <Check className="h-4 w-4 mr-2" />
+                Vote Saved!
+              </div>
+            ) : nextCategory ? (
+              <div className="flex items-center">
+                Submit & Continue
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </div>
+            ) : (
+              <div className="flex items-center">
+                Submit & Finish
+                <Check className="h-4 w-4 ml-2" />
+              </div>
+            )}
+          </Button>
         </div>
       </div>
     </div>
