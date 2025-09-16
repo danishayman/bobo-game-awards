@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Scale, 
   Shield, 
-  Users, 
   Clock, 
   CheckCircle, 
   XCircle, 
@@ -245,7 +244,7 @@ export default function RulesPage() {
           <div className="text-white/80 font-body leading-relaxed space-y-4">
             <p>
               The Bobo Game Awards represents the authentic voice of the gaming community. 
-              To maintain the integrity and fairness of our awards, we've established these 
+              To maintain the integrity and fairness of our awards, we&apos;ve established these 
               comprehensive rules that all participants must follow.
             </p>
           </div>
@@ -284,7 +283,7 @@ export default function RulesPage() {
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-normal tracking-tight mb-6" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
               <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
-                Do's and Don'ts
+                Do&apos;s and Don&apos;ts
               </span>
             </h2>
           </div>
@@ -294,7 +293,7 @@ export default function RulesPage() {
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-green-400 font-body flex items-center">
                 <CheckCircle className="mr-3 h-6 w-6" />
-                What's Encouraged
+                What&apos;s Encouraged
               </h3>
               <div className="space-y-4">
                 {allowedActions.map((action, index) => (
@@ -315,7 +314,7 @@ export default function RulesPage() {
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-red-400 font-body flex items-center">
                 <XCircle className="mr-3 h-6 w-6" />
-                What's Prohibited
+                What&apos;s Prohibited
               </h3>
               <div className="space-y-4">
                 {prohibitedActions.map((action, index) => (
@@ -344,7 +343,7 @@ export default function RulesPage() {
             </h2>
             <p className="text-white/80 max-w-3xl mx-auto font-body leading-relaxed">
               We take rule violations seriously to maintain the integrity of our awards. 
-              Here's what happens when rules are broken:
+              Here&apos;s what happens when rules are broken:
             </p>
           </div>
           
@@ -517,7 +516,7 @@ export default function RulesPage() {
           <h3 className="text-2xl font-semibold text-white font-body">Questions About the Rules?</h3>
           <p className="text-white/80 font-body leading-relaxed max-w-2xl mx-auto">
             If you need clarification about any voting rules or have questions about the process, 
-            don't hesitate to reach out. We're here to help ensure fair play for everyone.
+            don&apos;t hesitate to reach out. We&apos;re here to help ensure fair play for everyone.
           </p>
           <Button 
             asChild 
