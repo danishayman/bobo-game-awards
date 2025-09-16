@@ -54,7 +54,7 @@ const dmSerifText = DM_Serif_Text({
 });
 
 export const metadata: Metadata = {
-  title: "Gaming Awards - Community Voting",
+  title: "The Bobo Game Awards",
   description: "Vote for your favorite games of the year in our community-driven gaming awards",
 };
 
