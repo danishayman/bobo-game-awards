@@ -89,7 +89,7 @@ export default function Home() {
         
         {/* Title */}
         <motion.div variants={itemVariants} className="space-y-4">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent block">
               Bobo Game
             </span>
