@@ -67,6 +67,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Bobo" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} ${inter.variable} ${montserrat.variable} ${baskervville.variable} ${dmSerifText.variable} antialiased min-h-screen flex flex-col`}
         suppressHydrationWarning={true}
