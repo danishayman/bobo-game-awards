@@ -239,7 +239,7 @@ export default function PrivacyPage() {
           <h2 className="text-2xl font-semibold text-white font-body">Questions or Concerns?</h2>
           <p className="text-white/80 font-body leading-relaxed">
             If you have any questions about this Privacy Policy or our data practices, 
-            please contact us. We're committed to addressing your concerns promptly.
+            please contact us. We&apos;re committed to addressing your concerns promptly.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
@@ -259,7 +259,7 @@ export default function PrivacyPage() {
           <h3 className="text-xl font-semibold text-white font-body">Policy Updates</h3>
           <p className="text-white/70 font-body leading-relaxed max-w-2xl mx-auto">
             We may update this Privacy Policy from time to time. We will notify you of any changes 
-            by posting the new Privacy Policy on this page and updating the "Last updated" date.
+            by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
           </p>
         </motion.div>
       </motion.div>

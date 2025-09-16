@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Trophy, Users, Vote, Shield, Gamepad2, Heart, Calendar, Award } from "lucide-react";
+import { Trophy, Users, Vote, Shield, Gamepad2, Heart, Award } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -118,7 +118,7 @@ export default function AboutPage() {
               </p>
               <p>
                 Created by Spudin for Spudins, this platform ensures every community member 
-                can participate in honoring the year's most outstanding gaming achievements.
+                can participate in honoring the year&apos;s most outstanding gaming achievements.
               </p>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-white font-body">Results</h3>
               <p className="text-white/70 font-body">
-                Winners are announced and celebrated, showcasing the community's choice for gaming excellence.
+                Winners are announced and celebrated, showcasing the community&apos;s choice for gaming excellence.
               </p>
             </div>
           </div>

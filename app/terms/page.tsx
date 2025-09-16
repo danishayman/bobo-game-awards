@@ -150,7 +150,7 @@ export default function TermsPage() {
           </div>
           <div className="text-white/80 font-body leading-relaxed space-y-4">
             <p>
-              These Terms of Service ("Terms") govern your access to and use of the Bobo Game Awards 
+              These Terms of Service (&quot;Terms&quot;) govern your access to and use of the Bobo Game Awards 
               platform, a community-driven gaming awards voting system. These Terms constitute a 
               legally binding agreement between you and us.
             </p>
@@ -285,7 +285,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold text-white font-body">Questions About These Terms?</h2>
           <p className="text-white/80 font-body leading-relaxed">
             If you have any questions about these Terms of Service or need clarification 
-            on any policies, please don't hesitate to contact us.
+            on any policies, please don&apos;t hesitate to contact us.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 

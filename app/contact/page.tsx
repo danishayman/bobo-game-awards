@@ -153,8 +153,8 @@ export default function ContactPage() {
             </h1>
             
             <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed font-body">
-              Have questions, feedback, or need support? We're here to help! 
-              Reach out to us and we'll get back to you as soon as possible.
+              Have questions, feedback, or need support? We&apos;re here to help! 
+              Reach out to us and we&apos;ll get back to you as soon as possible.
             </p>
           </div>
         </motion.div>
@@ -216,7 +216,7 @@ export default function ContactPage() {
                 </span>
               </h2>
               <p className="text-white/70 font-body leading-relaxed">
-                Fill out the form below and we'll get back to you within 24-48 hours.
+                Fill out the form below and we&apos;ll get back to you within 24-48 hours.
               </p>
             </div>
 
@@ -234,7 +234,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-xl font-semibold text-white font-body">Message Sent!</h3>
                 <p className="text-white/70 font-body">
-                  Thank you for contacting us. We'll get back to you soon!
+                  Thank you for contacting us. We&apos;ll get back to you soon!
                 </p>
               </motion.div>
             ) : (
