@@ -4,7 +4,7 @@
 export const VOTING_CONFIG = {
   // Set your voting deadline here
   // Format: YYYY-MM-DD HH:MM:SS in UTC
-  GLOBAL_VOTING_DEADLINE: new Date('2025-08-20T23:59:59Z'), // Example: January 15, 2025 at 11:59 PM UTC
+  GLOBAL_VOTING_DEADLINE: new Date('2025-09-20T23:59:59Z'), // Example: January 15, 2025 at 11:59 PM UTC
   
   // Timezone for display (optional - used for user-friendly display)
   DISPLAY_TIMEZONE: 'GMT+8',
