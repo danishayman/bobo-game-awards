@@ -35,7 +35,7 @@ interface PageSkeletonProps {
 export function PageSkeleton({ variant, className }: PageSkeletonProps) {
   if (variant === 'vote-dashboard') {
     return (
-      <div className={cn("flex items-center justify-center relative overflow-hidden py-20 min-h-screen", className)}>
+      <div className={cn("relative overflow-hidden py-20 min-h-[80vh] flex items-center justify-center", className)}>
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
         <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
