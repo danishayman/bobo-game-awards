@@ -54,8 +54,31 @@ const dmSerifText = DM_Serif_Text({
 });
 
 export const metadata: Metadata = {
-  title: "The Bobo Game Awards",
-  description: "Vote for your favorite games of the year in our community-driven gaming awards",
+  title: "the Bobo Game Awards",
+  description: "Veli Nai Veli Premium",
+  metadataBase: new URL('https://bobo-game-awards.vercel.app'),
+  openGraph: {
+    title: "the Bobo Game Awards",
+    description: "Veli Nai Veli Premium",
+    url: 'https://bobo-game-awards.vercel.app',
+    siteName: "the Bobo Game Awards",
+    images: [
+      {
+        url: '/preview.png',
+        width: 1200,
+        height: 630,
+        alt: 'the Bobo Game Awards',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "the Bobo Game Awards",
+    description: "Veli Nai Veli Premium",
+    images: ['/preview.png'],
+  },
 };
 
 export default function RootLayout({
