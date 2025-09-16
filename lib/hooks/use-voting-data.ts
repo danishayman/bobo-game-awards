@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CategoryWithNominees, Category, Ballot, Vote } from '@/lib/types/database'
 
 interface VotingData {
@@ -39,7 +39,7 @@ export function useVotingData(slug: string) {
 
 // Hook for prefetching next category data
 export function usePrefetchVotingData() {
-  const queryClient = useQuery({}).client
+  const queryClient = useQueryClient()
   
   return (slug: string) => {
     queryClient.prefetchQuery({

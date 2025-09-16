@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Get vote counts separately for better performance and accuracy
-      const { data: voteData, error: voteError } = await supabase
+      const { data: voteData } = await supabase
         .from('votes')
         .select('nominee_id')
         .eq('is_final', true)

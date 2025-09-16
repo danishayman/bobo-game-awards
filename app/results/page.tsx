@@ -64,11 +64,11 @@ export default function ResultsPage() {
     }, 0)
   }
 
-  const getWinner = (nominees: ResultNominee[]) => {
-    return nominees.reduce((winner, nominee) => 
-      nominee.vote_count > winner.vote_count ? nominee : winner
-    )
-  }
+  // const getWinner = (nominees: ResultNominee[]) => {
+  //   return nominees.reduce((winner, nominee) => 
+  //     nominee.vote_count > winner.vote_count ? nominee : winner
+  //   )
+  // }
 
   const getRankColor = (index: number) => {
     switch (index) {
@@ -198,7 +198,6 @@ export default function ResultsPage() {
         <div className="grid gap-8">
           {results.map((category) => {
             const sortedNominees = [...category.nominees].sort((a, b) => b.vote_count - a.vote_count)
-            const winner = sortedNominees[0]
             const totalCategoryVotes = category.nominees.reduce((sum, nom) => sum + nom.vote_count, 0)
 
             return (

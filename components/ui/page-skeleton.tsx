@@ -3,7 +3,7 @@
 import { motion, Variants } from 'framer-motion'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { CardSkeleton } from '@/components/ui/card-skeleton'
-import { Skeleton, SkeletonPulse } from '@/components/ui/skeleton'
+import { SkeletonPulse } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
 const containerVariants: Variants = {

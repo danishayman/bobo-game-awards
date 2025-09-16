@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     if (appUser?.is_admin) {
       fetchData()
     }
-  }, [appUser, loading])
+  }, [appUser, loading, router])
 
   const fetchData = async () => {
     try {

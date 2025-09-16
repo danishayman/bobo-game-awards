@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
@@ -11,9 +11,8 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useVotingData, usePrefetchVotingData } from '@/lib/hooks/use-voting-data'
-import { CategoryWithNominees, Nominee, Category, Ballot } from '@/lib/types/database'
+import { Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
-import { PageSkeleton } from '@/components/ui/page-skeleton'
 import { NomineeLoadingSkeleton } from '@/components/ui/nominee-loading-skeleton'
 
 const containerVariants: Variants = {
@@ -54,7 +53,7 @@ export default function CategoryVotePage() {
 
   // Extract data from React Query result
   const category = votingData?.category || null
-  const allCategories = votingData?.allCategories || []
+  const allCategories = useMemo(() => votingData?.allCategories || [], [votingData?.allCategories])
   const currentIndex = votingData?.currentIndex || 0
   const ballot = votingData?.ballot || null
   const currentVote = votingData?.currentVote || null

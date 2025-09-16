@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Skeleton, SkeletonPulse } from '@/components/ui/skeleton'
+import { SkeletonPulse } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
 interface CardSkeletonProps {
