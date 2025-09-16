@@ -29,8 +29,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-white/70 hover:text-[var(--red-primary)] transition-colors">
-                  Categories
+                <Link href="/nominees" className="text-white/70 hover:text-[var(--red-primary)] transition-colors">
+                  View Nominees
                 </Link>
               </li>
               {appUser?.is_admin && (
