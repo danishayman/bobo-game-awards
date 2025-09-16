@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageSquare, Send, ArrowLeft, Users, Clock, MapPin } from "lucide-react";
+import { Mail, MessageSquare, ArrowLeft, Users, Clock, MapPin } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -34,22 +33,15 @@ const contactMethods = [
     icon: Mail,
     title: "Email Us",
     description: "Send us an email and we'll get back to you within 24-48 hours.",
-    info: "contact@bobogameawards.com",
-    action: "mailto:contact@bobogameawards.com"
-  },
+    info: "zagreusaiman@gmail.com",
+      action: "mailto:zagreusaiman@gmail.com"
+    },
   {
     icon: MessageSquare,
     title: "Community Discord",
     description: "Join our Discord community for real-time support and discussions.",
-    info: "discord.gg/bobogameawards",
-    action: "https://discord.gg/bobogameawards"
-  },
-  {
-    icon: Users,
-    title: "Community Forums",
-    description: "Connect with other community members and get help from moderators.",
-    info: "Visit Community Hub",
-    action: "/community"
+    info: "discord.gg/bexed",
+    action: "https://discord.gg/bexed"
   }
 ];
 
@@ -64,46 +56,6 @@ const contactReasons = [
 ];
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-    reason: ""
-  });
-  
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setSubmitted(true);
-    setIsSubmitting(false);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-        reason: ""
-      });
-    }, 3000);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   return (
     <div className="relative overflow-hidden py-20 min-h-screen">
@@ -169,7 +121,7 @@ export default function ContactPage() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {contactMethods.map((method, index) => (
               <motion.div
                 key={index}
@@ -205,148 +157,17 @@ export default function ContactPage() {
           </div>
         </motion.div>
 
-        {/* Contact Form Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Contact Form */}
-          <motion.div variants={itemVariants} className="space-y-8">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-normal tracking-tight mb-4" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
-                  Send Us a Message
-                </span>
-              </h2>
-              <p className="text-white/70 font-body leading-relaxed">
-                Fill out the form below and we&apos;ll get back to you within 24-48 hours.
-              </p>
-            </div>
+        {/* Support Information */}
+        <motion.div variants={itemVariants} className="space-y-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-normal tracking-tight mb-6" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                Support Information
+              </span>
+            </h2>
+          </div>
 
-            {submitted ? (
-              <motion.div 
-                className="glass rounded-xl p-8 text-center space-y-4"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="flex justify-center">
-                  <div className="p-3 rounded-full bg-green-500/20">
-                    <Send className="h-8 w-8 text-green-400" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-white font-body">Message Sent!</h3>
-                <p className="text-white/70 font-body">
-                  Thank you for contacting us. We&apos;ll get back to you soon!
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-white font-body">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:border-red-primary focus:outline-none transition-colors font-body"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-white font-body">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:border-red-primary focus:outline-none transition-colors font-body"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="reason" className="text-sm font-medium text-white font-body">
-                    Reason for Contact
-                  </label>
-                  <select
-                    id="reason"
-                    name="reason"
-                    value={formData.reason}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white focus:border-red-primary focus:outline-none transition-colors font-body"
-                  >
-                    <option value="">Select a reason (optional)</option>
-                    {contactReasons.map((reason, index) => (
-                      <option key={index} value={reason} className="bg-background-secondary">
-                        {reason}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="subject" className="text-sm font-medium text-white font-body">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:border-red-primary focus:outline-none transition-colors font-body"
-                    placeholder="Brief subject line"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-white font-body">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:border-red-primary focus:outline-none transition-colors resize-none font-body"
-                    placeholder="Tell us how we can help you..."
-                  />
-                </div>
-
-                <Button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-red-primary hover:bg-red-secondary text-white px-8 py-4 text-lg font-semibold rounded-full shadow-[0_0_30px_rgba(229,9,20,0.4)] hover:shadow-[0_0_40px_rgba(229,9,20,0.6)] transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-body"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="mr-3 h-5 w-5" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
-            )}
-          </motion.div>
-
-          {/* Contact Information & FAQ */}
-          <motion.div variants={itemVariants} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Quick Info */}
             <div className="glass rounded-xl p-8 space-y-6">
               <h3 className="text-2xl font-semibold text-white font-body">Quick Information</h3>
@@ -382,40 +203,42 @@ export default function ContactPage() {
                 {contactReasons.slice(0, 5).map((reason, index) => (
                   <div key={index} className="flex items-start space-x-3">
                     <span className="text-red-primary mt-2">•</span>
-                    <span className="text-white/80 font-body">{reason}</span>
+                    <span className="text-white/80 font-body text-sm">{reason}</span>
                   </div>
                 ))}
-              </div>
-              <div className="pt-4">
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  className="border-white/20 text-white hover:bg-white/10 font-body"
-                >
-                  <Link href="/about">
-                    Learn More About Us
-                  </Link>
-                </Button>
               </div>
             </div>
 
             {/* Community Guidelines */}
             <div className="glass rounded-xl p-8 space-y-6">
               <h3 className="text-2xl font-semibold text-white font-body">Before You Contact Us</h3>
-              <div className="space-y-4 text-white/80 font-body leading-relaxed">
+              <div className="space-y-4 text-white/80 font-body leading-relaxed text-sm">
                 <p>
-                  <strong className="text-white">Check our FAQ:</strong> Many common questions are answered in our documentation and community forums.
+                  <strong className="text-white">Check our FAQ:</strong> Many common questions are answered in our documentation.
                 </p>
                 <p>
-                  <strong className="text-white">Be specific:</strong> The more details you provide, the faster we can help resolve your issue.
+                  <strong className="text-white">Be specific:</strong> The more details you provide, the faster we can help.
                 </p>
                 <p>
-                  <strong className="text-white">Stay respectful:</strong> Our team is here to help, and we appreciate kind communication.
+                  <strong className="text-white">Stay respectful:</strong> Our team appreciates kind communication.
                 </p>
               </div>
             </div>
-          </motion.div>
-        </div>
+          </div>
+
+          {/* Learn More Section */}
+          <div className="text-center">
+            <Button 
+              asChild 
+              variant="outline" 
+              className="border-red-primary/30 text-red-primary hover:bg-red-primary hover:text-white transition-all duration-300 font-body px-8 py-3"
+            >
+              <Link href="/about">
+                Learn More About the Bobo Game Awards
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
 
         {/* Bottom CTA */}
         <motion.div variants={itemVariants} className="text-center space-y-6">
