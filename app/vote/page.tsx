@@ -261,7 +261,7 @@ export default function VotePage() {
                       >
                         <Link href="/vote/summary">
                           <Award className="mr-2 h-4 w-4" />
-                          Finalize Ballot
+                          Finalize Votes
                         </Link>
                       </Button>
                     )}

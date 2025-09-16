@@ -223,7 +223,7 @@ export default function FinalizePage() {
                       ) : (
                         <>
                           <Award className="mr-3 h-6 w-6" />
-                          Finalize Ballot
+                          Finalize Votes
                         </>
                       )}
                     </Button>
