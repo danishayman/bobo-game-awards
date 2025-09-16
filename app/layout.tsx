@@ -54,7 +54,7 @@ const dmSerifText = DM_Serif_Text({
 });
 
 export const metadata: Metadata = {
-  title: "the Bobo Game Awards",
+  title: "The Bobo Game Awards",
   description: "Veli Nai Veli Premium",
   metadataBase: new URL('https://bobo-game-awards.vercel.app'),
   openGraph: {
