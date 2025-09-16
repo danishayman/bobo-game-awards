@@ -129,7 +129,7 @@ export default function PrivacyPage() {
             </p>
 
             <div className="text-sm text-white/60 font-body">
-              Last updated: January 2025
+              Last updated: September 2025
             </div>
           </div>
         </motion.div>

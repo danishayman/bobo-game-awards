@@ -82,7 +82,7 @@ export function Footer() {
         </div>
         
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-white/70">
-          <p>&copy; 2025 Gaming Awards. Built with ❤️ by the gaming community.</p>
+          <p>&copy; 2025 Gaming Awards. Built with ❤️ by Spudin 23</p>
         </div>
       </div>
     </footer>
