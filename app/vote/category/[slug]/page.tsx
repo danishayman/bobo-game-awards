@@ -267,22 +267,22 @@ export default function CategoryVotePage() {
 
   const { prevCategory, nextCategory } = getNavigationInfo()
 
-  // Dynamic layout calculation based on nominee count - responsive and centered for single cards
+  // Dynamic layout calculation based on nominee count - 3 columns on mobile
   const getLayoutClasses = (count: number) => {
     if (count === 1) {
       return {
         container: 'flex justify-center',
-        item: 'w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl'
+        item: 'w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg'
       }
     }
     
-    // Grid layout for multiple nominees
+    // Grid layout for multiple nominees - 3 cols on mobile, scaling up on larger screens
     let gridCols = ''
-    if (count === 2) gridCols = 'grid-cols-1 sm:grid-cols-2'
-    else if (count === 3) gridCols = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-    else if (count === 4) gridCols = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-    else if (count <= 6) gridCols = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
-    else gridCols = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'
+    if (count === 2) gridCols = 'grid-cols-2 sm:grid-cols-2'
+    else if (count === 3) gridCols = 'grid-cols-3 sm:grid-cols-3 lg:grid-cols-3'
+    else if (count === 4) gridCols = 'grid-cols-3 sm:grid-cols-2 lg:grid-cols-4'
+    else if (count <= 6) gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
+    else gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'
     
     return {
       container: `grid ${gridCols}`,
@@ -292,7 +292,7 @@ export default function CategoryVotePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-8">
         {/* Simple Header */}
         <div className="flex items-center justify-between mb-8">
           <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
@@ -328,7 +328,7 @@ export default function CategoryVotePage() {
 
         {/* Nominees Section - Simplified */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-4`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-2 sm:gap-3 md:gap-4`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -366,22 +366,22 @@ export default function CategoryVotePage() {
                 )}
 
                 {/* Content */}
-                <CardHeader className="p-4">
-                  <CardTitle className={`text-base font-semibold text-center line-clamp-2 ${
+                <CardHeader className="p-2 sm:p-3 md:p-4">
+                  <CardTitle className={`text-xs sm:text-sm md:text-base font-semibold text-center line-clamp-2 ${
                     selectedNominee === nominee.id ? 'text-red-primary' : 'text-white'
                   }`}>
                     {nominee.name}
                   </CardTitle>
                   
                   {nominee.description && (
-                    <CardDescription className="text-foreground-muted text-sm text-center line-clamp-2 mt-2">
+                    <CardDescription className="text-foreground-muted text-xs sm:text-sm text-center line-clamp-2 mt-1 sm:mt-2 hidden sm:block">
                       {nominee.description}
                     </CardDescription>
                   )}
 
                   {/* Selection indicator */}
-                  <div className="flex justify-center mt-4">
-                    <div className={`w-3 h-3 rounded-full transition-colors ${
+                  <div className="flex justify-center mt-2 sm:mt-3 md:mt-4">
+                    <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
                       selectedNominee === nominee.id ? 'bg-red-primary' : 'bg-white/20'
                     }`} />
                   </div>
