@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LoadingWrapper } from "@/components/ui/loading-wrapper";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,6 +101,7 @@ export default function RootLayout({
             <LoadingWrapper>
               <ServiceWorkerRegister />
               <Header />
+              <Analytics/>
               <main className="flex-1 justify-items-center">
                 {children}
               </main>
