@@ -79,22 +79,22 @@ export const NomineeCard = React.memo(function NomineeCard({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-3 right-3 z-10 w-6 h-6 sm:w-8 sm:h-8 bg-red-primary rounded-full flex items-center justify-center shadow-lg"
+            className="absolute top-1 right-1 z-10 w-4 h-4 sm:w-5 sm:h-5 bg-red-primary rounded-full flex items-center justify-center shadow-lg"
           >
-            <Check className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
+            <Check className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
           </motion.div>
         )}
 
         {/* Vote Status Indicator */}
         {isVoted && !isSelected && (
-          <div className="absolute top-3 right-3 z-10 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-            <Check className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
+          <div className="absolute top-1 right-1 z-10 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+            <Check className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
           </div>
         )}
 
-        {/* Optimized Image Section */}
+        {/* Compact Image Section */}
         {imageUrl && !imageError && (
-          <div className="relative w-full aspect-[3/4] overflow-hidden bg-background-tertiary">
+          <div className="relative w-full aspect-[4/5] overflow-hidden bg-background-tertiary">
             {/* Loading placeholder */}
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 animate-pulse" />
@@ -130,14 +130,14 @@ export const NomineeCard = React.memo(function NomineeCard({
 
         {/* Fallback for missing/error images */}
         {(!imageUrl || imageError) && (
-          <div className="relative w-full aspect-[3/4] overflow-hidden bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
+          <div className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
             <div className="text-4xl font-bold text-white/20">
               {name.charAt(0).toUpperCase()}
             </div>
           </div>
         )}
 
-        <CardHeader className={cn("relative flex-grow flex flex-col justify-between p-2 sm:p-3 md:p-4", !imageUrl && "pt-4 sm:pt-6")}>
+        <CardHeader className={cn("relative flex-grow flex flex-col justify-between p-1 sm:p-2", !imageUrl && "pt-2 sm:pt-3")}>
           {/* Simplified accent line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-0.5 transition-all duration-200",
@@ -151,23 +151,23 @@ export const NomineeCard = React.memo(function NomineeCard({
           <div className="flex flex-col h-full min-h-0">
             <div className="flex-1 space-y-1 min-h-0">
               <CardTitle className={cn(
-                "text-xs sm:text-sm md:text-base font-bold leading-tight transition-colors duration-150 line-clamp-2",
+                "text-xs font-bold leading-tight transition-colors duration-150 line-clamp-1",
                 isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
               )}>
                 {name}
               </CardTitle>
               
               {description && (
-                <CardDescription className="text-white/70 leading-relaxed line-clamp-2 text-xs hidden sm:block">
+                <CardDescription className="text-white/70 leading-tight line-clamp-1 text-xs hidden md:block">
                   {description}
                 </CardDescription>
               )}
             </div>
             
             {/* Simplified selection dot */}
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-1">
               <div className={cn(
-                "w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors duration-150",
+                "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-colors duration-150",
                 isSelected ? "bg-red-primary" : "bg-white/20"
               )} />
             </div>

@@ -278,18 +278,18 @@ export default function CategoryVotePage() {
 
   const { prevCategory, nextCategory } = getNavigationInfo()
 
-  // Consistent layout for all categories - based on Best Indie Game style
+  // Compact layout for all categories - optimized for smaller cards
   const getLayoutClasses = (count: number) => {
     if (count === 1) {
       return {
         container: 'flex justify-center',
-        item: 'w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg'
+        item: 'w-full max-w-xs'
       }
     }
     
-    // Consistent grid layout for all categories (2+ nominees)
-    // This matches the Best Indie Game category layout
-    const gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
+    // Compact grid layout for all categories (2+ nominees)
+    // Fixed 6-column layout like the design
+    const gridCols = 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
     
     return {
       container: `grid ${gridCols}`,
@@ -299,9 +299,9 @@ export default function CategoryVotePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-2 sm:px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
         {/* Simple Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4">
           <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
             <Link href="/vote">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -320,22 +320,22 @@ export default function CategoryVotePage() {
           </div>
         </div>
 
-        {/* Category Title - Simplified */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+        {/* Category Title - Compact */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             {category.name}
           </h1>
           
           {category.description && (
-            <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+            <p className="text-sm text-foreground-muted max-w-2xl mx-auto">
               {category.description}
             </p>
           )}
         </div>
 
-        {/* Nominees Section - Simplified */}
+        {/* Nominees Section - Compact */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-2 sm:gap-3 md:gap-4`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -367,14 +367,14 @@ export default function CategoryVotePage() {
           ))}
         </motion.div>
 
-        {/* Simplified Action Section - Reduced spacing for better button visibility */}
-        <div className="flex flex-col items-center gap-4 mt-12 pt-6 border-t border-white/10">
-          {/* Navigation hint */}
-          <div className="text-sm text-foreground-muted text-center">
+        {/* Compact Action Section - Reduced spacing for better button visibility */}
+        <div className="flex flex-col items-center gap-3 mt-6 pt-4 border-t border-white/10">
+          {/* Navigation hint - Compact */}
+          <div className="text-xs text-foreground-muted text-center">
             {prevCategory && (
               <Link 
                 href={`/vote/category/${prevCategory.slug}`}
-                className="text-red-primary hover:text-red-secondary transition-colors mr-4"
+                className="text-red-primary hover:text-red-secondary transition-colors mr-3"
               >
                 ← Previous: {prevCategory.name}
               </Link>
