@@ -335,7 +335,7 @@ export default function CategoryVotePage() {
 
         {/* Nominees Section - Compact */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto justify-items-center`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
