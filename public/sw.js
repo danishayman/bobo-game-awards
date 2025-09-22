@@ -45,24 +45,43 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Cache strategy for images (especially IGDB images)
-  if (request.destination === 'image' || url.hostname.includes('images.igdb.com')) {
+  // Enhanced cache strategy for images (especially IGDB images)
+  if (request.destination === 'image' || url.hostname.includes('images.igdb.com') || url.pathname.includes('/_next/image')) {
     event.respondWith(
       caches.open(IMAGE_CACHE_NAME).then((cache) => {
         return cache.match(request).then((response) => {
           if (response) {
+            // Return cached image immediately
             return response
           }
 
           return fetch(request).then((fetchResponse) => {
-            // Only cache successful responses
-            if (fetchResponse.status === 200) {
-              cache.put(request, fetchResponse.clone())
+            // Only cache successful responses and limit cache size
+            if (fetchResponse.status === 200 && fetchResponse.headers.get('content-length') < 2000000) { // 2MB limit
+              // Clone before caching
+              const responseClone = fetchResponse.clone()
+              
+              // Cache with size management
+              cache.keys().then(keys => {
+                if (keys.length > 100) { // Limit to 100 images
+                  cache.delete(keys[0]) // Remove oldest
+                }
+                cache.put(request, responseClone)
+              })
             }
             return fetchResponse
           }).catch(() => {
-            // Return a fallback image if fetch fails
-            return new Response('', { status: 404 })
+            // Return a fallback placeholder image
+            return new Response(
+              `<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#1a1a1a"/>
+                <text x="50%" y="50%" text-anchor="middle" fill="#666" font-size="14">Image</text>
+              </svg>`,
+              { 
+                status: 200,
+                headers: { 'Content-Type': 'image/svg+xml' }
+              }
+            )
           })
         })
       })

@@ -1,6 +1,6 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState } from 'react'
 
@@ -10,23 +10,47 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            // Global defaults for better performance
-            staleTime: 30 * 1000, // 30 seconds
-            gcTime: 5 * 60 * 1000, // 5 minutes
+            // Optimized defaults for voting app performance
+            staleTime: 2 * 60 * 1000, // 2 minutes - longer for better UX
+            gcTime: 15 * 60 * 1000, // 15 minutes in cache
             retry: (failureCount, error) => {
-              // Don't retry on 4xx errors
-              if (error instanceof Error && error.message.includes('404')) {
-                return false
+              // Don't retry on 4xx errors or auth errors
+              if (error instanceof Error) {
+                if (error.message.includes('404') || 
+                    error.message.includes('401') || 
+                    error.message.includes('403')) {
+                  return false
+                }
               }
               return failureCount < 2
             },
             refetchOnWindowFocus: false,
             refetchOnReconnect: true,
+            // Enable suspense for better loading states
+            suspense: false,
+            // Optimize for mobile networks
+            networkMode: 'offlineFirst',
+            // Enable background updates for smoother UX
+            refetchInterval: false,
+            refetchIntervalInBackground: false,
           },
           mutations: {
             retry: 1,
+            // Enable optimistic updates
+            networkMode: 'offlineFirst',
           },
         },
+        // Enhanced query cache configuration
+        queryCache: new QueryCache({
+          onError: (error, query) => {
+            console.error('Query error:', error, 'Query key:', query.queryKey)
+          },
+        }),
+        mutationCache: new MutationCache({
+          onError: (error, variables, context, mutation) => {
+            console.error('Mutation error:', error, 'Variables:', variables)
+          },
+        }),
       })
   )
 
@@ -39,3 +63,4 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
     </QueryClientProvider>
   )
 }
+
