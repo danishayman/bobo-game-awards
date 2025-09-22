@@ -149,7 +149,7 @@ export const NomineeCard = React.memo(function NomineeCard({
           )} />
 
           <div className="flex flex-col h-full min-h-0">
-            <div className="flex-1 space-y-1 min-h-0">
+            <div className="flex-1 space-y-1 min-h-0 text-center">
               <CardTitle className={cn(
                 "text-xs font-bold leading-tight transition-colors duration-150 line-clamp-1",
                 isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
