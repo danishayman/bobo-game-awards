@@ -63,6 +63,11 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  /* Ensure scrollbar doesn't overlap with sticky header */
+  scroll-padding-top: 4rem; /* 64px header height */
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -70,6 +75,8 @@ body {
 
 ::-webkit-scrollbar-track {
   background: var(--background-secondary);
+  /* Ensure scrollbar track starts below header */
+  margin-top: 4rem; /* 64px header height */
 }
 
 ::-webkit-scrollbar-thumb {
