@@ -158,9 +158,6 @@ export function LiveVotingCountdown({ onLiveVotingStarted, className = "" }: Liv
         </motion.p>
       )}
 
-      <p className="text-foreground-muted text-sm">
-        Voting is currently restricted to administrators only.
-      </p>
     </motion.div>
   );
 }

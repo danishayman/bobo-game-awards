@@ -133,7 +133,7 @@ export default function CategoryVotePage() {
                 Voting Opening Soon!
               </h1>
               <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-                Live voting hasn&apos;t started yet. Only administrators can currently vote. Check back when the countdown reaches zero!
+                Live voting hasn&apos;t started yet. Check back when the countdown reaches zero!
               </p>
             </motion.div>
             
