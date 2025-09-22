@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, CheckCircle, Unlock } from 'lucide-react';
-import { getLiveVotingStart, getTimeUntilLiveVoting, isLiveVotingActive } from '@/lib/config/voting';
+import { getTimeUntilLiveVoting, isLiveVotingActive } from '@/lib/config/voting';
 
 interface LiveVotingCountdownProps {
   onLiveVotingStarted?: () => void;

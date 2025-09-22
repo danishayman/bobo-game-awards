@@ -11,7 +11,7 @@ import { Category, Vote as VoteType, Ballot } from '@/lib/types/database'
 import { CheckCircle, Vote, Target, Award, Star, Trophy, AlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
-import { isVotingActive, canUserVote, isVotingLocked, getLiveVotingStart } from '@/lib/config/voting'
+import { isVotingActive, canUserVote, isVotingLocked } from '@/lib/config/voting'
 import { LiveVotingCountdown } from '@/components/ui/live-voting-countdown'
 
 const containerVariants: Variants = {
@@ -189,7 +189,7 @@ export default function VotePage() {
                 Voting Opening Soon!
               </h1>
               <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-                Live voting hasn't started yet. Only administrators can currently vote. Check back when the countdown reaches zero!
+                Live voting hasn&apos;t started yet. Only administrators can currently vote. Check back when the countdown reaches zero!
               </p>
             </motion.div>
             
