@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Vote } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { isVotingActive, getVotingDeadline, VOTING_CONFIG } from "@/lib/config/voting";
+import { isVotingActive, getVotingDeadline, getLiveVotingStart, isLiveVotingActive, VOTING_CONFIG } from "@/lib/config/voting";
 import { useEffect, useState } from "react";
 import { CountdownBanner } from "@/components/ui/countdown-banner";
 
@@ -33,11 +33,13 @@ const itemVariants: Variants = {
 
 export default function Home() {
   const [votingActive, setVotingActive] = useState(true);
+  const [liveVotingActive, setLiveVotingActive] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     setVotingActive(isVotingActive());
+    setLiveVotingActive(isLiveVotingActive());
   }, []);
 
   // Don't render countdown until mounted to avoid hydration mismatch
@@ -65,8 +67,8 @@ export default function Home() {
     <>
       {VOTING_CONFIG.COUNTDOWN_ENABLED && (
         <CountdownBanner 
-          deadline={getVotingDeadline()}
-          title="VOTING ENDS IN"
+          deadline={liveVotingActive ? getVotingDeadline() : getLiveVotingStart()}
+          title={liveVotingActive ? "VOTING ENDS IN" : "VOTING STARTS IN"}
         />
       )}
       <div className="flex items-center justify-center relative overflow-hidden py-20">
@@ -126,7 +128,7 @@ export default function Home() {
             </p>
           
           {/* Call to Action */}
-          {votingActive ? (
+          {votingActive && liveVotingActive ? (
             <Button 
               asChild 
               size="lg" 
@@ -135,6 +137,18 @@ export default function Home() {
               <Link href="/vote">
                 <Vote className="mr-3 h-6 w-6" />
                 Start Voting
+              </Link>
+            </Button>
+          ) : votingActive && !liveVotingActive ? (
+            <Button 
+              asChild 
+              size="lg" 
+              variant="outline"
+              className="border-yellow-500/50 text-yellow-300 hover:text-yellow-200 hover:border-yellow-400/70 px-12 py-6 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105 font-body"
+            >
+              <Link href="/vote">
+                <Vote className="mr-3 h-6 w-6" />
+                Coming Soon
               </Link>
             </Button>
           ) : (

@@ -9,6 +9,8 @@ import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
+import { canUserVote, isVotingLocked } from '@/lib/config/voting'
+import { LiveVotingCountdown } from '@/components/ui/live-voting-countdown'
 import { useVotingData, usePrefetchVotingData, useVoteMutation } from '@/lib/hooks/use-voting-data'
 import { Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
@@ -51,6 +53,8 @@ export default function CategoryVotePage() {
   const [selectedNominee, setSelectedNominee] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [justVoted, setJustVoted] = useState(false)
+  const [userCanVote, setUserCanVote] = useState(true)
+  const [votingLocked, setVotingLocked] = useState(false)
 
   // Extract data from React Query result
   const category = votingData?.currentCategory || null
@@ -65,6 +69,14 @@ export default function CategoryVotePage() {
       return
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    // Check if user can vote (considering admin status and voting lock)
+    setVotingLocked(isVotingLocked())
+    if (appUser) {
+      setUserCanVote(canUserVote(appUser.is_admin))
+    }
+  }, [appUser])
 
   // Set initial selected nominee when data loads
   useEffect(() => {
@@ -92,6 +104,65 @@ export default function CategoryVotePage() {
     console.error('Error fetching voting data:', error)
     router.push('/vote')
     return null
+  }
+
+  // Show voting locked message with countdown if voting is locked and user is not admin
+  if (votingLocked && !userCanVote) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center py-8">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <motion.div 
+            className="text-center space-y-12"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <div className="relative w-20 h-20">
+                <Image
+                  src="/logo.webp"
+                  alt="Bobo Game Awards Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                Voting Opening Soon!
+              </h1>
+              <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+                Live voting hasn't started yet. Only administrators can currently vote. Check back when the countdown reaches zero!
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants}>
+              <LiveVotingCountdown 
+                onLiveVotingStarted={() => {
+                  setVotingLocked(false)
+                  setUserCanVote(true)
+                }}
+                className="max-w-2xl mx-auto"
+              />
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                asChild 
+                size="lg" 
+                className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
+              >
+                <Link href="/vote">
+                  <ArrowLeft className="mr-2 h-5 w-5" />
+                  Back to Voting
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    )
   }
 
   const handleVoteAndNavigate = async () => {

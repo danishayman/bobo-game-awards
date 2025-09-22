@@ -11,7 +11,8 @@ import { Category, Vote as VoteType, Ballot } from '@/lib/types/database'
 import { CheckCircle, Vote, Target, Award, Star, Trophy, AlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
-import { isVotingActive } from '@/lib/config/voting'
+import { isVotingActive, canUserVote, isVotingLocked, getLiveVotingStart } from '@/lib/config/voting'
+import { LiveVotingCountdown } from '@/components/ui/live-voting-countdown'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -44,10 +45,13 @@ export default function VotePage() {
   const [ballot, setBallot] = useState<Ballot | null>(null)
   const [loadingData, setLoadingData] = useState(true)
   const [votingActive, setVotingActive] = useState(true)
+  const [userCanVote, setUserCanVote] = useState(true)
+  const [votingLocked, setVotingLocked] = useState(false)
 
   useEffect(() => {
-    // Check if voting is still active
+    // Check if voting is still active and if user can vote
     setVotingActive(isVotingActive())
+    setVotingLocked(isVotingLocked())
     
     if (!loading && !user) {
       router.push('/login')
@@ -58,6 +62,13 @@ export default function VotePage() {
       fetchData()
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    // Check if user can vote (considering admin status and voting lock)
+    if (appUser) {
+      setUserCanVote(canUserVote(appUser.is_admin))
+    }
+  }, [appUser])
 
   const fetchData = async () => {
     try {
@@ -144,6 +155,65 @@ export default function VotePage() {
                   </Link>
                 </Button>
               )}
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show voting locked message with countdown if voting is locked and user is not admin
+  if (votingLocked && !userCanVote) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center py-8">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <motion.div 
+            className="text-center space-y-12"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <div className="relative w-20 h-20">
+                <Image
+                  src="/logo.webp"
+                  alt="Bobo Game Awards Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                Voting Opening Soon!
+              </h1>
+              <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+                Live voting hasn't started yet. Only administrators can currently vote. Check back when the countdown reaches zero!
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants}>
+              <LiveVotingCountdown 
+                onLiveVotingStarted={() => {
+                  setVotingLocked(false)
+                  setUserCanVote(true)
+                }}
+                className="max-w-2xl mx-auto"
+              />
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                asChild 
+                size="lg" 
+                className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
+              >
+                <Link href="/">
+                  <Star className="mr-2 h-5 w-5" />
+                  Back to Home
+                </Link>
+              </Button>
             </motion.div>
           </motion.div>
         </div>
@@ -244,6 +314,15 @@ export default function VotePage() {
               <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
                 Vote for your favorite games in each category. You can change your votes until you finalize your ballot.
               </p>
+
+              {/* Admin early access notice */}
+              {votingLocked && appUser?.is_admin && (
+                <div className="inline-block px-4 py-2 bg-yellow-500/20 border border-yellow-500/50 rounded-lg">
+                  <p className="text-yellow-300 text-sm font-medium">
+                    🔓 Admin Early Access - Live voting opens for everyone soon!
+                  </p>
+                </div>
+              )}
             </div>
           </motion.div>
 

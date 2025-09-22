@@ -11,17 +11,26 @@ interface BatchVoteRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check global voting deadline first
-    const votingValidation = validateVotingPeriod();
-    if (!votingValidation.isActive) {
-      return votingValidation.response!;
-    }
-
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Get user's admin status
+    const { data: appUser } = await supabase
+      .from('users')
+      .select('is_admin')
+      .eq('id', user.id)
+      .single()
+
+    const isAdmin = appUser?.is_admin || false
+
+    // Check global voting deadline and voting lock (with admin bypass)
+    const votingValidation = validateVotingPeriod(isAdmin);
+    if (!votingValidation.isActive) {
+      return votingValidation.response!;
     }
 
     const body: BatchVoteRequest = await request.json()
