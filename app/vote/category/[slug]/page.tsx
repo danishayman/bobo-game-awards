@@ -9,7 +9,7 @@ import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
-import { useVotingData, usePrefetchVotingData } from '@/lib/hooks/use-voting-data'
+import { useVotingData, usePrefetchVotingData, useVoteMutation } from '@/lib/hooks/use-voting-data'
 import { Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
 import { NomineeLoadingSkeleton } from '@/components/ui/nominee-loading-skeleton'
@@ -46,6 +46,7 @@ export default function CategoryVotePage() {
   // Use React Query for data fetching
   const { data: votingData, isLoading: loadingData, error, isError } = useVotingData(slug)
   const prefetchVotingData = usePrefetchVotingData()
+  const { optimisticVoteUpdate, revertOptimisticUpdate, updateVoteCache } = useVoteMutation()
 
   const [selectedNominee, setSelectedNominee] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -97,6 +98,11 @@ export default function CategoryVotePage() {
     if (!selectedNominee || !category) return
 
     setSubmitting(true)
+    
+    // Apply optimistic update immediately for better UX
+    optimisticVoteUpdate(slug, category.id, selectedNominee)
+    setJustVoted(true)
+    
     try {
       console.log('Submitting vote:', {
         category_id: category.id,
@@ -122,16 +128,20 @@ export default function CategoryVotePage() {
           statusText: response.statusText,
           error: error
         })
+        
+        // Revert optimistic update on error
+        revertOptimisticUpdate(slug)
+        setJustVoted(false)
         throw new Error(error.error || 'Failed to save vote')
       }
 
-        setJustVoted(true)
-        
-        // Invalidate and refetch the voting data to get latest state
-        // This will update the currentVote state from server
+      const result = await response.json()
       
-      // Small delay to show success state
-      await new Promise(resolve => setTimeout(resolve, 800))
+      // Update cache with actual server response
+      updateVoteCache(slug, result.vote)
+      
+      // Small delay to show success state, but shorter since we already showed optimistic update
+      await new Promise(resolve => setTimeout(resolve, 400))
       
       // Navigate to next category or back to vote overview
       const nextCategory = allCategories[currentIndex + 1]
@@ -144,6 +154,7 @@ export default function CategoryVotePage() {
       console.error('Error saving vote:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to save vote. Please try again.'
       alert(`Vote failed: ${errorMessage}`)
+      setJustVoted(false)
     } finally {
       setSubmitting(false)
     }

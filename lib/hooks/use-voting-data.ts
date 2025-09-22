@@ -63,15 +63,18 @@ export function usePrefetchVotingData() {
   const queryClient = useQueryClient()
   
   return (slug: string) => {
-    queryClient.prefetchQuery({
-      queryKey: ['voting-data', slug],
-      queryFn: async (): Promise<VotingData> => {
-        const response = await fetch(`/api/categories/${slug}/voting-data`)
-        if (!response.ok) throw new Error('Failed to prefetch')
-        return response.json()
-      },
-      staleTime: 60 * 1000,
-    })
+    // Only prefetch if not already in cache or stale
+    if (!queryClient.getQueryData(['voting-data', slug])) {
+      queryClient.prefetchQuery({
+        queryKey: ['voting-data', slug],
+        queryFn: async (): Promise<VotingData> => {
+          const response = await fetch(`/api/categories/${slug}/voting-data`)
+          if (!response.ok) throw new Error('Failed to prefetch')
+          return response.json()
+        },
+        staleTime: 60 * 1000,
+      })
+    }
   }
 }
 
@@ -96,6 +99,72 @@ export function usePrefetchAllVotingData() {
       },
       staleTime: 60 * 1000,
     })
+  }
+}
+
+// Hook for optimistic updates and cache management
+export function useVoteMutation() {
+  const queryClient = useQueryClient()
+  
+  return {
+    // Optimistic update for immediate UI feedback
+    optimisticVoteUpdate: (slug: string, categoryId: string, nomineeId: string) => {
+      queryClient.setQueryData(['voting-data', slug], (oldData: VotingData | undefined) => {
+        if (!oldData) return oldData
+        
+        return {
+          ...oldData,
+          currentVote: {
+            id: 'temp-optimistic-id',
+            user_id: oldData._meta.user_id,
+            category_id: categoryId,
+            nominee_id: nomineeId,
+            is_final: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          userVotes: {
+            ...oldData.userVotes,
+            [categoryId]: {
+              id: 'temp-optimistic-id',
+              user_id: oldData._meta.user_id,
+              category_id: categoryId,
+              nominee_id: nomineeId,
+              is_final: false,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            }
+          },
+          categories: oldData.categories.map(cat => 
+            cat.id === categoryId ? { ...cat, hasVote: true } : cat
+          )
+        }
+      })
+    },
+
+    // Revert optimistic update on error
+    revertOptimisticUpdate: (slug: string) => {
+      queryClient.invalidateQueries({ queryKey: ['voting-data', slug] })
+    },
+
+    // Update cache with server response
+    updateVoteCache: (slug: string, voteData: Vote) => {
+      queryClient.setQueryData(['voting-data', slug], (oldData: VotingData | undefined) => {
+        if (!oldData) return oldData
+        
+        return {
+          ...oldData,
+          currentVote: voteData,
+          userVotes: {
+            ...oldData.userVotes,
+            [voteData.category_id]: voteData
+          },
+          categories: oldData.categories.map(cat => 
+            cat.id === voteData.category_id ? { ...cat, hasVote: true } : cat
+          )
+        }
+      })
+    }
   }
 }
 

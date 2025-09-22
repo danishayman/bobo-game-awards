@@ -73,149 +73,42 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Ensure user exists in public.users table
-    const { data: publicUser, error: userError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('id', user.id)
-      .single()
+    // Use optimized PostgreSQL function for validation and vote submission
+    try {
+      const { data, error } = await supabase.rpc('submit_vote_optimized', {
+        user_id_param: user.id,
+        category_id_param: category_id,
+        nominee_id_param: nominee_id,
+        user_display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
+        user_avatar_url: user.user_metadata?.avatar_url || null
+      })
 
-    if (userError || !publicUser) {
-      console.error('User not found in public.users table:', userError)
-      // Create user record if it doesn't exist
-      const { error: createUserError } = await supabase
-        .from('users')
-        .insert({
-          id: user.id,
-          display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
-          avatar_url: user.user_metadata?.avatar_url || null,
-        })
-
-      if (createUserError) {
-        console.error('Failed to create user record:', createUserError)
-        return NextResponse.json(
-          { error: 'Failed to create user profile' },
-          { status: 500 }
-        )
+      if (error) {
+        // Handle specific error cases
+        if (error.message.includes('VOTING_ENDED')) {
+          return NextResponse.json({ error: 'Voting has ended' }, { status: 403 })
+        }
+        if (error.message.includes('BALLOT_FINALIZED')) {
+          return NextResponse.json({ error: 'Ballot is already finalized' }, { status: 400 })
+        }
+        if (error.message.includes('INVALID_NOMINEE')) {
+          return NextResponse.json({ error: 'Invalid nominee selected' }, { status: 400 })
+        }
+        if (error.message.includes('CATEGORY_INACTIVE')) {
+          return NextResponse.json({ error: 'Voting is not active for this category' }, { status: 400 })
+        }
+        
+        console.error('Error in optimized vote submission:', error)
+        throw error
       }
+
+      return NextResponse.json({ vote: data }, { status: 201 })
+    } catch (functionError) {
+      console.error('Optimized function failed, falling back to manual queries:', functionError)
+      
+      // Fallback to manual validation if function doesn't exist
+      return await fallbackVoteSubmission(supabase, user, category_id, nominee_id)
     }
-
-    // Validate that the nominee exists and belongs to the category
-    const { data: nominee, error: nomineeError } = await supabase
-      .from('nominees')
-      .select('id, category_id')
-      .eq('id', nominee_id)
-      .single()
-
-    if (nomineeError || !nominee) {
-      console.error('Nominee validation failed:', nomineeError)
-      return NextResponse.json(
-        { error: 'Invalid nominee selected' },
-        { status: 400 }
-      )
-    }
-
-    if (nominee.category_id !== category_id) {
-      return NextResponse.json(
-        { error: 'Nominee does not belong to the specified category' },
-        { status: 400 }
-      )
-    }
-
-    // Check if voting is active for this category
-    const { data: category, error: categoryError } = await supabase
-      .from('categories')
-      .select('voting_start, voting_end, is_active')
-      .eq('id', category_id)
-      .single()
-
-    if (categoryError) {
-      console.error('Category validation failed:', categoryError)
-      return NextResponse.json(
-        { error: 'Invalid category' },
-        { status: 400 }
-      )
-    }
-
-    if (!category?.is_active) {
-      return NextResponse.json(
-        { error: 'Voting is not active for this category' },
-        { status: 400 }
-      )
-    }
-
-    const now = new Date()
-    if (category.voting_start && new Date(category.voting_start) > now) {
-      return NextResponse.json(
-        { error: 'Voting has not started yet' },
-        { status: 400 }
-      )
-    }
-
-    if (category.voting_end && new Date(category.voting_end) < now) {
-      return NextResponse.json(
-        { error: 'Voting has ended' },
-        { status: 400 }
-      )
-    }
-
-    // Check if user's ballot is already finalized
-    const { data: ballot } = await supabase
-      .from('ballots')
-      .select('is_final')
-      .eq('user_id', user.id)
-      .single()
-
-    if (ballot?.is_final) {
-      return NextResponse.json(
-        { error: 'Ballot is already finalized' },
-        { status: 400 }
-      )
-    }
-
-    // Upsert the vote (insert or update if exists)
-    const { data, error } = await supabase
-      .from('votes')
-      .upsert({
-        user_id: user.id,
-        category_id,
-        nominee_id,
-        is_final: false
-      }, {
-        onConflict: 'user_id,category_id'
-      })
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Error creating/updating vote:', error)
-      console.error('Vote data:', { user_id: user.id, category_id, nominee_id })
-      return NextResponse.json(
-        { 
-          error: 'Failed to save vote',
-          details: error.message,
-          code: error.code 
-        },
-        { status: 500 }
-      )
-    }
-
-    // Create or update ballot entry
-    const { error: ballotError } = await supabase
-      .from('ballots')
-      .upsert({
-        user_id: user.id,
-        is_final: false
-      }, {
-        onConflict: 'user_id'
-      })
-
-    if (ballotError) {
-      console.error('Error creating/updating ballot:', ballotError)
-      // Don't fail the request if ballot creation fails, as the vote was successful
-    }
-
-    return NextResponse.json({ vote: data }, { status: 201 })
   } catch (error) {
     console.error('Unexpected error in POST /api/votes:', error)
     return NextResponse.json(
@@ -226,4 +119,140 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+// Fallback function for manual vote submission
+async function fallbackVoteSubmission(
+  supabase: Awaited<ReturnType<typeof createClient>>, 
+  user: any, 
+  category_id: string, 
+  nominee_id: string
+) {
+  // Combine validation queries into fewer round trips
+  const [userCheck, validationData] = await Promise.all([
+    // Ensure user exists - upsert for efficiency
+    supabase
+      .from('users')
+      .upsert({
+        id: user.id,
+        display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
+        avatar_url: user.user_metadata?.avatar_url || null,
+      }, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      })
+      .select('id')
+      .single(),
+
+    // Combined validation query using joins
+    supabase
+      .from('nominees')
+      .select(`
+        id,
+        category_id,
+        categories!inner(
+          id,
+          is_active,
+          voting_start,
+          voting_end
+        )
+      `)
+      .eq('id', nominee_id)
+      .eq('category_id', category_id)
+      .eq('categories.is_active', true)
+      .single()
+  ])
+
+  if (userCheck.error) {
+    console.error('Failed to ensure user exists:', userCheck.error)
+    return NextResponse.json(
+      { error: 'Failed to create user profile' },
+      { status: 500 }
+    )
+  }
+
+  if (validationData.error || !validationData.data) {
+    console.error('Validation failed:', validationData.error)
+    return NextResponse.json(
+      { error: 'Invalid nominee or category' },
+      { status: 400 }
+    )
+  }
+
+  const nominee = validationData.data
+  const category = nominee.categories
+
+  // Check voting timing
+  const now = new Date()
+  if (category.voting_start && new Date(category.voting_start) > now) {
+    return NextResponse.json(
+      { error: 'Voting has not started yet' },
+      { status: 400 }
+    )
+  }
+
+  if (category.voting_end && new Date(category.voting_end) < now) {
+    return NextResponse.json(
+      { error: 'Voting has ended' },
+      { status: 400 }
+    )
+  }
+
+  // Check if ballot is finalized and submit vote in single query
+  const { data: ballot } = await supabase
+    .from('ballots')
+    .select('is_final')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (ballot?.is_final) {
+    return NextResponse.json(
+      { error: 'Ballot is already finalized' },
+      { status: 400 }
+    )
+  }
+
+  // Submit vote and ensure ballot exists in parallel
+  const [voteResult, ballotResult] = await Promise.all([
+    supabase
+      .from('votes')
+      .upsert({
+        user_id: user.id,
+        category_id,
+        nominee_id,
+        is_final: false
+      }, {
+        onConflict: 'user_id,category_id'
+      })
+      .select()
+      .single(),
+
+    supabase
+      .from('ballots')
+      .upsert({
+        user_id: user.id,
+        is_final: false
+      }, {
+        onConflict: 'user_id'
+      })
+  ])
+
+  if (voteResult.error) {
+    console.error('Error creating/updating vote:', voteResult.error)
+    return NextResponse.json(
+      { 
+        error: 'Failed to save vote',
+        details: voteResult.error.message,
+        code: voteResult.error.code 
+      },
+      { status: 500 }
+    )
+  }
+
+  if (ballotResult.error) {
+    console.error('Error creating/updating ballot:', ballotResult.error)
+    // Don't fail the request if ballot creation fails, as the vote was successful
+  }
+
+  return NextResponse.json({ vote: voteResult.data }, { status: 201 })
 }

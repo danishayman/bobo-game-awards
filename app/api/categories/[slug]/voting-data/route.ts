@@ -33,7 +33,12 @@ export async function GET(
 
     // Parse the JSON result from the PostgreSQL function
     const result = typeof data === 'string' ? JSON.parse(data) : data
-    return NextResponse.json(result)
+    
+    // Add caching headers for better performance
+    const response = NextResponse.json(result)
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60')
+    response.headers.set('ETag', `"voting-${slug}-${user.id}-${Date.now()}"`)
+    return response
 
   } catch (error) {
     console.error('Unexpected error in voting data fetch:', error)
@@ -131,7 +136,7 @@ async function fallbackVotingData(supabase: Awaited<ReturnType<typeof createClie
       return acc
     }, {} as Record<string, Vote>)
 
-    return NextResponse.json({
+    const result = {
       categories: categories.map(cat => ({
         id: cat.id,
         slug: cat.slug,
@@ -152,7 +157,13 @@ async function fallbackVotingData(supabase: Awaited<ReturnType<typeof createClie
         fallback: true,
         optimized: true
       }
-    })
+    }
+
+    // Add caching headers for fallback as well
+    const response = NextResponse.json(result)
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60')
+    response.headers.set('ETag', `"voting-fallback-${currentSlug}-${userId}-${Date.now()}"`)
+    return response
 
   } catch (error) {
     console.error('Fallback query failed:', error)
