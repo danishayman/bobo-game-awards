@@ -278,7 +278,7 @@ export default function CategoryVotePage() {
 
   const { prevCategory, nextCategory } = getNavigationInfo()
 
-  // Dynamic layout calculation based on nominee count - 3 columns on mobile
+  // Consistent layout for all categories - based on Best Indie Game style
   const getLayoutClasses = (count: number) => {
     if (count === 1) {
       return {
@@ -287,13 +287,9 @@ export default function CategoryVotePage() {
       }
     }
     
-    // Grid layout for multiple nominees - 3 cols on mobile, scaling up on larger screens
-    let gridCols = ''
-    if (count === 2) gridCols = 'grid-cols-2 sm:grid-cols-2'
-    else if (count === 3) gridCols = 'grid-cols-3 sm:grid-cols-3 lg:grid-cols-3'
-    else if (count === 4) gridCols = 'grid-cols-3 sm:grid-cols-2 lg:grid-cols-4'
-    else if (count <= 6) gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
-    else gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'
+    // Consistent grid layout for all categories (2+ nominees)
+    // This matches the Best Indie Game category layout
+    const gridCols = 'grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
     
     return {
       container: `grid ${gridCols}`,
@@ -325,7 +321,7 @@ export default function CategoryVotePage() {
         </div>
 
         {/* Category Title - Simplified */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             {category.name}
           </h1>
@@ -371,8 +367,8 @@ export default function CategoryVotePage() {
           ))}
         </motion.div>
 
-        {/* Simplified Action Section */}
-        <div className="flex flex-col items-center gap-6 mt-16 pt-8 border-t border-white/10">
+        {/* Simplified Action Section - Reduced spacing for better button visibility */}
+        <div className="flex flex-col items-center gap-4 mt-12 pt-6 border-t border-white/10">
           {/* Navigation hint */}
           <div className="text-sm text-foreground-muted text-center">
             {prevCategory && (
