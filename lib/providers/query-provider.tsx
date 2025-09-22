@@ -26,8 +26,6 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
             },
             refetchOnWindowFocus: false,
             refetchOnReconnect: true,
-            // Enable suspense for better loading states
-            suspense: false,
             // Optimize for mobile networks
             networkMode: 'offlineFirst',
             // Enable background updates for smoother UX
@@ -47,7 +45,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
           },
         }),
         mutationCache: new MutationCache({
-          onError: (error, variables, context, mutation) => {
+          onError: (error, variables) => {
             console.error('Mutation error:', error, 'Variables:', variables)
           },
         }),

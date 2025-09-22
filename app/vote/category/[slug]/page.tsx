@@ -3,17 +3,17 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useVotingData, usePrefetchVotingData } from '@/lib/hooks/use-voting-data'
 import { Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
 import { NomineeLoadingSkeleton } from '@/components/ui/nominee-loading-skeleton'
+import { NomineeCard } from '@/components/ui/nominee-card'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -52,8 +52,8 @@ export default function CategoryVotePage() {
   const [justVoted, setJustVoted] = useState(false)
 
   // Extract data from React Query result
-  const category = votingData?.category || null
-  const allCategories = useMemo(() => votingData?.allCategories || [], [votingData?.allCategories])
+  const category = votingData?.currentCategory || null
+  const allCategories = useMemo(() => votingData?.categories || [], [votingData?.categories])
   const currentIndex = votingData?.currentIndex || 0
   const ballot = votingData?.ballot || null
   const currentVote = votingData?.currentVote || null
@@ -337,60 +337,25 @@ export default function CategoryVotePage() {
             <motion.div
               key={nominee.id}
               variants={itemVariants}
-              className={`group relative ${submitting ? 'cursor-not-allowed' : 'cursor-pointer'} ${getLayoutClasses(category.nominees.length).item}`}
-              onClick={() => {
-                if (!submitting) {
-                  setSelectedNominee(nominee.id)
-                  setJustVoted(false)
-                }
-              }}
+              className={getLayoutClasses(category.nominees.length).item}
             >
-              {/* Simplified Nominee Card */}
-              <Card className={`h-full overflow-hidden border transition-all duration-300 ${
-                submitting ? '' : 'hover:scale-105'
-              } ${
-                selectedNominee === nominee.id 
-                  ? 'border-red-primary shadow-lg shadow-red-primary/25 bg-background-secondary' 
-                  : `border-white/10 bg-background-secondary/50 ${submitting ? 'opacity-60' : 'hover:border-white/20'}`
-              }`}>
-                
-                {/* Image */}
-                {nominee.image_url && (
-                  <div className="relative w-full aspect-[3/4] overflow-hidden bg-background-tertiary">
-                    <Image
-                      src={nominee.image_url}
-                      alt={nominee.name}
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                      priority={index < 4}
-                      loading={index < 4 ? "eager" : "lazy"}
-                    />
-                  </div>
-                )}
-
-                {/* Content */}
-                <CardHeader className="p-2 sm:p-3 md:p-4">
-                  <CardTitle className={`text-xs sm:text-sm md:text-base font-semibold text-center line-clamp-2 ${
-                    selectedNominee === nominee.id ? 'text-red-primary' : 'text-white'
-                  }`}>
-                    {nominee.name}
-                  </CardTitle>
-                  
-                  {nominee.description && (
-                    <CardDescription className="text-foreground-muted text-xs sm:text-sm text-center line-clamp-2 mt-1 sm:mt-2 hidden sm:block">
-                      {nominee.description}
-                    </CardDescription>
-                  )}
-
-                  {/* Selection indicator */}
-                  <div className="flex justify-center mt-2 sm:mt-3 md:mt-4">
-                    <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
-                      selectedNominee === nominee.id ? 'bg-red-primary' : 'bg-white/20'
-                    }`} />
-                  </div>
-                </CardHeader>
-              </Card>
+              <NomineeCard
+                id={nominee.id}
+                name={nominee.name}
+                description={nominee.description || undefined}
+                imageUrl={nominee.image_url || undefined}
+                isSelected={selectedNominee === nominee.id}
+                isVoted={currentVote?.nominee_id === nominee.id}
+                priority={index < 4}
+                index={index}
+                onClick={() => {
+                  if (!submitting) {
+                    setSelectedNominee(nominee.id)
+                    setJustVoted(false)
+                  }
+                }}
+                className={submitting ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
+              />
             </motion.div>
           ))}
         </motion.div>

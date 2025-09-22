@@ -32,8 +32,6 @@ const nextConfig: NextConfig = {
     imageSizes: [96, 128, 192, 256, 384, 512], // Better sizes for nominee cards
     // Limit concurrent image optimizations for better server performance
     domains: [], // Use remotePatterns instead
-    // Enable aggressive image optimization
-    quality: 80, // Slightly lower quality for faster loading
     // Add custom loader for IGDB images if needed
     unoptimized: false,
   },
@@ -45,8 +43,6 @@ const nextConfig: NextConfig = {
   },
   // Enable compression
   compress: true,
-  // Optimize bundle
-  swcMinify: true,
   // Enable static optimization where possible
   output: 'standalone',
 };
