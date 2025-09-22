@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
 // Fallback function for manual vote submission
 async function fallbackVoteSubmission(
   supabase: Awaited<ReturnType<typeof createClient>>, 
-  user: any, 
+  user: { id: string; user_metadata?: { full_name?: string; avatar_url?: string }; email?: string }, 
   category_id: string, 
   nominee_id: string
 ) {
@@ -180,7 +180,7 @@ async function fallbackVoteSubmission(
   }
 
   const nominee = validationData.data
-  const category = nominee.categories
+  const category = Array.isArray(nominee.categories) ? nominee.categories[0] : nominee.categories
 
   // Check voting timing
   const now = new Date()

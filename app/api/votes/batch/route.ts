@@ -94,10 +94,10 @@ export async function POST(request: NextRequest) {
             const result = await response.json()
             submittedVotes.push(result.vote)
           } else {
-            const error = await response.json()
-            errors.push({ vote, error: error.error })
+            const errorData = await response.json()
+            errors.push({ vote, error: errorData.error })
           }
-        } catch (error) {
+        } catch {
           errors.push({ vote, error: 'Network error during submission' })
         }
       }
