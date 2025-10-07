@@ -86,13 +86,12 @@ export function Header() {
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
 
-          {user ? (
+          {user && !signingOut ? (
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild disabled={signingOut}>
+              <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className={`relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white ${signingOut ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={signingOut}
+                  className="relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white"
                 >
                   <Avatar className="h-9 w-9">
                     <AvatarImage 
@@ -133,13 +132,17 @@ export function Header() {
                 <DropdownMenuItem 
                   onClick={handleSignOut} 
                   className="text-white hover:text-red-primary hover:bg-white/10"
-                  disabled={signingOut}
                 >
-                  <LogOut className={`mr-3 h-4 w-4 ${signingOut ? 'animate-spin' : ''}`} />
-                  {signingOut ? 'Signing out...' : 'Sign out'}
+                  <LogOut className="mr-3 h-4 w-4" />
+                  Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : signingOut ? (
+            <div className="flex items-center gap-2 text-white/60 text-sm">
+              <LogOut className="h-4 w-4 animate-spin" />
+              <span className="hidden sm:inline">Signing out...</span>
+            </div>
           ) : (
             <Button asChild variant="premium" size="sm">
               <Link href="/login">Sign In</Link>
