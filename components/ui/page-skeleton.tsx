@@ -4,6 +4,7 @@ import { motion, Variants } from 'framer-motion'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { CardSkeleton } from '@/components/ui/card-skeleton'
 import { SkeletonPulse } from '@/components/ui/skeleton'
+import { NomineeLoadingSkeleton } from '@/components/ui/nominee-loading-skeleton'
 import { cn } from '@/lib/utils'
 
 const containerVariants: Variants = {
@@ -110,7 +111,7 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
 
   if (variant === 'vote-summary') {
     return (
-      <div className={cn("min-h-screen bg-gradient-to-b from-background via-background to-background-secondary", className)}>
+      <div className={cn("bg-full-viewport bg-gradient-to-b from-background via-background to-background-secondary", className)}>
         <div className="container py-8 space-y-8">
           {/* Header */}
           <motion.div 
@@ -119,39 +120,9 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
             className="text-center space-y-6"
           >
             <div className="space-y-4">
-              <SkeletonPulse className="w-64 h-8 rounded-full mx-auto" variant="shimmer" />
               <SkeletonPulse className="h-12 w-80 mx-auto" variant="shimmer" />
               <SkeletonPulse className="h-6 w-96 mx-auto" variant="shimmer" />
             </div>
-          </motion.div>
-
-          {/* Ballot Status Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card className="border-2 border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <SkeletonPulse className="w-12 h-12 rounded-xl" variant="shimmer" />
-                    <div className="space-y-2">
-                      <SkeletonPulse className="h-6 w-48" variant="shimmer" />
-                      <SkeletonPulse className="h-4 w-64" variant="shimmer" />
-                    </div>
-                  </div>
-                  <SkeletonPulse className="w-16 h-6 rounded-full" variant="shimmer" />
-                </div>
-                <div className="mt-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <SkeletonPulse className="h-4 w-16" variant="shimmer" />
-                    <SkeletonPulse className="h-4 w-8" variant="shimmer" />
-                  </div>
-                  <SkeletonPulse className="w-full h-2 rounded-full" variant="shimmer" />
-                </div>
-              </CardHeader>
-            </Card>
           </motion.div>
 
           {/* Vote Cards */}
@@ -161,11 +132,6 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
             variants={containerVariants}
             className="space-y-6"
           >
-            <motion.div variants={itemVariants} className="text-center space-y-2">
-              <SkeletonPulse className="h-8 w-32 mx-auto" variant="shimmer" />
-              <SkeletonPulse className="h-5 w-80 mx-auto" variant="shimmer" />
-            </motion.div>
-            
             <motion.div 
               variants={containerVariants}
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -174,16 +140,34 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
             </motion.div>
           </motion.div>
 
-          {/* Action Buttons */}
+          {/* Finalize Ballot Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
+            transition={{ delay: 0.4 }}
           >
-            <SkeletonPulse className="h-12 w-40 rounded-full" variant="shimmer" />
-            <SkeletonPulse className="h-12 w-36 rounded-full" variant="shimmer" />
-            <SkeletonPulse className="h-12 w-44 rounded-full" variant="shimmer" />
+            <Card className="border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
+              <CardHeader>
+                <SkeletonPulse className="h-6 w-64 mx-auto" variant="shimmer" />
+                <SkeletonPulse className="h-4 w-96 mx-auto mt-2" variant="shimmer" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <SkeletonPulse className="h-12 w-40 rounded-full" variant="shimmer" />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Missing Categories Alert */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="border border-orange-500/50 bg-orange-500/10 p-4 rounded-lg">
+              <SkeletonPulse className="h-4 w-80 mx-auto" variant="shimmer" />
+            </div>
           </motion.div>
         </div>
       </div>
@@ -192,31 +176,34 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
 
   if (variant === 'category-vote') {
     return (
-      <div className={cn("container py-8", className)}>
-        <div className="space-y-8">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <SkeletonPulse className="w-48 h-8 rounded-full mx-auto" variant="shimmer" />
-            <SkeletonPulse className="h-12 w-80 mx-auto" variant="shimmer" />
-            <SkeletonPulse className="h-6 w-96 mx-auto" variant="shimmer" />
-          </div>
-
-          {/* Progress */}
-          <div className="flex items-center justify-center gap-2">
-            {[...Array(5)].map((_, i) => (
-              <SkeletonPulse key={i} className="w-8 h-8 rounded-full" variant="shimmer" />
-            ))}
-          </div>
-
-          {/* Nominees Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CardSkeleton variant="nominee" count={6} />
-          </div>
-
-          {/* Navigation */}
-          <div className="flex justify-between">
+      <div className={cn("min-h-screen bg-background", className)}>
+        <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
+          {/* Simple Header - matches actual page */}
+          <div className="flex items-center justify-between mb-4">
             <SkeletonPulse className="h-10 w-24 rounded" variant="shimmer" />
-            <SkeletonPulse className="h-10 w-24 rounded" variant="shimmer" />
+            <div className="flex items-center gap-4 text-sm">
+              <SkeletonPulse className="h-4 w-20" variant="shimmer" />
+            </div>
+          </div>
+
+          {/* Category Title - Compact */}
+          <div className="text-center mb-6">
+            <SkeletonPulse className="h-8 md:h-10 lg:h-12 w-80 mx-auto mb-2" variant="shimmer" />
+            <SkeletonPulse className="h-4 w-96 mx-auto" variant="shimmer" />
+          </div>
+
+          {/* Nominees Section - Compact grid matching NomineeLoadingSkeleton */}
+          <div className="mb-6">
+            <NomineeLoadingSkeleton count={6} />
+          </div>
+
+          {/* Compact Action Section */}
+          <div className="flex flex-col items-center gap-3 mt-6 pt-4 border-t border-white/10">
+            {/* Navigation hint */}
+            <SkeletonPulse className="h-3 w-64 mx-auto" variant="shimmer" />
+            
+            {/* Main action button */}
+            <SkeletonPulse className="h-12 w-48 rounded" variant="shimmer" />
           </div>
         </div>
       </div>
@@ -409,7 +396,7 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
-            <Card key={i} className="border-white/20">
+            <Card key={i} className="border-white/20 bg-gradient-to-br from-purple-900/20 to-blue-900/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <SkeletonPulse className="h-4 w-24" variant="shimmer" />
                 <SkeletonPulse className="w-4 h-4 rounded" variant="shimmer" />
@@ -440,15 +427,15 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
                 </div>
               </div>
 
-              {/* Nominees Grid */}
+              {/* Nominees Grid - Matches actual page grid */}
               <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
-                <CardSkeleton variant="nominee" count={6} />
+                <NomineeLoadingSkeleton count={6} />
               </div>
 
               {/* Divider */}
               {categoryIndex !== 2 && (
                 <div className="flex items-center justify-center pt-8">
-                  <SkeletonPulse className="w-32 h-px" variant="shimmer" />
+                  <div className="w-full max-w-xs h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 </div>
               )}
             </div>
@@ -456,7 +443,7 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
         </div>
 
         {/* Footer */}
-        <div className="text-center pt-8">
+        <div className="text-center text-sm text-white/60 pt-8">
           <SkeletonPulse className="h-4 w-80 mx-auto" variant="shimmer" />
         </div>
       </div>
