@@ -325,12 +325,6 @@ export default function VoteSummaryPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button asChild variant="outline" size="lg">
-                    <Link href="/vote">
-                      <Vote className="mr-2 h-5 w-5" />
-                      Continue Voting
-                    </Link>
-                  </Button>
                   <Button 
                     onClick={handleFinalize}
                     disabled={finalizing}
