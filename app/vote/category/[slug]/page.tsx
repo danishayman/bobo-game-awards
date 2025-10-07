@@ -359,7 +359,7 @@ export default function CategoryVotePage() {
     // Each card will have a fixed width and the flex container will center them
     return {
       container: 'flex flex-wrap justify-center',
-      item: 'w-[calc(50%-0.25rem)] sm:w-[calc(33.333%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(20%-0.8rem)] xl:w-[calc(16.666%-1rem)] max-w-[180px]'
+      item: 'w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] md:w-[calc(25%-1rem)] lg:w-[calc(20%-1rem)] xl:w-[calc(16.666%-1.25rem)] min-w-[140px] max-w-[220px]'
     }
   }
 
