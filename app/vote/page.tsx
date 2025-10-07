@@ -326,6 +326,44 @@ export default function VotePage() {
             </div>
           </motion.div>
 
+          {/* Progress Overview - Simplified */}
+          <motion.div variants={itemVariants} className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-3">
+              <Target className="h-5 w-5 text-red-primary" />
+              <h2 className="text-lg font-semibold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                Your Voting Progress
+              </h2>
+            </div>
+            
+            <div className="text-4xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+              {userVotes.length}
+              <span className="text-foreground-muted text-xl"> / {categories.length}</span>
+            </div>
+            
+            <div className="text-foreground-muted">Categories completed</div>
+            
+            {/* Progress Bar */}
+            <div className="w-full max-w-md mx-auto bg-white/10 rounded-full h-2">
+              <div 
+                className="bg-red-primary h-2 rounded-full transition-all duration-1000"
+                style={{ width: `${(userVotes.length / categories.length) * 100}%` }}
+              />
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <Button 
+                asChild 
+                variant="outline" 
+                className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary"
+              >
+                <Link href="/vote/summary">
+                  <Star className="mr-2 h-4 w-4" />
+                  Review Votes
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+
           {/* Start Voting Section - Simplified */}
           <motion.div variants={itemVariants}>
             <Card className="border-white/10 bg-background-secondary/50 hover:border-red-primary/30 transition-all duration-300">
@@ -356,63 +394,6 @@ export default function VotePage() {
                       Start Voting
                     </Link>
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Progress Overview - Simplified */}
-          <motion.div variants={itemVariants}>
-            <Card className="border-white/10 bg-background-secondary/50 hover:border-red-primary/30 transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-white text-xl" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                  <div className="p-2 rounded-lg bg-red-primary/20">
-                    <Target className="h-5 w-5 text-red-primary" />
-                  </div>
-                  Your Voting Progress
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                      {userVotes.length}
-                      <span className="text-foreground-muted text-lg"> / {categories.length}</span>
-                    </div>
-                    <div className="text-foreground-muted">Categories completed</div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div 
-                      className="bg-red-primary h-2 rounded-full transition-all duration-1000"
-                      style={{ width: `${(userVotes.length / categories.length) * 100}%` }}
-                    />
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button 
-                      asChild 
-                      variant="outline" 
-                      className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary"
-                    >
-                      <Link href="/vote/summary">
-                        <Star className="mr-2 h-4 w-4" />
-                        Review Votes
-                      </Link>
-                    </Button>
-                    {userVotes.length > 0 && (
-                      <Button 
-                        asChild 
-                        className="bg-red-primary hover:bg-red-secondary text-white"
-                      >
-                        <Link href="/vote/summary">
-                          <Award className="mr-2 h-4 w-4" />
-                          Finalize Votes
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
                 </div>
               </CardContent>
             </Card>
