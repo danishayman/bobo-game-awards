@@ -404,7 +404,7 @@ export default function CategoryVotePage() {
 
         {/* Nominees Section - Compact */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto justify-items-center place-items-center`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -413,7 +413,7 @@ export default function CategoryVotePage() {
             <motion.div
               key={nominee.id}
               variants={itemVariants}
-              className={getLayoutClasses(category.nominees.length).item}
+              className={`${getLayoutClasses(category.nominees.length).item} w-full`}
             >
               <NomineeCard
                 id={nominee.id}

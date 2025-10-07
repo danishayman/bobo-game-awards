@@ -57,13 +57,14 @@ export const NomineeCard = React.memo(function NomineeCard({
       whileHover={{ scale: shouldLoadEagerly ? 1.02 : 1.01 }} // Reduce animation complexity for non-priority items
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.15 }} // Faster animations
+      className="w-full"
     >
       <Card
         className={cn(
           "group relative overflow-hidden cursor-pointer transition-all duration-200 border-white/20", // Faster transitions
           "hover:border-red-primary/50",
           showGlow && "hover:shadow-[0_0_20px_rgba(229,9,20,0.2)]", // Reduced glow intensity
-          "h-full flex flex-col",
+          "flex flex-col w-full",
           isSelected && [
             "ring-2 ring-red-primary border-red-primary",
             showGlow && "shadow-[0_0_25px_rgba(229,9,20,0.4)]"
@@ -137,7 +138,7 @@ export const NomineeCard = React.memo(function NomineeCard({
           </div>
         )}
 
-        <CardHeader className={cn("relative p-1 sm:p-2 h-14 sm:h-16", !imageUrl && "pt-2 sm:pt-3")}>
+        <CardHeader className="relative p-1 sm:p-2 h-16 sm:h-18 flex-shrink-0">
           {/* Simplified accent line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-0.5 transition-all duration-200",
