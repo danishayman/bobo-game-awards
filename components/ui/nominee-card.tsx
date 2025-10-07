@@ -137,7 +137,7 @@ export const NomineeCard = React.memo(function NomineeCard({
           </div>
         )}
 
-        <CardHeader className={cn("relative flex-grow flex flex-col justify-between p-1 sm:p-2", !imageUrl && "pt-2 sm:pt-3")}>
+        <CardHeader className={cn("relative p-1 sm:p-2 h-14 sm:h-16", !imageUrl && "pt-2 sm:pt-3")}>
           {/* Simplified accent line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-0.5 transition-all duration-200",
@@ -148,24 +148,18 @@ export const NomineeCard = React.memo(function NomineeCard({
                 : "bg-white/10 opacity-0 group-hover:opacity-100"
           )} />
 
-          <div className="flex flex-col h-full min-h-0">
-            <div className="flex-1 space-y-1 min-h-0 text-center">
+          <div className="flex flex-col h-full justify-between">
+            <div className="flex-1 flex items-center justify-center text-center min-h-0">
               <CardTitle className={cn(
-                "text-xs font-bold leading-tight transition-colors duration-150 line-clamp-1",
+                "text-xs font-bold leading-tight transition-colors duration-150 line-clamp-2",
                 isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
               )}>
                 {name}
               </CardTitle>
-              
-              {description && (
-                <CardDescription className="text-white/70 leading-tight line-clamp-1 text-xs hidden md:block">
-                  {description}
-                </CardDescription>
-              )}
             </div>
             
             {/* Simplified selection dot */}
-            <div className="flex justify-center mt-1">
+            <div className="flex justify-center">
               <div className={cn(
                 "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-colors duration-150",
                 isSelected ? "bg-red-primary" : "bg-white/20"
