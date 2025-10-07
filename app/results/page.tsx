@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Trophy, Users, Clock, Crown, Shield } from 'lucide-react'
+import { Trophy, Clock, Crown, Shield } from 'lucide-react'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 
 interface ResultNominee {
@@ -55,27 +54,6 @@ export default function ResultsPage() {
       setError(error instanceof Error ? error.message : 'Failed to load results')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const getTotalVotes = () => {
-    return results.reduce((total, category) => {
-      return total + category.nominees.reduce((catTotal, nominee) => catTotal + nominee.vote_count, 0)
-    }, 0)
-  }
-
-  // const getWinner = (nominees: ResultNominee[]) => {
-  //   return nominees.reduce((winner, nominee) => 
-  //     nominee.vote_count > winner.vote_count ? nominee : winner
-  //   )
-  // }
-
-  const getRankColor = (index: number) => {
-    switch (index) {
-      case 0: return 'text-yellow-600 bg-yellow-50 border-yellow-200'
-      case 1: return 'text-gray-600 bg-gray-50 border-gray-200'
-      case 2: return 'text-amber-600 bg-amber-50 border-amber-200'
-      default: return 'text-gray-500 bg-gray-50 border-gray-200'
     }
   }
 
@@ -135,146 +113,60 @@ export default function ResultsPage() {
     )
   }
 
-  const totalVotes = getTotalVotes()
-
   return (
     <div className="container py-8 space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tighter">
-          Gaming Awards Results
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          Community choice winners across all categories
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-bold">Awards Results</h1>
+        <p className="text-muted-foreground">
+          Community winners
         </p>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Votes</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalVotes.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Across all categories
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Categories</CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{results.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Award categories
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Winners</CardTitle>
-            <Crown className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{results.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Games crowned
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Results by Category */}
-      <div className="space-y-8">
-        <h2 className="text-2xl font-bold text-center">Category Winners</h2>
-        
-        <div className="grid gap-8">
-          {results.map((category) => {
-            const sortedNominees = [...category.nominees].sort((a, b) => b.vote_count - a.vote_count)
-            const totalCategoryVotes = category.nominees.reduce((sum, nom) => sum + nom.vote_count, 0)
+      <div className="grid gap-6 max-w-4xl mx-auto">
+        {results.map((category) => {
+          const sortedNominees = [...category.nominees].sort((a, b) => b.vote_count - a.vote_count)
+          const winner = sortedNominees[0]
 
-            return (
-              <Card key={category.category_id} className="overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20">
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Trophy className="h-6 w-6 text-purple-600" />
-                    {category.category_name}
-                  </CardTitle>
-                  <CardDescription>
-                    {totalCategoryVotes.toLocaleString()} total votes cast
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="space-y-0">
-                    {sortedNominees.map((nominee, index) => {
-                      const percentage = totalCategoryVotes > 0 
-                        ? (nominee.vote_count / totalCategoryVotes) * 100 
-                        : 0
-                      
-                      return (
-                        <div 
-                          key={nominee.nominee_id}
-                          className={`relative p-4 border-b last:border-b-0 ${
-                            index === 0 ? 'bg-yellow-50/50 dark:bg-yellow-950/10' : ''
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Badge 
-                                variant="outline" 
-                                className={`${getRankColor(index)} font-bold min-w-[2rem] justify-center`}
-                              >
-                                #{index + 1}
-                              </Badge>
-                              <div>
-                                <h3 className={`font-semibold ${index === 0 ? 'text-lg' : ''}`}>
-                                  {nominee.nominee_name}
-                                  {index === 0 && (
-                                    <Crown className="inline h-4 w-4 ml-2 text-yellow-600" />
-                                  )}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                  {nominee.vote_count.toLocaleString()} votes ({percentage.toFixed(1)}%)
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Vote percentage bar */}
-                          <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full transition-all duration-500 ${
-                                index === 0 ? 'bg-yellow-500' : 'bg-purple-500'
-                              }`}
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Footer Note */}
-      <div className="text-center text-sm text-muted-foreground">
-        <p>Results are updated in real-time as votes are cast.</p>
-        {appUser?.is_admin && (
-          <p className="mt-1 text-purple-600">
-            Admin view: You can see results even during active voting periods.
-          </p>
-        )}
+          return (
+            <Card key={category.category_id}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-purple-600" />
+                  {category.category_name}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {/* Winner */}
+                  {winner && (
+                    <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-950/10 rounded-lg border border-yellow-200">
+                      <Crown className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold truncate">{winner.nominee_name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {winner.vote_count.toLocaleString()} votes
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Other nominees */}
+                  {sortedNominees.slice(1).map((nominee, index) => (
+                    <div key={nominee.nominee_id} className="flex items-center justify-between py-2 px-3">
+                      <span className="text-muted-foreground text-sm">#{index + 2}</span>
+                      <span className="flex-1 px-3 truncate">{nominee.nominee_name}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {nominee.vote_count.toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
     </div>
   )
