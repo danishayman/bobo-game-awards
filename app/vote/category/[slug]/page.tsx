@@ -367,7 +367,7 @@ export default function CategoryVotePage() {
     const gridCols = 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
     
     return {
-      container: `grid ${gridCols} justify-center`,
+      container: `grid ${gridCols} justify-items-center`,
       item: ''
     }
   }
@@ -404,7 +404,7 @@ export default function CategoryVotePage() {
 
         {/* Nominees Section - Compact */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto justify-items-center`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto place-content-center`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
