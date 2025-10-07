@@ -218,6 +218,51 @@ export default function VoteSummaryPage() {
           </div>
         </motion.div>
 
+        {/* Finalize Ballot Section */}
+        {!ballot?.is_final && votes.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
+              <CardHeader>
+                <CardTitle className="text-orange-200 text-xl text-center">
+                  Ready to Finalize Your Votes?
+                </CardTitle>
+                <CardDescription className="text-orange-300 text-center">
+                  Once you finalize, you won&rsquo;t be able to make any changes to your votes.
+                  {votedCategories < totalCategories && (
+                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you&rsquo;re satisfied with your current choices.`
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    onClick={handleFinalize}
+                    disabled={finalizing}
+                    variant="premium"
+                    size="lg"
+                    className="bg-orange-600 hover:bg-orange-700"
+                  >
+                    {finalizing ? (
+                      <div className="flex items-center">
+                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
+                        Finalizing Votes...
+                      </div>
+                    ) : (
+                      <>
+                        <CheckCircle className="mr-2 h-5 w-5" />
+                        Finalize Votes
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Your Votes */}
         <motion.div 
@@ -302,53 +347,6 @@ export default function VoteSummaryPage() {
             })}
           </motion.div>
         </motion.div>
-
-
-        {/* Finalize Ballot Section */}
-        {!ballot?.is_final && votes.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
-              <CardHeader>
-                <CardTitle className="text-orange-200 text-xl text-center">
-                  Ready to Finalize Your Votes?
-                </CardTitle>
-                <CardDescription className="text-orange-300 text-center">
-                  Once you finalize, you won&rsquo;t be able to make any changes to your votes.
-                  {votedCategories < totalCategories && (
-                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you&rsquo;re satisfied with your current choices.`
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    onClick={handleFinalize}
-                    disabled={finalizing}
-                    variant="premium"
-                    size="lg"
-                    className="bg-orange-600 hover:bg-orange-700"
-                  >
-                    {finalizing ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
-                        Finalizing Votes...
-                      </div>
-                    ) : (
-                      <>
-                        <CheckCircle className="mr-2 h-5 w-5" />
-                        Finalize Votes
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
 
         {/* Missing Categories Alert */}
         {!ballot?.is_final && votedCategories < totalCategories && (
