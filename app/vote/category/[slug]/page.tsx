@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth/auth-context'
 import { canUserVote, isVotingLocked } from '@/lib/config/voting'
+import { validateCompleteVote } from '@/lib/utils/client-validation'
 import { LiveVotingCountdown } from '@/components/ui/live-voting-countdown'
 import { useVotingData, usePrefetchVotingData, useVoteMutation } from '@/lib/hooks/use-voting-data'
 import { Nominee } from '@/lib/types/database'
@@ -168,6 +169,18 @@ export default function CategoryVotePage() {
   const handleVoteAndNavigate = async () => {
     if (!selectedNominee || !category) return
 
+    // Client-side validation for immediate feedback (no server round-trip)
+    const validation = validateCompleteVote(
+      category.id,
+      selectedNominee,
+      appUser?.is_admin || false
+    )
+
+    if (!validation.isValid) {
+      alert(`Vote failed: ${validation.error}`)
+      return
+    }
+
     setSubmitting(true)
     
     // Apply optimistic update immediately for better UX
@@ -175,12 +188,6 @@ export default function CategoryVotePage() {
     setJustVoted(true)
     
     try {
-      console.log('Submitting vote:', {
-        category_id: category.id,
-        nominee_id: selectedNominee,
-        category_slug: category.slug
-      })
-
       const response = await fetch('/api/votes', {
         method: 'POST',
         headers: {
@@ -189,16 +196,13 @@ export default function CategoryVotePage() {
         body: JSON.stringify({
           category_id: category.id,
           nominee_id: selectedNominee,
+          is_admin: appUser?.is_admin || false,
         }),
       })
 
       if (!response.ok) {
         const error = await response.json()
-        console.error('Vote save failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: error
-        })
+        console.error('Vote save failed:', error)
         
         // Revert optimistic update on error
         revertOptimisticUpdate(slug)
@@ -211,7 +215,7 @@ export default function CategoryVotePage() {
       // Update cache with actual server response
       updateVoteCache(slug, result.vote)
       
-      // Small delay to show success state, but shorter since we already showed optimistic update
+      // Small delay to show success state
       await new Promise(resolve => setTimeout(resolve, 400))
       
       // Navigate to next category or back to vote overview

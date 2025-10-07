@@ -7,6 +7,7 @@ interface BatchVoteRequest {
     category_id: string
     nominee_id: string
   }>
+  is_admin?: boolean
 }
 
 export async function POST(request: NextRequest) {
@@ -18,23 +19,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Get user's admin status
-    const { data: appUser } = await supabase
-      .from('users')
-      .select('is_admin')
-      .eq('id', user.id)
-      .single()
-
-    const isAdmin = appUser?.is_admin || false
-
-    // Check global voting deadline and voting lock (with admin bypass)
-    const votingValidation = validateVotingPeriod(isAdmin);
-    if (!votingValidation.isActive) {
-      return votingValidation.response!;
-    }
-
     const body: BatchVoteRequest = await request.json()
-    const { votes } = body
+    const { votes, is_admin } = body
 
     // Validate required fields
     if (!votes || !Array.isArray(votes) || votes.length === 0) {
@@ -61,71 +47,33 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Try optimized batch function first
-    try {
-      const { data, error } = await supabase.rpc('submit_batch_votes_optimized', {
-        user_id_param: user.id,
-        votes_param: votes,
-        user_display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
-        user_avatar_url: user.user_metadata?.avatar_url || null
-      })
-
-      if (error) {
-        console.error('Error in batch vote submission:', error)
-        throw error
-      }
-
-      return NextResponse.json({ 
-        votes: data,
-        count: data?.length || 0,
-        message: `Successfully submitted ${data?.length || 0} votes`
-      }, { status: 201 })
-    } catch (functionError) {
-      console.error('Batch function failed, falling back to individual submissions:', functionError)
-      
-      // Fallback to individual vote submissions in a transaction
-      const submittedVotes = []
-      const errors = []
-
-      for (const vote of votes) {
-        try {
-          const response = await fetch('/api/votes', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': request.headers.get('Authorization') || '',
-              'Cookie': request.headers.get('Cookie') || ''
-            },
-            body: JSON.stringify(vote),
-          })
-
-          if (response.ok) {
-            const result = await response.json()
-            submittedVotes.push(result.vote)
-          } else {
-            const errorData = await response.json()
-            errors.push({ vote, error: errorData.error })
-          }
-        } catch {
-          errors.push({ vote, error: 'Network error during submission' })
-        }
-      }
-
-      if (errors.length > 0) {
-        return NextResponse.json({
-          votes: submittedVotes,
-          errors,
-          count: submittedVotes.length,
-          message: `Submitted ${submittedVotes.length} votes with ${errors.length} errors`
-        }, { status: 207 }) // 207 Multi-Status for partial success
-      }
-
-      return NextResponse.json({
-        votes: submittedVotes,
-        count: submittedVotes.length,
-        message: `Successfully submitted ${submittedVotes.length} votes`
-      }, { status: 201 })
+    // Check global voting deadline and voting lock (with admin bypass from client)
+    const votingValidation = validateVotingPeriod(is_admin || false);
+    if (!votingValidation.isActive) {
+      return votingValidation.response!;
     }
+
+    // Use optimized batch function
+    const { data, error } = await supabase.rpc('submit_batch_votes_optimized', {
+      user_id_param: user.id,
+      votes_param: votes,
+      user_display_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous',
+      user_avatar_url: user.user_metadata?.avatar_url || null
+    })
+
+    if (error) {
+      console.error('Error in batch vote submission:', error)
+      return NextResponse.json({ 
+        error: 'Failed to submit votes',
+        details: error.message 
+      }, { status: 500 })
+    }
+
+    return NextResponse.json({ 
+      votes: data,
+      count: data?.length || 0,
+      message: `Successfully submitted ${data?.length || 0} votes`
+    }, { status: 201 })
   } catch (error) {
     console.error('Unexpected error in batch vote submission:', error)
     return NextResponse.json(

@@ -39,14 +39,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [signingOut])
 
   const fetchAppUser = useCallback(async (userId: string) => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single()
 
-    if (data && !error) {
-      setAppUser(data)
+      if (data && !error) {
+        setAppUser(data)
+      } else if (error) {
+        console.error('Error fetching app user:', error)
+      }
+    } catch (error) {
+      console.error('Exception fetching app user:', error)
     }
   }, [supabase])
 

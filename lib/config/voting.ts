@@ -14,8 +14,8 @@ export const VOTING_CONFIG = {
   
   // Live voting start time (voting is locked until this time)
   // Only admins can vote before this time
-  LIVE_VOTING_START_YEAR: 2026,
-  LIVE_VOTING_START_MONTH: 1, // September (1-12)
+  LIVE_VOTING_START_YEAR: 2025,
+  LIVE_VOTING_START_MONTH: 10, // September (1-12)
   LIVE_VOTING_START_DAY: 1,
   LIVE_VOTING_START_HOUR: 0, // 6 PM
   LIVE_VOTING_START_MINUTE: 0,
