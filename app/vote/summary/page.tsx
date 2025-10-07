@@ -13,7 +13,6 @@ import {
   CheckCircle, 
   Trophy, 
   Vote, 
-  Calendar, 
   Clock,
   Star,
   Medal,
@@ -267,7 +266,7 @@ export default function VoteSummaryPage() {
                       </div>
                     </CardHeader>
                     
-                    <CardContent className="space-y-4">
+                    <CardContent>
                       {/* Nominee Selection */}
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
                         <div className="flex items-center gap-3">
@@ -282,36 +281,9 @@ export default function VoteSummaryPage() {
                           )}
                           <div className="flex-1">
                             <h4 className="font-semibold text-white text-lg">{vote.nominees.name}</h4>
-                            {vote.nominees.description && (
-                              <p className="text-white/60 text-sm mt-1 line-clamp-2">
-                                {vote.nominees.description}
-                              </p>
-                            )}
                           </div>
                           <Trophy className="h-5 w-5 text-yellow-500 flex-shrink-0" />
                         </div>
-                      </div>
-                      
-                      {/* Vote Details */}
-                      <div className="flex items-center justify-between text-sm text-white/60">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>Voted {new Date(vote.created_at).toLocaleDateString('en-GB')}</span>
-                        </div>
-                        
-                        {!ballot?.is_final && (
-                          <Button 
-                            asChild 
-                            variant="ghost" 
-                            size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Link href={`/vote/category/${vote.categories.slug}`}>
-                              <span className="mr-1">Change</span>
-                              <ChevronRight className="h-3 w-3" />
-                            </Link>
-                          </Button>
-                        )}
                       </div>
                     </CardContent>
                   </Card>
