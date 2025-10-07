@@ -141,51 +141,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSigningOut(true)
     
     try {
-      // Set a timeout for the sign-out operation
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Sign out timeout')), 10000) // 10 second timeout
+      // Optimized: Shorter timeout for better UX (3 seconds instead of 10)
+      const timeoutPromise = new Promise<{ error: Error }>((_, reject) => {
+        setTimeout(() => reject(new Error('Sign out timeout')), 3000)
       })
       
-      const signOutPromise = supabase.auth.signOut()
+      const signOutPromise = supabase.auth.signOut({ scope: 'local' })
       
       // Race between sign-out and timeout
-      const result = await Promise.race([signOutPromise, timeoutPromise])
-      const { error } = result as { error: Error | null }
+      await Promise.race([signOutPromise, timeoutPromise])
       
-      if (error) throw error
+      // Immediately clear local state (don't wait for auth listener)
+      setUser(null)
+      setAppUser(null)
+      
+      // Navigate immediately for better perceived performance
+      window.location.href = '/'
       
     } catch (error) {
       console.error('Sign out error:', error)
       
-      // Force local session clearing as fallback
+      // Fast fallback: Clear local session immediately
       try {
-        // Clear local storage items that Supabase might use
-        localStorage.removeItem('supabase.auth.token')
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('sb-') || key.includes('supabase')) {
-            localStorage.removeItem(key)
-          }
-        })
+        // Clear Supabase auth storage keys
+        const storageKeys = Object.keys(localStorage).filter(key => 
+          key.startsWith('sb-') || key.includes('supabase-auth')
+        )
+        storageKeys.forEach(key => localStorage.removeItem(key))
         
-        // Clear cookies by setting them to expire
-        document.cookie.split(";").forEach(cookie => {
-          const eqPos = cookie.indexOf("=")
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-          if (name.trim().includes('sb-') || name.trim().includes('supabase')) {
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
-          }
-        })
-        
-        // Force update the auth state
+        // Clear state immediately
         setUser(null)
         setAppUser(null)
-        setSigningOut(false)
         
-        // Force a page reload as final fallback
+        // Navigate to home
         window.location.href = '/'
         
       } catch (fallbackError) {
         console.error('Fallback sign out error:', fallbackError)
+        // Last resort: Force reload to clear everything
+        window.location.reload()
+      } finally {
         setSigningOut(false)
       }
     }
