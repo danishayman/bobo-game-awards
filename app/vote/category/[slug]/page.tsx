@@ -386,12 +386,6 @@ export default function CategoryVotePage() {
           
           <div className="flex items-center gap-4 text-sm text-foreground-muted">
             <span>{currentIndex + 1} of {allCategories.length}</span>
-            {(currentVote || justVoted) && (
-              <Badge variant="outline" className="text-green-500 border-green-500/50 bg-green-500/10">
-                <Check className="h-3 w-3 mr-1" />
-                Voted
-              </Badge>
-            )}
           </div>
         </div>
 

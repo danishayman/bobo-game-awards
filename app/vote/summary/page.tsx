@@ -16,7 +16,8 @@ import {
   Clock,
   Star,
   Medal,
-  ChevronRight
+  ChevronRight,
+  Edit
 } from 'lucide-react'
 import { PageSkeleton } from '@/components/ui/page-skeleton'
 import { Category } from '@/lib/types/database'
@@ -245,7 +246,7 @@ export default function VoteSummaryPage() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-primary to-red-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
                     <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3 flex-1">
                           <div className="p-3 rounded-xl bg-red-primary/20 group-hover:bg-red-primary/30 transition-colors">
                             <IconComponent className="h-6 w-6 text-red-primary" />
@@ -259,10 +260,19 @@ export default function VoteSummaryPage() {
                             </CardDescription>
                           </div>
                         </div>
-                        <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Voted
-                        </Badge>
+                        {!ballot?.is_final && (
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="border-white/20 hover:border-red-primary/50 hover:bg-red-primary/10"
+                          >
+                            <Link href={`/vote/category/${vote.categories.slug}`}>
+                              <Edit className="h-4 w-4 mr-1" />
+                              Change
+                            </Link>
+                          </Button>
+                        )}
                       </div>
                     </CardHeader>
                     
