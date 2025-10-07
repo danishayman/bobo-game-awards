@@ -355,20 +355,11 @@ export default function CategoryVotePage() {
 
   // Compact layout for all categories - optimized for smaller cards
   const getLayoutClasses = (count: number) => {
-    if (count === 1) {
-      return {
-        container: 'flex justify-center',
-        item: 'w-full max-w-xs'
-      }
-    }
-    
-    // Compact grid layout for all categories (2+ nominees)
-    // Fixed 6-column layout like the design
-    const gridCols = 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
-    
+    // Use flex wrap with justify-center for proper centering
+    // Each card will have a fixed width and the flex container will center them
     return {
-      container: `grid ${gridCols} justify-items-center`,
-      item: ''
+      container: 'flex flex-wrap justify-center',
+      item: 'w-[calc(50%-0.25rem)] sm:w-[calc(33.333%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(20%-0.8rem)] xl:w-[calc(16.666%-1rem)] max-w-[180px]'
     }
   }
 
@@ -404,7 +395,7 @@ export default function CategoryVotePage() {
 
         {/* Nominees Section - Compact */}
         <motion.div 
-          className={`${getLayoutClasses(category.nominees.length).container} gap-1 sm:gap-2 md:gap-3 max-w-6xl mx-auto place-content-center`}
+          className={`${getLayoutClasses(category.nominees.length).container} gap-2 sm:gap-3 md:gap-4 max-w-6xl mx-auto`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -413,7 +404,7 @@ export default function CategoryVotePage() {
             <motion.div
               key={nominee.id}
               variants={itemVariants}
-              className={`${getLayoutClasses(category.nominees.length).item} w-full`}
+              className={getLayoutClasses(category.nominees.length).item}
             >
               <NomineeCard
                 id={nominee.id}
