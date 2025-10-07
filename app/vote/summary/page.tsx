@@ -200,7 +200,7 @@ export default function VoteSummaryPage() {
 
   return (
     <div className="bg-full-viewport bg-gradient-to-b from-background via-background to-background-secondary">
-      <div className="container py-8 space-y-8">
+      <div className={`container py-8 space-y-8 ${!ballot?.is_final && votes.length > 0 ? 'pb-40' : ''}`}>
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -217,52 +217,6 @@ export default function VoteSummaryPage() {
             </p>
           </div>
         </motion.div>
-
-        {/* Finalize Ballot Section */}
-        {!ballot?.is_final && votes.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-orange-600/10">
-              <CardHeader>
-                <CardTitle className="text-orange-200 text-xl text-center">
-                  Ready to Finalize Your Votes?
-                </CardTitle>
-                <CardDescription className="text-orange-300 text-center">
-                  Once you finalize, you won&rsquo;t be able to make any changes to your votes.
-                  {votedCategories < totalCategories && (
-                    ` You still have ${totalCategories - votedCategories} categories left to vote in, but you can finalize now if you&rsquo;re satisfied with your current choices.`
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    onClick={handleFinalize}
-                    disabled={finalizing}
-                    variant="premium"
-                    size="lg"
-                    className="bg-orange-600 hover:bg-orange-700"
-                  >
-                    {finalizing ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
-                        Finalizing Votes...
-                      </div>
-                    ) : (
-                      <>
-                        <CheckCircle className="mr-2 h-5 w-5" />
-                        Finalize Votes
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
 
         {/* Your Votes */}
         <motion.div 
@@ -367,6 +321,53 @@ export default function VoteSummaryPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Floating Finalize Ballot Section */}
+      {!ballot?.is_final && votes.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="fixed bottom-0 left-0 right-0 z-50 border-t border-orange-500/50 bg-gradient-to-r from-orange-500/95 to-orange-600/95 backdrop-blur-lg shadow-[0_-4px_30px_rgba(234,88,12,0.3)]"
+        >
+          <div className="container py-4 md:py-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="text-center md:text-left">
+                <h3 className="text-white font-bold text-lg md:text-xl">
+                  Ready to Finalize Your Votes?
+                </h3>
+                <p className="text-orange-100 text-sm md:text-base">
+                  Once you finalize, you won&rsquo;t be able to make any changes.
+                  {votedCategories < totalCategories && (
+                    ` ${totalCategories - votedCategories} categories remaining.`
+                  )}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <Button 
+                  onClick={handleFinalize}
+                  disabled={finalizing}
+                  variant="premium"
+                  size="lg"
+                  className="bg-white text-orange-600 hover:bg-orange-50 hover:text-orange-700 font-bold shadow-lg"
+                >
+                  {finalizing ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin h-5 w-5 border-2 border-orange-600 border-t-transparent rounded-full mr-2" />
+                      Finalizing Votes...
+                    </div>
+                  ) : (
+                    <>
+                      <CheckCircle className="mr-2 h-5 w-5" />
+                      Finalize Votes
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </div>
   )
 }
