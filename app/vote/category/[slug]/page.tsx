@@ -145,12 +145,13 @@ export default function CategoryVotePage() {
 
       setCurrentVote(selectedNominee)
       
-      // Navigate to next category or back to vote overview
+      // Navigate to next category or summary page if this is the last one
       const nextCategory = allCategories[currentIndex + 1]
       if (nextCategory) {
         router.push(`/vote/category/${nextCategory.slug}`)
       } else {
-        router.push('/vote')
+        // This was the last category, go to summary
+        router.push('/vote/summary')
       }
     } catch (error) {
       console.error('Error saving vote:', error)
