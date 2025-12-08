@@ -128,6 +128,7 @@ export default function ResultsPage() {
         {results.map((category) => {
           const sortedNominees = [...category.nominees].sort((a, b) => b.vote_count - a.vote_count)
           const winner = sortedNominees[0]
+          const totalVotes = category.nominees.reduce((sum, nominee) => sum + nominee.vote_count, 0)
 
           return (
             <Card key={category.category_id}>
@@ -146,7 +147,7 @@ export default function ResultsPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold truncate">{winner.nominee_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {winner.vote_count.toLocaleString()} votes
+                          {winner.vote_count.toLocaleString()} votes ({totalVotes > 0 ? ((winner.vote_count / totalVotes) * 100).toFixed(1) : '0'}%)
                         </p>
                       </div>
                     </div>
@@ -158,7 +159,7 @@ export default function ResultsPage() {
                       <span className="text-muted-foreground text-sm">#{index + 2}</span>
                       <span className="flex-1 px-3 truncate">{nominee.nominee_name}</span>
                       <span className="text-sm text-muted-foreground">
-                        {nominee.vote_count.toLocaleString()}
+                        {nominee.vote_count.toLocaleString()} ({totalVotes > 0 ? ((nominee.vote_count / totalVotes) * 100).toFixed(1) : '0'}%)
                       </span>
                     </div>
                   ))}
