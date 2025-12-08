@@ -111,7 +111,7 @@ export function PageSkeleton({ variant, className }: PageSkeletonProps) {
 
   if (variant === 'vote-summary') {
     return (
-      <div className={cn("bg-full-viewport bg-gradient-to-b from-background via-background to-background-secondary", className)}>
+      <div className={cn("min-h-screen bg-gradient-to-b from-background via-background to-background-secondary", className)}>
         <div className="container py-8 space-y-8">
           {/* Header */}
           <motion.div 
