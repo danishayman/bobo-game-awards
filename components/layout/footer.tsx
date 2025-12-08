@@ -55,11 +55,6 @@ export function Footer() {
                   Voting Rules
                 </Link>
               </li>
-              <li>
-                <Link href="/contact" className="text-white/70 hover:text-[var(--red-primary)] transition-colors">
-                  Contact
-                </Link>
-              </li>
             </ul>
           </div>
           

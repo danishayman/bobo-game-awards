@@ -47,7 +47,6 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith('/about') &&
     !request.nextUrl.pathname.startsWith('/privacy') &&
     !request.nextUrl.pathname.startsWith('/terms') &&
-    !request.nextUrl.pathname.startsWith('/contact') &&
     !request.nextUrl.pathname.startsWith('/rules') &&
     request.nextUrl.pathname !== '/'
   ) {

@@ -237,17 +237,7 @@ export default function PrivacyPage() {
             If you have any questions about this Privacy Policy or our data practices, 
             please contact us. We&apos;re committed to addressing your concerns promptly.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              asChild 
-              className="bg-red-primary hover:bg-red-secondary text-white px-6 py-3 font-semibold rounded-full transition-all duration-300 font-body"
-            >
-              <Link href="/contact">
-                <Mail className="mr-2 h-4 w-4" />
-                Contact Us
-              </Link>
-            </Button>
-          </div>
+
         </motion.div>
 
         {/* Policy Updates */}

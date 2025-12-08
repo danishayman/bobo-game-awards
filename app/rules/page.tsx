@@ -510,24 +510,6 @@ export default function RulesPage() {
             </Button>
           </div>
         </motion.div>
-
-        {/* Contact Section */}
-        <motion.div variants={itemVariants} className="glass rounded-2xl p-8 text-center space-y-6">
-          <h3 className="text-2xl font-semibold text-white font-body">Questions About the Rules?</h3>
-          <p className="text-white/80 font-body leading-relaxed max-w-2xl mx-auto">
-            If you need clarification about any voting rules or have questions about the process, 
-            don&apos;t hesitate to reach out. We&apos;re here to help ensure fair play for everyone.
-          </p>
-          <Button 
-            asChild 
-            variant="outline" 
-            className="border-red-primary/30 text-red-primary hover:bg-red-primary hover:text-white transition-all duration-300 font-body"
-          >
-            <Link href="/contact">
-              Contact Support
-            </Link>
-          </Button>
-        </motion.div>
       </motion.div>
     </div>
   );
