@@ -159,12 +159,12 @@ export default function NomineesPage() {
 
             {/* Nominees Grid */}
             {category.nominees && category.nominees.length > 0 ? (
-              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
+              <div className="flex flex-wrap justify-center gap-3 md:gap-6">
                 {category.nominees
                   .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
                   .map((nominee) => (
-                    <NomineeCard
-                      key={nominee.id}
+                    <div key={nominee.id} className="w-[calc(33.333%-0.5rem)] sm:w-[calc(33.333%-0.5rem)] md:w-[calc(25%-1.125rem)] lg:w-[calc(20%-1.2rem)] xl:w-[calc(16.666%-1.25rem)]">
+                      <NomineeCard
                       id={nominee.id}
                       name={nominee.name}
                       description={nominee.description || undefined}
@@ -172,6 +172,7 @@ export default function NomineesPage() {
                       showGlow={false}
                       className="hover:scale-105 transition-transform duration-200"
                     />
+                    </div>
                   ))}
               </div>
             ) : (
