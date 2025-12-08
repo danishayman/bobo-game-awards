@@ -209,9 +209,9 @@ export default function VotePage() {
                 size="lg" 
                 className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
               >
-                <Link href="/">
-                  <Star className="mr-2 h-5 w-5" />
-                  Back to Home
+                <Link href="/nominees">
+                  <Trophy className="mr-2 h-5 w-5" />
+                  View Nominees
                 </Link>
               </Button>
             </motion.div>
