@@ -77,8 +77,10 @@ export default function NomineesPage() {
     <div className="container py-8 space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tighter bg-gradient-to-r from-purple-400 via-red-primary to-orange-400 bg-clip-text text-transparent">
-          Gaming Awards Nominees
+        <h1 className="text-4xl md:text-6xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+          <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+            Gaming Awards Nominees
+          </span>
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           Discover all the incredible games nominated across every category in our community-driven gaming awards
@@ -86,47 +88,24 @@ export default function NomineesPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="border-white/20 bg-gradient-to-br from-purple-900/20 to-blue-900/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">Total Categories</CardTitle>
-            <Trophy className="h-4 w-4 text-purple-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{categories.length}</div>
-            <p className="text-xs text-white/60">
-              Award categories
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="glass rounded-2xl p-6 space-y-2 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <Trophy className="h-6 w-6 text-yellow-300/80" />
+          </div>
+          <h3 className="text-sm font-medium text-white/80 font-body">Total Categories</h3>
+          <div className="text-4xl font-bold text-white">{categories.length}</div>
+          <p className="text-sm text-white/60 font-body">Award categories</p>
+        </div>
         
-        <Card className="border-white/20 bg-gradient-to-br from-red-900/20 to-orange-900/20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">Total Nominees</CardTitle>
-            <GamepadIcon className="h-4 w-4 text-red-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{totalNominees}</div>
-            <p className="text-xs text-white/60">
-              Games nominated
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-white/20 bg-gradient-to-br from-green-900/20 to-teal-900/20 md:col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">Average per Category</CardTitle>
-            <Users className="h-4 w-4 text-green-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">
-              {categories.length > 0 ? Math.round(totalNominees / categories.length) : 0}
-            </div>
-            <p className="text-xs text-white/60">
-              Nominees per category
-            </p>
-          </CardContent>
-        </Card>
+        <div className="glass rounded-2xl p-6 space-y-2 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <GamepadIcon className="h-6 w-6 text-yellow-300/80" />
+          </div>
+          <h3 className="text-sm font-medium text-white/80 font-body">Total Nominees</h3>
+          <div className="text-4xl font-bold text-white">{totalNominees}</div>
+          <p className="text-sm text-white/60 font-body">Games nominated</p>
+        </div>
       </div>
 
       {/* Categories and Nominees */}
@@ -135,9 +114,10 @@ export default function NomineesPage() {
           <div key={category.id} className="space-y-6">
             {/* Category Header */}
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold text-white flex items-center justify-center gap-3">
-                <Trophy className="h-8 w-8 text-purple-400" />
-                {category.name}
+              <h2 className="text-3xl md:text-4xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                  {category.name}
+                </span>
               </h2>
               {category.description && (
                 <p className="text-white/70 text-lg max-w-3xl mx-auto">
@@ -146,14 +126,6 @@ export default function NomineesPage() {
               )}
               <div className="flex items-center justify-center gap-4 text-sm text-white/60">
                 <span>{category.nominees?.length || 0} nominees</span>
-                {category.voting_start && category.voting_end && (
-                  <span>•</span>
-                )}
-                {category.voting_start && category.voting_end && (
-                  <span>
-                    Voting: {new Date(category.voting_start).toLocaleDateString()} - {new Date(category.voting_end).toLocaleDateString()}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -170,7 +142,7 @@ export default function NomineesPage() {
                       description={nominee.description || undefined}
                       imageUrl={nominee.image_url || undefined}
                       showGlow={false}
-                      className="hover:scale-105 transition-transform duration-200"
+                      className="hover:scale-105 transition-transform duration-200 cursor-default"
                     />
                     </div>
                   ))}
