@@ -307,9 +307,10 @@ export default function CategoryVotePage() {
           {/* Category Title */}
           <div className="text-center space-y-6 mb-12">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-in-up">
-              <Trophy className="h-8 w-8 sm:h-12 sm:w-12 text-red-primary" />
-              <h1 className="text-responsive-title font-bold bg-gradient-to-r from-white via-white to-red-primary bg-clip-text text-transparent text-center sm:text-left">
-                {category.name.toUpperCase()}
+              <h1 className="text-responsive-title font-normal tracking-tight leading-none text-center sm:text-left" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
+                  {category.name}
+                </span>
               </h1>
             </div>
             
