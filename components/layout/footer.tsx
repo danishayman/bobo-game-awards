@@ -12,8 +12,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Gamepad2 className="h-5 w-5 text-[var(--red-primary)]" />
-              <span className="font-bold text-white">Gaming Awards</span>
+              <span className="font-bold text-white">Bobo Game Awards</span>
             </div>
             <p className="text-sm text-white/70">
               Community-driven gaming awards celebrating the best games of the year.
@@ -82,7 +81,7 @@ export function Footer() {
         </div>
         
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-white/70">
-          <p>&copy; 2025 Gaming Awards. Built with ❤️ by Spudin 23</p>
+          <p>&copy; 2025 Bobo Game Awards. Built with ❤️ by Spudin 23</p>
         </div>
       </div>
     </footer>
