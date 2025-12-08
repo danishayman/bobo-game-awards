@@ -58,8 +58,8 @@ export function LiveVotingCountdown({ onLiveVotingStarted, className = "" }: Liv
         transition={{ duration: 0.8 }}
       >
         <div className="flex items-center justify-center gap-3">
-          <Clock className="h-8 w-8 text-blue-400" />
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-400" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+          <Clock className="h-8 w-8 text-yellow-400" />
+          <h2 className="text-2xl md:text-3xl font-bold text-yellow-400" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
             Time Until Live Voting
           </h2>
         </div>
@@ -113,9 +113,9 @@ export function LiveVotingCountdown({ onLiveVotingStarted, className = "" }: Liv
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         >
-          <Clock className={`h-8 w-8 ${isCritical ? 'text-red-500' : isUrgent ? 'text-yellow-500' : 'text-blue-400'}`} />
+          <Clock className={`h-8 w-8 ${isCritical ? 'text-red-500' : isUrgent ? 'text-yellow-500' : 'text-yellow-400'}`} />
         </motion.div>
-        <h2 className={`text-2xl md:text-3xl font-bold ${isCritical ? 'text-red-500' : isUrgent ? 'text-yellow-500' : 'text-blue-400'}`} style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+        <h2 className={`text-2xl md:text-3xl font-bold ${isCritical ? 'text-red-500' : isUrgent ? 'text-yellow-500' : 'text-yellow-400'}`} style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
           Time Until Live Voting
         </h2>
       </div>
@@ -173,11 +173,11 @@ interface TimeUnitProps {
 function TimeUnit({ value, label, isUrgent, isCritical, animate = false }: TimeUnitProps) {
   const bgColor = isCritical ? 'bg-red-500/20 border-red-500/50' : 
                   isUrgent ? 'bg-yellow-500/20 border-yellow-500/50' : 
-                  'bg-blue-500/20 border-blue-500/50';
+                  'bg-yellow-500/20 border-yellow-500/50';
   
   const textColor = isCritical ? 'text-red-300' : 
                     isUrgent ? 'text-yellow-300' : 
-                    'text-blue-300';
+                    'text-yellow-300';
 
   return (
     <motion.div
