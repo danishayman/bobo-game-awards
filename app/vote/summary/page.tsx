@@ -199,7 +199,7 @@ export default function VoteSummaryPage() {
   const votedCategories = votes.length
 
   return (
-    <div className="bg-full-viewport bg-gradient-to-b from-background via-background to-background-secondary">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background-secondary">
       <div className={`container py-8 space-y-8 ${!ballot?.is_final && votes.length > 0 ? 'pb-40' : ''}`}>
         {/* Header */}
         <motion.div 
