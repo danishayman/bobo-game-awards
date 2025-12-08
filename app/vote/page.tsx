@@ -353,52 +353,15 @@ export default function VotePage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button 
                 asChild 
-                variant="outline" 
-                className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary"
+                className="bg-red-primary hover:bg-red-secondary text-white"
               >
-                <Link href="/vote/summary">
-                  <Star className="mr-2 h-4 w-4" />
-                  Review Votes
+                <Link href="/vote/start">
+                  <Vote className="mr-2 h-4 w-4" />
+                  Start Voting
                 </Link>
               </Button>
             </div>
           </motion.div>
-
-          {/* Start Voting Section - Simplified */}
-          <motion.div variants={itemVariants}>
-            <Card className="border-white/10 bg-background-secondary/50 hover:border-red-primary/30 transition-all duration-300">
-              <CardContent className="p-8 text-center">
-                <div className="space-y-6">
-                  <div className="flex justify-center">
-                    <div className="p-3 rounded-full bg-red-primary/20">
-                      <Vote className="h-8 w-8 text-red-primary" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
-                      Ready to Vote?
-                    </h2>
-                    <p className="text-foreground-muted leading-relaxed max-w-lg mx-auto">
-                      Start the guided voting experience and go through each category one by one. You can change your votes anytime before finalizing.
-                    </p>
-                  </div>
-                  
-                  <Button 
-                    asChild 
-                    size="lg"
-                    className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold transition-all duration-300"
-                  >
-                    <Link href="/vote/start">
-                      <Vote className="mr-2 h-5 w-5" />
-                      Start Voting
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
         </motion.div>
       </div>
     </div>
