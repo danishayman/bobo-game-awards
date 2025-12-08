@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 import { isVotingActive } from '@/lib/config/voting'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Handle auth session updates first
   const response = await updateSession(request)
   
