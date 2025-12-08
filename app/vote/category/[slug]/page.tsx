@@ -324,7 +324,7 @@ export default function CategoryVotePage() {
 
       {/* Nominees Section */}
       <div className="container mx-auto px-4 pb-20">
-        <div className={`grid ${getGridCols(category.nominees.length)} gap-3 lg:gap-4`}>
+        <div className={`grid ${getGridCols(category.nominees.length)} gap-3 lg:gap-4 `}>
           {category.nominees.map((nominee: Nominee, index: number) => (
             <div
               key={nominee.id}
