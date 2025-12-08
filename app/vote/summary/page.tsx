@@ -330,9 +330,9 @@ export default function VoteSummaryPage() {
           transition={{ delay: 0.3, duration: 0.4 }}
           className="fixed bottom-0 left-0 right-0 z-50 border-t border-orange-500/50 bg-gradient-to-r from-orange-500/95 to-orange-600/95 backdrop-blur-lg shadow-[0_-4px_30px_rgba(234,88,12,0.3)]"
         >
-          <div className="container py-4 md:py-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="text-center md:text-left">
+          <div className="w-full py-4 md:py-6 flex justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-center">
                 <h3 className="text-white font-bold text-lg md:text-xl">
                   Ready to Finalize Your Votes?
                 </h3>
