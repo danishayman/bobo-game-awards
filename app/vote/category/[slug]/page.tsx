@@ -320,7 +320,7 @@ export default function CategoryVotePage() {
           {category.nominees.map((nominee: Nominee, index: number) => (
             <div
               key={nominee.id}
-              className={`group relative cursor-pointer animate-slide-in-up w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(20%-0.8rem)] xl:w-[calc(16.666%-0.833rem)] max-w-[220px] ${
+              className={`group relative cursor-pointer animate-slide-in-up w-[160px] sm:w-[180px] lg:w-[200px] ${
                 index < 4 ? `animate-delay-${(index + 1) * 100}` : ''
               }`}
               onClick={() => setSelectedNominee(nominee.id)}
