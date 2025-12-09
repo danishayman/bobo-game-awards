@@ -62,6 +62,7 @@ export default function CategoryVotePage() {
   }, [user, loading, slug])
 
   const fetchData = async () => {
+    setLoadingData(true)
     try {
       // Fetch ballot status first to check if it's finalized
       const ballotRes = await fetch('/api/ballot/status')
@@ -70,6 +71,7 @@ export default function CategoryVotePage() {
 
       // If ballot is finalized, don't allow further voting
       if (ballotData.ballot?.is_final) {
+        setLoadingData(false)
         return // Component will render thank you message
       }
 
@@ -98,6 +100,10 @@ export default function CategoryVotePage() {
       if (currentVoteForCategory) {
         setCurrentVote(currentVoteForCategory.nominee_id)
         setSelectedNominee(currentVoteForCategory.nominee_id)
+      } else {
+        // Reset selection if no vote exists for this category
+        setCurrentVote(null)
+        setSelectedNominee(null)
       }
 
       // Find current category index
@@ -368,10 +374,10 @@ export default function CategoryVotePage() {
                   <div className="text-center pt-2">
                     <Button
                       size="sm"
-                      className={`w-full text-xs py-1.5 ${
+                      className={`w-full text-xs py-1.5 font-semibold transition-all duration-300 ${
                         selectedNominee === nominee.id
-                          ? 'bg-red-primary hover:bg-red-secondary text-white'
-                          : 'bg-background-tertiary border border-white/20 text-white hover:bg-red-primary hover:border-red-primary'
+                          ? 'bg-red-primary hover:bg-red-secondary text-white shadow-[0_0_15px_rgba(229,9,20,0.4)]'
+                          : 'bg-white/10 border border-white/30 text-white hover:bg-red-primary/80 hover:border-red-primary hover:shadow-[0_0_10px_rgba(229,9,20,0.3)]'
                       }`}
                     >
                       VOTE
@@ -422,6 +428,8 @@ export default function CategoryVotePage() {
                   <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2" />
                   Saving...
                 </div>
+              ) : !selectedNominee ? (
+                'Save Vote'
               ) : currentVote === selectedNominee ? (
                 'Vote Saved'
               ) : (
