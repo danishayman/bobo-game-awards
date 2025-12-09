@@ -274,9 +274,9 @@ export default function CategoryVotePage() {
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-secondary/10 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative container mx-auto px-4 py-12 lg:py-20">
+        <div className="relative container mx-auto px-4 py-4 lg:py-6">
           {/* Navigation */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
             <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
               <Link href="/vote">
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -296,7 +296,7 @@ export default function CategoryVotePage() {
           </div>
 
           {/* Category Title */}
-          <div className="text-center space-y-6 mb-12">
+          <div className="text-center space-y-3 mb-6">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-in-up">
               <h1 className="text-responsive-title font-normal tracking-tight leading-none text-center sm:text-left" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                 <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
@@ -315,7 +315,7 @@ export default function CategoryVotePage() {
       </div>
 
       {/* Nominees Section */}
-      <div className="container mx-auto px-4 pb-20">
+      <div className="container mx-auto px-4 pb-6">
         <div className="flex flex-wrap justify-center gap-3 lg:gap-4 max-w-[1400px] mx-auto">
           {category.nominees.map((nominee: Nominee, index: number) => (
             <div
@@ -398,7 +398,7 @@ export default function CategoryVotePage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col lg:flex-row items-center justify-between pt-16 border-t border-white/10 mt-16 gap-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between pt-6 border-t border-white/10 mt-6 gap-4">
           <div className="flex flex-col sm:flex-row gap-4 order-2 lg:order-1">
             {prevCategory && (
               <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50">
