@@ -263,15 +263,6 @@ export default function CategoryVotePage() {
 
   const { prevCategory, nextCategory } = getNavigationInfo()
 
-  // Dynamic grid calculation based on nominee count - optimized for smaller cards
-  const getGridCols = (count: number) => {
-    if (count <= 2) return 'grid-cols-2 sm:grid-cols-2 md:grid-cols-2'
-    if (count <= 3) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-3'
-    if (count <= 4) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
-    if (count <= 6) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
-    return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
       {/* Hero Header Section */}
@@ -325,11 +316,11 @@ export default function CategoryVotePage() {
 
       {/* Nominees Section */}
       <div className="container mx-auto px-4 pb-20">
-        <div className={`grid ${getGridCols(category.nominees.length)} gap-3 lg:gap-4 `}>
+        <div className="flex flex-wrap justify-center gap-3 lg:gap-4 max-w-[1400px] mx-auto">
           {category.nominees.map((nominee: Nominee, index: number) => (
             <div
               key={nominee.id}
-              className={`group relative cursor-pointer animate-slide-in-up ${
+              className={`group relative cursor-pointer animate-slide-in-up w-[calc(50%-0.375rem)] sm:w-[calc(33.333%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(20%-0.8rem)] xl:w-[calc(16.666%-0.833rem)] max-w-[220px] ${
                 index < 4 ? `animate-delay-${(index + 1) * 100}` : ''
               }`}
               onClick={() => setSelectedNominee(nominee.id)}
