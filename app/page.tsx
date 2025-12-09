@@ -71,7 +71,7 @@ export default function Home() {
           title={liveVotingActive ? "VOTING ENDS IN" : "VOTING STARTS IN"}
         />
       )}
-      <div className="flex items-center justify-center relative overflow-hidden py-20">
+      <div className="flex items-center justify-center relative overflow-hidden py-8 md:py-12">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-radial from-red-primary/5 via-transparent to-transparent"></div>
       <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-red-primary/10 rounded-full blur-3xl animate-pulse"></div>
@@ -79,7 +79,7 @@ export default function Home() {
       
       {/* Main Content */}
       <motion.div 
-        className="relative text-center space-y-12 px-6 max-w-4xl mx-auto"
+        className="relative text-center space-y-6 md:space-y-8 px-6 max-w-4xl mx-auto"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -120,7 +120,7 @@ export default function Home() {
 
         
         {/* Subtitle */}
-        <motion.div variants={itemVariants} className="space-y-8 mt-12">
+        <motion.div variants={itemVariants} className="space-y-6 mt-6">
             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-body">
             Community-driven awards by Spudin, for Spudins. 
             <br />
