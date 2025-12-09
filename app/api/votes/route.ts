@@ -14,6 +14,26 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const categorySlug = searchParams.get('category')
 
+    // If filtering by category slug, first get the category ID
+    let categoryId = null
+    if (categorySlug) {
+      const { data: categoryData, error: categoryError } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', categorySlug)
+        .single()
+
+      if (categoryError) {
+        console.error('Error fetching category:', categoryError)
+        return NextResponse.json(
+          { error: 'Category not found' },
+          { status: 404 }
+        )
+      }
+
+      categoryId = categoryData.id
+    }
+
     let query = supabase
       .from('votes')
       .select(`
@@ -23,8 +43,8 @@ export async function GET(request: NextRequest) {
       `)
       .eq('user_id', user.id)
 
-    if (categorySlug) {
-      query = query.eq('categories.slug', categorySlug)
+    if (categoryId) {
+      query = query.eq('category_id', categoryId)
     }
 
     const { data, error } = await query
