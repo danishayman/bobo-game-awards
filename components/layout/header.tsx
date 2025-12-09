@@ -120,15 +120,6 @@ export function Header() {
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-white/10" />
-                {appUser?.is_admin && (
-                  <DropdownMenuItem asChild className="text-white hover:text-red-primary hover:bg-white/10">
-                    <Link href="/admin">
-                      <Settings className="mr-3 h-4 w-4" />
-                      Admin Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator className="bg-white/10" />
                 <DropdownMenuItem 
                   onClick={handleSignOut} 
                   className="text-white hover:text-red-primary hover:bg-white/10"
