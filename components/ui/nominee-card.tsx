@@ -95,7 +95,7 @@ export const NomineeCard = React.memo(function NomineeCard({
 
         {/* Compact Image Section */}
         {imageUrl && !imageError && (
-          <div className="relative w-full aspect-[4/5] overflow-hidden bg-background-tertiary">
+          <div className="relative w-full aspect-[3/4] overflow-hidden bg-background-tertiary">
             {/* Loading placeholder */}
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 animate-pulse" />
@@ -131,7 +131,7 @@ export const NomineeCard = React.memo(function NomineeCard({
 
         {/* Fallback for missing/error images */}
         {(!imageUrl || imageError) && (
-          <div className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
+          <div className="relative w-full aspect-[3/4] overflow-hidden bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
             <div className="text-4xl font-bold text-white/20">
               {name.charAt(0).toUpperCase()}
             </div>
