@@ -138,7 +138,7 @@ export const NomineeCard = React.memo(function NomineeCard({
           </div>
         )}
 
-        <CardHeader className="relative p-1 sm:p-2 h-16 sm:h-18 flex-shrink-0">
+        <CardHeader className="relative p-1.5 sm:p-3 flex-shrink-0">
           {/* Simplified accent line */}
           <div className={cn(
             "absolute top-0 left-0 w-full h-0.5 transition-all duration-200",
@@ -149,18 +149,25 @@ export const NomineeCard = React.memo(function NomineeCard({
                 : "bg-white/10 opacity-0 group-hover:opacity-100"
           )} />
 
-          <div className="flex flex-col h-full justify-between">
-            <div className="flex-1 flex items-center justify-center text-center min-h-0">
-              <CardTitle className={cn(
-                "text-xs font-bold leading-tight transition-colors duration-150 line-clamp-2",
-                isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
+          <div className="flex flex-col gap-1 text-center">
+            <CardTitle className={cn(
+              "text-sm sm:text-base font-bold leading-tight transition-colors duration-150 line-clamp-2",
+              isSelected ? "text-red-primary" : "text-white group-hover:text-red-primary"
+            )}>
+              {name}
+            </CardTitle>
+            
+            {description && (
+              <CardDescription className={cn(
+                "text-[10px] sm:text-xs leading-tight transition-colors duration-150 line-clamp-2",
+                isSelected ? "text-white/80" : "text-white/60 group-hover:text-white/70"
               )}>
-                {name}
-              </CardTitle>
-            </div>
+                {description}
+              </CardDescription>
+            )}
             
             {/* Simplified selection dot */}
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-0.5">
               <div className={cn(
                 "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-colors duration-150",
                 isSelected ? "bg-red-primary" : "bg-white/20"
