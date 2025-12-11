@@ -93,8 +93,9 @@ export default function CategoryVotePage() {
 
       setCategory(categoryData.category)
       
-      // Categories are already ordered by display_order and filtered for active ones from the API
-      setAllCategories(allCategoriesData.categories || [])
+      // Reverse categories array so voting starts from the last category (highest display_order)
+      const reversedCategories = [...(allCategoriesData.categories || [])].reverse()
+      setAllCategories(reversedCategories)
       
       const currentVoteForCategory = votesData.votes?.[0]
       if (currentVoteForCategory) {
@@ -106,8 +107,8 @@ export default function CategoryVotePage() {
         setSelectedNominee(null)
       }
 
-      // Find current category index
-      const index = (allCategoriesData.categories || []).findIndex((cat: any) => cat.slug === slug) ?? 0
+      // Find current category index in reversed array
+      const index = reversedCategories.findIndex((cat: any) => cat.slug === slug) ?? 0
       setCurrentIndex(index)
     } catch (error) {
       console.error('Error fetching data:', error)

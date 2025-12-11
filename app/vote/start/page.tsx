@@ -22,9 +22,12 @@ export default function StartVotingPage() {
       return
     }
 
-    // Redirect to first category that user hasn't voted for, or first category
-    const firstUnvotedCategory = votingData.categories.find(cat => !cat.hasVote)
-    const targetCategory = firstUnvotedCategory || votingData.categories[0]
+    // Reverse categories so voting starts from the last category (highest display_order)
+    const reversedCategories = [...votingData.categories].reverse()
+
+    // Redirect to first category that user hasn't voted for, or first category in reversed array
+    const firstUnvotedCategory = reversedCategories.find(cat => !cat.hasVote)
+    const targetCategory = firstUnvotedCategory || reversedCategories[0]
     
     router.push(`/vote/category/${targetCategory.slug}`)
   }, [router, votingData])
