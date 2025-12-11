@@ -9,6 +9,7 @@ import { motion, Variants } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/lib/auth/auth-context'
 import { CategoryWithNominees, Nominee } from '@/lib/types/database'
 import { ArrowLeft, ArrowRight, Check, Trophy, CheckCircle, Star } from 'lucide-react'
@@ -49,6 +50,17 @@ export default function CategoryVotePage() {
   const [loadingData, setLoadingData] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [ballot, setBallot] = useState<any>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Detect device type
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     if (!loading && !user) {
@@ -177,12 +189,76 @@ export default function CategoryVotePage() {
   }
 
   if (loading || loadingData) {
+    // Device-responsive skeleton count
+    const skeletonCount = isMobile ? 4 : 6
+
     return (
-      <div className="container py-8 justify-items-center">
-        <div className="flex items-center justify-items-center min-h-[400px]">
-          <div className="text-center space-y-4 justify-items-center">
-            <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto" />
-            <p>Loading category...</p>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
+        {/* Hero Header Skeleton */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-primary/20 via-transparent to-red-secondary/20" />
+          </div>
+
+          <div className="relative container mx-auto px-4 py-4 lg:py-6">
+            {/* Navigation Skeleton */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+              <Skeleton className="h-10 w-40 bg-white/10" />
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-6 w-32 bg-white/10" />
+                <Skeleton className="h-6 w-20 bg-white/10" />
+              </div>
+            </div>
+
+            {/* Category Title Skeleton */}
+            <div className="text-center space-y-3 mb-6">
+              <Skeleton className="h-12 w-64 sm:w-96 mx-auto bg-white/10" />
+              <Skeleton className="h-6 w-full max-w-3xl mx-auto bg-white/10" />
+              <Skeleton className="h-6 w-3/4 max-w-2xl mx-auto bg-white/10" />
+            </div>
+          </div>
+        </div>
+
+        {/* Nominees Skeleton Section */}
+        <div className="container mx-auto px-4 pb-6">
+          <div className="flex flex-wrap justify-center gap-3 lg:gap-4 max-w-[1400px] mx-auto">
+            {Array.from({ length: skeletonCount }).map((_, index) => (
+              <div
+                key={index}
+                className="w-[160px] sm:w-[180px] lg:w-[200px] animate-pulse"
+              >
+                <Card className="h-full flex flex-col overflow-hidden border-white/20 bg-background-secondary/50 backdrop-blur-sm">
+                  {/* Image Skeleton */}
+                  <div className="relative w-full aspect-[3/4] overflow-hidden flex-shrink-0">
+                    <Skeleton className="w-full h-full bg-white/5" />
+                  </div>
+
+                  {/* Content Skeleton */}
+                  <CardHeader className="relative p-3 flex-1 flex flex-col justify-between min-h-[120px]">
+                    {/* Vote Button Skeleton */}
+                    <div className="text-center pt-2">
+                      <Skeleton className="h-7 w-full bg-white/10" />
+                    </div>
+
+                    {/* Title and Description Skeleton */}
+                    <div className="text-center pt-2 flex-1 flex flex-col justify-center space-y-2">
+                      <Skeleton className="h-4 w-3/4 mx-auto bg-white/10" />
+                      <Skeleton className="h-3 w-full mx-auto bg-white/10" />
+                      <Skeleton className="h-3 w-5/6 mx-auto bg-white/10" />
+                    </div>
+                  </CardHeader>
+                </Card>
+              </div>
+            ))}
+          </div>
+
+          {/* Action Buttons Skeleton */}
+          <div className="flex flex-col lg:flex-row items-center justify-between pt-6 border-t border-white/10 mt-6 gap-4">
+            <Skeleton className="h-10 w-40 bg-white/10" />
+            <div className="flex gap-4">
+              <Skeleton className="h-10 w-32 bg-white/10" />
+              <Skeleton className="h-10 w-40 bg-white/10" />
+            </div>
           </div>
         </div>
       </div>
