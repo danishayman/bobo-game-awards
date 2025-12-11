@@ -252,7 +252,7 @@ export default function VotePage() {
               </p>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.div variants={itemVariants} className="flex justify-center">
               <Button 
                 asChild 
                 size="lg" 
@@ -263,19 +263,6 @@ export default function VotePage() {
                   View Your Votes
                 </Link>
               </Button>
-              {appUser?.is_admin && (
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  size="lg"
-                  className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-3 font-semibold"
-                >
-                  <Link href="/results">
-                    <Trophy className="mr-2 h-5 w-5" />
-                    See Results
-                  </Link>
-                </Button>
-              )}
             </motion.div>
           </motion.div>
         </div>
