@@ -82,8 +82,8 @@ export default function NomineesPage() {
             Gaming Awards Nominees
           </span>
         </h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Discover all the incredible games nominated across every category in our community-driven gaming awards
+        <p className="text-white/70 text-lg max-w-2xl mx-auto">
+          All nominated games across every category
         </p>
       </div>
 
