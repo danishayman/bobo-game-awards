@@ -63,9 +63,9 @@ export default function AboutPage() {
             </span>
           </h1>
           
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-body">
-            A community-driven celebration of gaming excellence where every vote counts.
-          </p>
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-body">
+            Community-driven gaming awards where every vote counts.
+            </p>
         </motion.div>
 
         {/* Main Content */}
