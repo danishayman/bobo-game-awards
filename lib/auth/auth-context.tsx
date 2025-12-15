@@ -26,13 +26,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [signingOut, setSigningOut] = useState(false)
   const supabase = createClient()
 
-  // Safety mechanism: Reset signing out state after 15 seconds if it gets stuck
+  // Safety mechanism: Reset signing out state after 5 seconds if it gets stuck
   useEffect(() => {
     if (signingOut) {
       const timeout = setTimeout(() => {
         console.warn('Sign out process seems stuck, resetting state')
         setSigningOut(false)
-      }, 15000) // 15 second safety timeout
+        // Force clear state and reload if stuck
+        setUser(null)
+        setAppUser(null)
+        window.location.href = '/'
+      }, 5000) // 5 second safety timeout
       
       return () => clearTimeout(timeout)
     }
@@ -138,52 +142,82 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    if (signingOut) return // Prevent duplicate sign out attempts
+    
     setSigningOut(true)
     
     try {
-      // Optimized: Shorter timeout for better UX (3 seconds instead of 10)
-      const timeoutPromise = new Promise<{ error: Error }>((_, reject) => {
-        setTimeout(() => reject(new Error('Sign out timeout')), 3000)
-      })
+      // Helper to add timeout to any promise
+      const withTimeout = <T,>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+        return Promise.race([
+          promise,
+          new Promise<T>((_, reject) => 
+            setTimeout(() => reject(new Error('Operation timeout')), timeoutMs)
+          )
+        ])
+      }
       
-      const signOutPromise = supabase.auth.signOut({ scope: 'local' })
+      // First, try to clear the server-side session via API route
+      // Use a short timeout (2 seconds) to avoid hanging
+      try {
+        await withTimeout(
+          fetch('/api/auth/signout', { 
+            method: 'POST',
+            credentials: 'include'
+          }),
+          2000 // 2 second timeout
+        )
+      } catch (err) {
+        console.warn('Server sign out failed or timed out, continuing:', err)
+      }
       
-      // Race between sign-out and timeout
-      await Promise.race([signOutPromise, timeoutPromise])
+      // Then clear client-side session with timeout
+      try {
+        await withTimeout(
+          supabase.auth.signOut({ scope: 'global' }),
+          2000 // 2 second timeout
+        )
+      } catch (err) {
+        console.warn('Client sign out failed or timed out, forcing clear:', err)
+      }
       
-      // Immediately clear local state (don't wait for auth listener)
+      // Clear local state immediately
       setUser(null)
       setAppUser(null)
       
-      // Navigate immediately for better perceived performance
+      // Clear all cached data
+      try {
+        sessionStorage.clear()
+        // Also clear auth-related localStorage
+        Object.keys(localStorage)
+          .filter(key => key.includes('sb-') || key.includes('supabase'))
+          .forEach(key => localStorage.removeItem(key))
+      } catch (e) {
+        console.warn('Failed to clear storage:', e)
+      }
+      
+      // Navigate to home page
       window.location.href = '/'
       
     } catch (error) {
       console.error('Sign out error:', error)
       
-      // Fast fallback: Clear local session immediately
+      // Fallback: Force clear everything
+      setUser(null)
+      setAppUser(null)
+      
+      // Clear all storage aggressively
       try {
-        // Clear Supabase auth storage keys
-        const storageKeys = Object.keys(localStorage).filter(key => 
-          key.startsWith('sb-') || key.includes('supabase-auth')
-        )
-        storageKeys.forEach(key => localStorage.removeItem(key))
-        
-        // Clear state immediately
-        setUser(null)
-        setAppUser(null)
-        
-        // Navigate to home
-        window.location.href = '/'
-        
-      } catch (fallbackError) {
-        console.error('Fallback sign out error:', fallbackError)
-        // Last resort: Force reload to clear everything
-        window.location.reload()
-      } finally {
-        setSigningOut(false)
+        localStorage.clear()
+        sessionStorage.clear()
+      } catch (e) {
+        console.warn('Failed to clear storage:', e)
       }
+      
+      // Force reload to clear any remaining state
+      window.location.href = '/'
     }
+    // Note: Don't reset signingOut here - let the page reload or safety timeout handle it
   }
 
   const value = {

@@ -52,6 +52,34 @@ export default function CategoryVotePage() {
   const [ballot, setBallot] = useState<any>(null)
   const [isMobile, setIsMobile] = useState(false)
 
+  // Cache categories in sessionStorage to avoid refetching
+  const getCachedCategories = () => {
+    try {
+      const cached = sessionStorage.getItem('voting_categories')
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached)
+        // Cache valid for 5 minutes
+        if (Date.now() - timestamp < 5 * 60 * 1000) {
+          return data
+        }
+      }
+    } catch (e) {
+      console.error('Error reading categories cache:', e)
+    }
+    return null
+  }
+
+  const setCachedCategories = (categories: any[]) => {
+    try {
+      sessionStorage.setItem('voting_categories', JSON.stringify({
+        data: categories,
+        timestamp: Date.now()
+      }))
+    } catch (e) {
+      console.error('Error setting categories cache:', e)
+    }
+  }
+
   useEffect(() => {
     // Detect device type
     const checkMobile = () => {
@@ -76,9 +104,31 @@ export default function CategoryVotePage() {
   const fetchData = async () => {
     setLoadingData(true)
     try {
-      // Fetch ballot status first to check if it's finalized
-      const ballotRes = await fetch('/api/ballot/status')
-      const ballotData = await ballotRes.json()
+      // Check if categories are cached
+      const cachedCategories = getCachedCategories()
+      
+      // Prepare parallel requests - skip categories fetch if cached
+      const requests = [
+        fetch('/api/ballot/status'),
+        fetch(`/api/categories/${slug}`),
+        fetch(`/api/votes?category=${slug}`)
+      ]
+      
+      if (!cachedCategories) {
+        requests.push(fetch('/api/categories'))
+      }
+
+      // Fetch all data in parallel for much faster loading
+      const responses = await Promise.all(requests)
+      
+      // Parse all responses in parallel
+      const [ballotRes, categoryRes, votesRes, allCategoriesRes] = responses
+      const parsedData = await Promise.all(
+        responses.map(res => res.json())
+      )
+      
+      const [ballotData, categoryData, votesData, allCategoriesData] = parsedData
+
       setBallot(ballotData.ballot)
 
       // If ballot is finalized, don't allow further voting
@@ -87,26 +137,22 @@ export default function CategoryVotePage() {
         return // Component will render thank you message
       }
 
-      // Fetch category with nominees
-      const categoryRes = await fetch(`/api/categories/${slug}`)
-      const categoryData = await categoryRes.json()
-      
       if (!categoryRes.ok) {
         throw new Error(categoryData.error || 'Failed to fetch category')
       }
 
-      // Fetch all categories for navigation (ordered by display_order)
-      const allCategoriesRes = await fetch('/api/categories')
-      const allCategoriesData = await allCategoriesRes.json()
-      
-      // Fetch current user vote for this category
-      const votesRes = await fetch(`/api/votes?category=${slug}`)
-      const votesData = await votesRes.json()
-
       setCategory(categoryData.category)
       
+      // Use cached categories or fresh data
+      const categoriesData = cachedCategories || allCategoriesData?.categories || []
+      
+      // Cache categories if we just fetched them
+      if (!cachedCategories && categoriesData.length > 0) {
+        setCachedCategories(categoriesData)
+      }
+      
       // Reverse categories array so voting starts from the last category (highest display_order)
-      const reversedCategories = [...(allCategoriesData.categories || [])].reverse()
+      const reversedCategories = [...categoriesData].reverse()
       setAllCategories(reversedCategories)
       
       const currentVoteForCategory = votesData.votes?.[0]

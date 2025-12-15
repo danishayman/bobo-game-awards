@@ -1,15 +1,13 @@
-import { createClient } from '@/lib/supabase/server'
+import { authenticateRequest } from '@/lib/auth/server-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { validateVotingPeriod } from '@/lib/utils/voting-protection'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const auth = await authenticateRequest()
+    if (auth.error) return auth.error
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { supabase, user } = auth
 
     const { searchParams } = new URL(request.url)
     const categorySlug = searchParams.get('category')
@@ -69,12 +67,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const auth = await authenticateRequest()
+    if (auth.error) return auth.error
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { supabase, user } = auth
 
     const body = await request.json()
     const { category_id, nominee_id, is_admin } = body
