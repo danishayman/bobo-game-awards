@@ -5,9 +5,9 @@ export const VOTING_CONFIG = {
   // Set your voting deadline here
   // This is the deadline in GMT+8 time - the system will convert it properly
   // Format: YYYY-MM-DD HH:MM:SS (this will be interpreted as GMT+8 time)
-  DEADLINE_YEAR: 2026,
-  DEADLINE_MONTH: 1, // September (1-12)
-  DEADLINE_DAY: 7,
+  DEADLINE_YEAR: 2025,
+  DEADLINE_MONTH: 12, // September (1-12)
+  DEADLINE_DAY: 31,
   DEADLINE_HOUR: 23, // 11 PM
   DEADLINE_MINUTE: 59,
   DEADLINE_SECOND: 59,
@@ -15,9 +15,9 @@ export const VOTING_CONFIG = {
   // Live voting start time (voting is locked until this time)
   // Only admins can vote before this time
   LIVE_VOTING_START_YEAR: 2025,
-  LIVE_VOTING_START_MONTH: 12, // September (1-12)
-  LIVE_VOTING_START_DAY: 20,
-  LIVE_VOTING_START_HOUR: 0, // 6 PM
+  LIVE_VOTING_START_MONTH: 12, // December (1-12)
+  LIVE_VOTING_START_DAY: 15,
+  LIVE_VOTING_START_HOUR: 21, // 9 PM
   LIVE_VOTING_START_MINUTE: 0,
   LIVE_VOTING_START_SECOND: 0,
   
