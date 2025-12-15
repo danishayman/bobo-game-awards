@@ -210,13 +210,23 @@ export default function CategoryVotePage() {
 
       setCurrentVote(selectedNominee)
       
-      // Navigate to next category or summary page if this is the last one
-      const nextCategory = allCategories[currentIndex + 1]
-      if (nextCategory) {
-        router.push(`/vote/category/${nextCategory.slug}`)
-      } else {
-        // This was the last category, go to summary
+      // Fetch all votes to check if user has voted for all categories
+      const votesResponse = await fetch('/api/votes')
+      const votesData = await votesResponse.json()
+      const totalVotes = votesData.votes?.length || 0
+      
+      // If user has voted for all categories, redirect to summary page
+      if (totalVotes >= allCategories.length) {
         router.push('/vote/summary')
+      } else {
+        // Otherwise, navigate to next category or summary page if this is the last one
+        const nextCategory = allCategories[currentIndex + 1]
+        if (nextCategory) {
+          router.push(`/vote/category/${nextCategory.slug}`)
+        } else {
+          // This was the last category, go to summary
+          router.push('/vote/summary')
+        }
       }
     } catch (error) {
       console.error('Error saving vote:', error)
@@ -224,6 +234,19 @@ export default function CategoryVotePage() {
       alert(`Vote failed: ${errorMessage}`)
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const handleNext = async () => {
+    // If there's a selected nominee that hasn't been saved, save it first
+    if (selectedNominee && selectedNominee !== currentVote) {
+      await handleVote()
+    } else {
+      // Otherwise just navigate to next category
+      const nextCategory = allCategories[currentIndex + 1]
+      if (nextCategory) {
+        router.push(`/vote/category/${nextCategory.slug}`)
+      }
     }
   }
 
@@ -561,12 +584,15 @@ export default function CategoryVotePage() {
             </Button>
 
             {nextCategory && (
-              <Button asChild variant="outline" className="border-white/20 hover:border-red-primary/50 w-full sm:w-auto">
-                <Link href={`/vote/category/${nextCategory.slug}`}>
-                  <span className="hidden sm:inline">{nextCategory.name}</span>
-                  <span className="sm:hidden">Next</span>
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
+              <Button 
+                onClick={handleNext}
+                disabled={submitting}
+                variant="outline" 
+                className="border-white/20 hover:border-red-primary/50 w-full sm:w-auto"
+              >
+                <span className="hidden sm:inline">{nextCategory.name}</span>
+                <span className="sm:hidden">Next</span>
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             )}
           </div>
