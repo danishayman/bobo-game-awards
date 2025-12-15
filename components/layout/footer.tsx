@@ -77,17 +77,6 @@ export function Footer() {
         
         <div className="mt-8 border-t border-white/10 pt-8 text-center text-sm text-white/70">
           <p>&copy; 2025 Bobo Game Awards. All rights reserved.</p>
-          <p className="mt-2">
-            Created by{' '}
-            <a 
-              href="https://danishaiman.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-[var(--red-primary)] hover:underline"
-            >
-              @danishayman
-            </a>
-          </p>
         </div>
       </div>
     </footer>
