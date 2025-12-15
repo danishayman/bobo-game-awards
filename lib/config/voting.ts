@@ -7,7 +7,7 @@ export const VOTING_CONFIG = {
   // Format: YYYY-MM-DD HH:MM:SS (this will be interpreted as GMT+8 time)
   DEADLINE_YEAR: 2025,
   DEADLINE_MONTH: 12, // September (1-12)
-  DEADLINE_DAY: 31,
+  DEADLINE_DAY: 19,
   DEADLINE_HOUR: 23, // 11 PM
   DEADLINE_MINUTE: 59,
   DEADLINE_SECOND: 59,
