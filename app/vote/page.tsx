@@ -52,7 +52,7 @@ export default function VotePage() {
     // Check if voting is still active and if user can vote
     setVotingActive(isVotingActive())
     setVotingLocked(isVotingLocked())
-    
+
     if (!loading && !user) {
       router.push('/login')
       return
@@ -75,11 +75,11 @@ export default function VotePage() {
       // Fetch categories
       const categoriesRes = await fetch('/api/categories')
       const categoriesData = await categoriesRes.json()
-      
+
       // Fetch user votes
       const votesRes = await fetch('/api/votes')
       const votesData = await votesRes.json()
-      
+
       // Fetch ballot status
       const ballotRes = await fetch('/api/ballot/status')
       const ballotData = await ballotRes.json()
@@ -104,7 +104,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center py-8">
         <div className="container mx-auto px-4 max-w-2xl">
-          <motion.div 
+          <motion.div
             className="text-center space-y-8"
             initial="hidden"
             animate="visible"
@@ -120,7 +120,7 @@ export default function VotePage() {
                 />
               </div>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="space-y-6">
               <AlertTriangle className="h-16 w-16 text-red-500 mx-auto" />
               <h1 className="text-4xl md:text-5xl font-bold text-red-500" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
@@ -130,11 +130,11 @@ export default function VotePage() {
                 The voting period has concluded. Thank you for your interest in the Bobo Game Awards!
               </p>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                asChild 
-                size="lg" 
+              <Button
+                asChild
+                size="lg"
                 className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
               >
                 <Link href="/">
@@ -143,9 +143,9 @@ export default function VotePage() {
                 </Link>
               </Button>
               {appUser?.is_admin && (
-                <Button 
-                  asChild 
-                  variant="outline" 
+                <Button
+                  asChild
+                  variant="outline"
                   size="lg"
                   className="border-white/20 hover:border-red-primary/50 text-white hover:text-red-primary px-8 py-3 font-semibold"
                 >
@@ -167,7 +167,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center py-8">
         <div className="container mx-auto px-4 max-w-3xl">
-          <motion.div 
+          <motion.div
             className="text-center space-y-12"
             initial="hidden"
             animate="visible"
@@ -183,7 +183,7 @@ export default function VotePage() {
                 />
               </div>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="space-y-6">
               <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                 Voting Opening Soon!
@@ -192,9 +192,9 @@ export default function VotePage() {
                 Live voting hasn&apos;t started yet. Check back when the countdown reaches zero!
               </p>
             </motion.div>
-            
+
             <motion.div variants={itemVariants}>
-              <LiveVotingCountdown 
+              <LiveVotingCountdown
                 onLiveVotingStarted={() => {
                   setVotingLocked(false)
                   setUserCanVote(true)
@@ -202,11 +202,11 @@ export default function VotePage() {
                 className="max-w-2xl mx-auto"
               />
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                asChild 
-                size="lg" 
+              <Button
+                asChild
+                size="lg"
                 className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
               >
                 <Link href="/nominees">
@@ -225,7 +225,7 @@ export default function VotePage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center py-8">
         <div className="container mx-auto px-4 max-w-2xl">
-          <motion.div 
+          <motion.div
             className="text-center space-y-8"
             initial="hidden"
             animate="visible"
@@ -241,7 +241,7 @@ export default function VotePage() {
                 />
               </div>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="space-y-6">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
               <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
@@ -251,11 +251,11 @@ export default function VotePage() {
                 Your votes have been successfully submitted and finalized. Your voice matters in the gaming community!
               </p>
             </motion.div>
-            
+
             <motion.div variants={itemVariants} className="flex justify-center">
-              <Button 
-                asChild 
-                size="lg" 
+              <Button
+                asChild
+                size="lg"
                 className="bg-red-primary hover:bg-red-secondary text-white px-8 py-3 font-semibold"
               >
                 <Link href="/vote/summary">
@@ -273,7 +273,7 @@ export default function VotePage() {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-4xl">
-        <motion.div 
+        <motion.div
           className="space-y-12"
           initial="hidden"
           animate="visible"
@@ -292,12 +292,12 @@ export default function VotePage() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                 Cast Your Votes
               </h1>
-              
+
               <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
                 Vote for your favorite games in each category. You can change your votes until you finalize your ballot.
               </p>
@@ -321,25 +321,25 @@ export default function VotePage() {
                 Your Voting Progress
               </h2>
             </div>
-            
+
             <div className="text-4xl font-bold text-white" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
               {userVotes.length}
               <span className="text-foreground-muted text-xl"> / {categories.length}</span>
             </div>
-            
+
             <div className="text-foreground-muted">Categories completed</div>
-            
+
             {/* Progress Bar */}
             <div className="w-full max-w-md mx-auto bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className="bg-red-primary h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${(userVotes.length / categories.length) * 100}%` }}
               />
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button 
-                asChild 
+              <Button
+                asChild
                 className="bg-red-primary hover:bg-red-secondary text-white"
               >
                 <Link href="/vote/start">

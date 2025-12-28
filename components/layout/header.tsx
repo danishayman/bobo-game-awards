@@ -21,7 +21,7 @@ export function Header() {
 
   const handleSignOut = async () => {
     if (signingOut) return // Prevent multiple clicks
-    
+
     try {
       await signOut()
       // Don't call router.push here - let the auth state change handle navigation
@@ -61,12 +61,10 @@ export function Header() {
             About
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
           </Link>
-          {user && (
-            <Link href="/vote" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
-              Vote
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
-            </Link>
-          )}
+          <Link href="/winner" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
+            Winners
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-primary transition-all group-hover:w-full"></span>
+          </Link>
           {appUser?.is_admin && (
             <Link href="/results" className="text-sm font-medium text-white/80 hover:text-red-primary transition-all duration-200 relative group py-2">
               Results
@@ -89,14 +87,14 @@ export function Header() {
           {user && !signingOut ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="relative h-10 w-10 rounded-full transition-none active:scale-100 hover:bg-transparent hover:text-white"
                 >
                   <Avatar className="h-9 w-9">
-                    <AvatarImage 
-                      src={appUser?.avatar_url || ''} 
-                      alt={appUser?.display_name || 'User'} 
+                    <AvatarImage
+                      src={appUser?.avatar_url || ''}
+                      alt={appUser?.display_name || 'User'}
                     />
                     <AvatarFallback className="bg-background-secondary text-white font-semibold">
                       {appUser?.display_name?.charAt(0)?.toUpperCase() || 'U'}
@@ -107,9 +105,9 @@ export function Header() {
               <DropdownMenuContent className="w-64 bg-background-secondary border border-white/20 backdrop-blur-xl" align="end" forceMount>
                 <div className="flex items-center justify-start gap-3 p-3">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage 
-                      src={appUser?.avatar_url || ''} 
-                      alt={appUser?.display_name || 'User'} 
+                    <AvatarImage
+                      src={appUser?.avatar_url || ''}
+                      alt={appUser?.display_name || 'User'}
                     />
                     <AvatarFallback className="bg-red-primary text-white font-semibold">
                       {appUser?.display_name?.charAt(0)?.toUpperCase() || 'U'}
@@ -120,8 +118,8 @@ export function Header() {
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem 
-                  onClick={handleSignOut} 
+                <DropdownMenuItem
+                  onClick={handleSignOut}
                   className="text-white hover:text-red-primary hover:bg-white/10"
                 >
                   <LogOut className="mr-3 h-4 w-4" />
@@ -146,39 +144,37 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-white/10 bg-background/95 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-3">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
-            <Link 
-              href="/nominees" 
+            <Link
+              href="/nominees"
               className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Nominees
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               About
             </Link>
-            {user && (
-              <Link 
-                href="/vote" 
-                className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Vote
-              </Link>
-            )}
+            <Link
+              href="/winner"
+              className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Winners
+            </Link>
             {appUser?.is_admin && (
-              <Link 
-                href="/results" 
+              <Link
+                href="/results"
                 className="block text-sm font-medium text-white/80 hover:text-red-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -186,8 +182,8 @@ export function Header() {
               </Link>
             )}
             {!user && (
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="block text-sm font-medium text-red-primary hover:text-red-secondary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
