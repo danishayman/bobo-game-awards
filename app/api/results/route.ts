@@ -5,6 +5,7 @@ interface VoteResult {
   category_id: string
   category_name: string
   category_slug: string
+  category_description?: string
   nominee_id: string
   nominee_name: string
   nominee_image_url?: string
@@ -16,6 +17,7 @@ interface GroupedCategory {
   category_id: string
   category_name: string
   category_slug: string
+  category_description?: string
   nominees: Array<{
     nominee_id: string
     nominee_name: string
@@ -31,6 +33,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const categorySlug = searchParams.get('category')
 
+    const showcase = searchParams.get('showcase') === 'true'
+
     // Check if user is admin or if voting has ended for public access
     const { data: { user } } = await supabase.auth.getUser()
     let isAdmin = false
@@ -41,12 +45,12 @@ export async function GET(request: NextRequest) {
         .select('is_admin')
         .eq('id', user.id)
         .single()
-      
+
       isAdmin = appUser?.is_admin || false
     }
 
-    // If not admin, check if voting has ended for the requested categories
-    if (!isAdmin) {
+    // If not admin and not showcase mode, check if voting has ended for the requested categories
+    if (!isAdmin && !showcase) {
       let votingEndedQuery = supabase
         .from('categories')
         .select('slug, voting_end')
@@ -59,7 +63,7 @@ export async function GET(request: NextRequest) {
       const { data: categories } = await votingEndedQuery
 
       const now = new Date()
-      const hasEndedCategories = categories?.filter(cat => 
+      const hasEndedCategories = categories?.filter(cat =>
         !cat.voting_end || new Date(cat.voting_end) < now
       )
 
@@ -99,18 +103,21 @@ export async function GET(request: NextRequest) {
           category_id: result.category_id,
           category_name: result.category_name,
           category_slug: result.category_slug,
+          category_description: result.category_description,
           nominees: []
         }
       }
-      
+
       if (result.nominee_id) {
         acc[result.category_id].nominees.push({
           nominee_id: result.nominee_id,
           nominee_name: result.nominee_name,
+          nominee_image_url: result.nominee_image_url,
+          nominee_description: result.nominee_description,
           vote_count: result.vote_count
         })
       }
-      
+
       return acc
     }, {})
 
