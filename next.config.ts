@@ -45,6 +45,15 @@ const nextConfig: NextConfig = {
   compress: true,
   // Enable static optimization where possible
   output: 'standalone',
+  async redirects() {
+    return [
+      {
+        source: '/vote/:path*',
+        destination: '/winner',
+        permanent: false,
+      },
+    ]
+  },
 };
 
 export default nextConfig;
