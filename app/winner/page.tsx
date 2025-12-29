@@ -360,53 +360,54 @@ export default function WinnerPage() {
         <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
             {/* Navigation Header */}
             <div className="sticky top-16 z-40 bg-background/80 backdrop-blur-md border-b border-white/10">
-                <div className="container mx-auto px-4 py-3">
+                <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
                     <div className="flex items-center justify-between">
-                        {/* Left: Exit/Back */}
+                        {/* Left: Back to Categories */}
                         <Button
                             variant="ghost"
+                            size="sm"
                             onClick={handleBackToGrid}
-                            className="text-white/70 hover:text-white hover:bg-white/10"
+                            className="text-white/70 hover:text-white hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-4"
                         >
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            All Categories
+                            <List className="h-4 w-4 sm:mr-2" />
+                            <span className="hidden sm:inline">Categories</span>
                         </Button>
 
                         {/* Center: Navigation */}
-                        <div className="flex items-center gap-2 sm:gap-4">
+                        <div className="flex items-center gap-1 sm:gap-4">
                             <Button
                                 variant="ghost"
+                                size="sm"
                                 onClick={handlePrevious}
                                 disabled={currentIndex === 0}
-                                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30"
+                                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 px-2 sm:px-4"
                             >
-                                <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
-                                <span className="hidden sm:inline">Previous</span>
+                                <ArrowLeft className="h-4 w-4" />
                             </Button>
 
-                            <span className="text-sm text-foreground-muted px-2 sm:px-4">
+                            <span className="text-xs sm:text-sm text-foreground-muted px-1 sm:px-4 whitespace-nowrap">
                                 {currentIndex + 1} / {results.length}
                             </span>
 
                             <Button
                                 variant="ghost"
+                                size="sm"
                                 onClick={handleNext}
                                 disabled={currentIndex === results.length - 1}
-                                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30"
+                                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-30 px-2 sm:px-4"
                             >
-                                <span className="hidden sm:inline">Next</span>
-                                <ArrowRight className="h-4 w-4 ml-1 sm:ml-2" />
+                                <ArrowRight className="h-4 w-4" />
                             </Button>
                         </div>
 
                         {/* Right: Exit */}
                         <Button
                             variant="ghost"
+                            size="sm"
                             onClick={handleExit}
-                            className="text-white/70 hover:text-white hover:bg-white/10"
+                            className="text-white/70 hover:text-white hover:bg-white/10 px-2 sm:px-4"
                         >
-                            <X className="h-4 w-4 mr-2" />
-                            <span className="hidden sm:inline">Exit</span>
+                            <X className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>
@@ -425,21 +426,21 @@ export default function WinnerPage() {
                     className="container mx-auto px-4 py-8"
                 >
                     {/* Category Header */}
-                    <div className="text-center space-y-4 mb-10">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight leading-none" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
+                    <div className="text-center space-y-2 sm:space-y-4 mb-6 sm:mb-10">
+                        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight leading-none px-2" style={{ fontFamily: 'var(--font-dm-serif-text)' }}>
                             <span className="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 bg-clip-text text-transparent">
                                 {currentCategory.category_name}
                             </span>
                         </h1>
                         {currentCategory.category_description && (
-                            <p className="text-foreground-muted text-lg md:text-xl max-w-3xl mx-auto">
+                            <p className="text-foreground-muted text-sm sm:text-lg md:text-xl max-w-3xl mx-auto px-2">
                                 {currentCategory.category_description}
                             </p>
                         )}
                     </div>
 
                     {/* Nominees Grid */}
-                    <div className="flex flex-wrap justify-center gap-4 lg:gap-6 max-w-[1400px] mx-auto">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 max-w-[1400px] mx-auto px-1">
                         {sortedNominees.map((nominee, index) => {
                             const isWinner = nominee.nominee_id === winner?.nominee_id
 
@@ -449,7 +450,7 @@ export default function WinnerPage() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1, duration: 0.4 }}
-                                    className="w-[160px] sm:w-[180px] lg:w-[200px]"
+                                    className="w-full"
                                 >
                                     <Card className={`h-full flex flex-col overflow-hidden transition-all duration-300 ${isWinner
                                         ? 'ring-2 ring-red-primary border-red-primary shadow-[0_0_40px_rgba(229,9,20,0.5)] bg-background-secondary/80'
@@ -514,34 +515,40 @@ export default function WinnerPage() {
                     </div>
 
                     {/* Navigation Footer */}
-                    <div className="flex items-center justify-center gap-4 mt-10 pt-6 border-t border-white/10">
+                    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-6 sm:mt-10 pt-4 sm:pt-6 border-t border-white/10">
                         <Button
                             variant="outline"
+                            size="sm"
                             onClick={handlePrevious}
                             disabled={currentIndex === 0}
-                            className="border-white/20 hover:border-red-primary/50 disabled:opacity-30"
+                            className="border-white/20 hover:border-red-primary/50 disabled:opacity-30 text-xs sm:text-sm"
                         >
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Previous Category
+                            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                            <span className="hidden sm:inline">Previous</span>
+                            <span className="sm:hidden">Prev</span>
                         </Button>
 
                         <Button
                             variant="outline"
+                            size="sm"
                             onClick={handleBackToGrid}
-                            className="border-white/20 hover:border-red-primary/50"
+                            className="border-white/20 hover:border-red-primary/50 text-xs sm:text-sm"
                         >
-                            <List className="h-4 w-4 mr-2" />
-                            All Categories
+                            <List className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                            <span className="hidden sm:inline">All Categories</span>
+                            <span className="sm:hidden">All</span>
                         </Button>
 
                         <Button
                             variant="outline"
+                            size="sm"
                             onClick={handleNext}
                             disabled={currentIndex === results.length - 1}
-                            className="border-white/20 hover:border-red-primary/50 disabled:opacity-30"
+                            className="border-white/20 hover:border-red-primary/50 disabled:opacity-30 text-xs sm:text-sm"
                         >
-                            Next Category
-                            <ArrowRight className="h-4 w-4 ml-2" />
+                            <span className="hidden sm:inline">Next</span>
+                            <span className="sm:hidden">Next</span>
+                            <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2" />
                         </Button>
                     </div>
                 </motion.div>
